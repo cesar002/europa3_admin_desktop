@@ -10,15 +10,19 @@ const defaultInclude = path.resolve(__dirname, 'src')
 module.exports = {
   module: {
     rules: [
-      {
-        test: /\.css$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          'css-loader',
-          'postcss-loader'
-        ],
-        include: defaultInclude
-      },
+      // {
+      //   test: /\.css$/,
+      //   use: [
+      //     MiniCssExtractPlugin.loader,
+      //     'css-loader',
+      //     'postcss-loader'
+      //   ],
+      //   include: defaultInclude
+		// },
+		{
+			test: /\.css$/,
+			use: ['style-loader', 'css-loader']
+		 },
       {
         test: /\.jsx?$/,
         use: [{ loader: 'babel-loader' }],
