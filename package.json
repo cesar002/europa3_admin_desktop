@@ -1,21 +1,17 @@
 {
-  "name": "electron-react-webpack-boilerplate",
-  "version": "1.12.0",
-  "description": "Minimal Electron, React, PostCSS and Webpack boilerplate to help you get started with building your next app.",
+  "name": "administrador-europa3",
+  "version": "1.0.0",
+  "description": "Gestor para administrar los datos de la aplicación de europa 3",
   "license": "MIT",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/alexdevero/electron-react-webpack-boilerplate.git"
+    "url": "https://Cesar_002@bitbucket.org/Cesar_002/europa3-administrador.git"
   },
   "homepage": "",
-  "bugs": {
-    "url": "https://github.com/alexdevero/electron-react-webpack-boilerplate/issues"
-  },
   "author": {
-    "name": "Alex Devero",
-    "email": "deveroalex@gmail.com",
-    "url": "https://github.com/alexdevero"
+    "name": "Julio cesar castillo aguirre",
+    "email": "juliocastillo_13@gmail.com"
   },
   "keywords": [
     "app",
@@ -46,12 +42,18 @@
     "postpackage": "electron-packager ./ --out=./builds"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
+    "formik": "^2.1.4",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.2.0",
+    "redux": "^4.0.5",
+    "yup": "^0.29.1"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",
