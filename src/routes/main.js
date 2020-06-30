@@ -5,12 +5,7 @@ import {
 } from "react-router-dom";
 
 import Login from '../pages/Login'
-
-const DashBoard = () => (
-	<div>
-		<h1>DASHBOARD</h1>
-	</div>
-)
+import DashBoard from '../pages/Dashboard'
 
 const MainRoute = () => (
 	<HashRouter>

@@ -17,11 +17,6 @@ class Login extends React.Component{
 		}
 
 		this.login = this.login.bind(this);
-		this.abort = new AbortController();
-	}
-
-	componentWillUnmount(){
-		this.abort.abort();
 	}
 
 	login(values){
@@ -32,7 +27,7 @@ class Login extends React.Component{
 		setTimeout(() => {
 			this.setState({
 				loadLogin: false
-			}/*, ()=> this.props.history.push('/dashboard')*/)
+			}, ()=> this.props.history.push('/dashboard'))
 		}, 2000);
 	}
 
