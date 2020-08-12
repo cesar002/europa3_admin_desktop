@@ -2,13 +2,12 @@ import React from 'react'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
+import SVGSpinner from '../pures/SVGSpinner'
 
 export default class LoginForm extends React.PureComponent{
 
 	render(){
 		return(
-			<React.Fragment>
-				<h3 className="login-heading mb-4">Bienvenido!</h3>
 				<Formik
 					initialValues={{ username: '', password: '' }}
 					validationSchema={Yup.object().shape({
@@ -16,8 +15,11 @@ export default class LoginForm extends React.PureComponent{
 						password: Yup.string().required('Contraseña requerida')
 					})}
 					onSubmit={(values, { setSubmitting, resetForm }) => {
-							this.props.loginHandle(values)
-							setSubmitting(false);
+							// this.props.loginHandle(values)
+							setTimeout(() => {
+								console.log(values)
+								setSubmitting(false);
+							}, 400);
 					}}
 				>
 					{({
@@ -28,60 +30,62 @@ export default class LoginForm extends React.PureComponent{
 						handleBlur,
 						handleSubmit,
 						isSubmitting,
-						/* and other goodies */
 						}) => (
-						<form onSubmit={handleSubmit}>
-							<div className="form-label-group">
-								<input
-									className={`form-control ${errors.username && touched.username ? 'is-invalid' : ''}`}
+						<form className = 'bg-white shadow-md rounded my-20 w-4/5 sm:w-3/5 px-10 py-12'
+							onSubmit={handleSubmit}
+						>
+							<div className = 'mb-8'>
+								<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+									Nombre de usuario
+								</label>
+								<input className={`shadow appearance-none border ${errors.username && touched.username ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+									id="username"
 									type="text"
-									id="inputUserName"
-									name="username"
+									name = "username"
+									placeholder="Nombre de usuario"
 									onChange={ handleChange }
 									onBlur={handleBlur}
 									value={values.username}
 									autoFocus
 								/>
-								<label htmlFor="inputUserName">Nombre de usuario</label>
-								{errors.username &&
-								<div className="invalid-feedback">
-									{errors.username}
-								</div>
+								{errors.username && touched.username &&
+								<p className="text-red-500 text-xs italic">{ errors.username}</p>
 								}
 							</div>
-							<div className="form-label-group">
-								<input
-									className={`form-control ${errors.password && touched.password ? 'is-invalid' : ''}`}
-									name = "password"
+							<div className = 'mb-8'>
+								<label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+									Contraseña
+								</label>
+								<input className={`shadow appearance-none border ${errors.password && touched.password ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
+									id="password"
 									type="password"
-									id="inputPassword"
+									name = "password"
+									placeholder="Nombre de usuario"
 									onChange={ handleChange }
 									onBlur={ handleBlur }
 									value={values.password}
 								/>
-								<label htmlFor="inputPassword">Contraseña</label>
-								{errors.password &&
-								<div className="invalid-feedback">
-									{errors.password}
-								</div>
+								{errors.password && touched.password &&
+								<p className="text-red-500 text-xs italic">{errors.password}</p>
 								}
 							</div>
-							<button className="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2"
-								type="submit" disabled={isSubmitting}
-							>
-							Iniciar sesión
-							</button>
-							{/* <div className="text-center text-danger font-weight-bold">
-								Usuario y/o contraseña incorrectos
-							</div> */}
-							<div className="text-center">
-								<a className="small" href="#">Olvide mi contraseña</a>
+							<div className = 'flex justify-center mt-12'>
+								<button className = 'flex justify-center w-full bg-blue-500 hover:bg-blue-700 text-white font-bold rounded focus:outline-none focus:shadow-outline py-4'
+									type="submit"
+									disabled = { isSubmitting }
+								>
+									{!isSubmitting &&
+									<span>Iniciar sesión</span>
+									}
+									{isSubmitting &&
+									<SVGSpinner />
+									}
+								</button>
 							</div>
 						</form>
 					)}
 				</Formik>
-			</React.Fragment>
-
 		)
 	}
 }
+

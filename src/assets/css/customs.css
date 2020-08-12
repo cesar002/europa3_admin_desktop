@@ -1,0 +1,4 @@
+.img_banner_login{
+	background-image: url('../images/banner_login.jpg');
+	object-fit: cover;
+}

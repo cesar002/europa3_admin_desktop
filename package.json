@@ -39,7 +39,10 @@
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
     "build": "cross-env NODE_ENV=production webpack --config webpack.build.config.js --mode production",
     "package": "npm run build",
-    "postpackage": "electron-packager ./ --out=./builds"
+	 "postpackage": "electron-packager ./ --out=./builds",
+	 "build:tailwind": "tailwindcss build src/assets/css/tailwind.css -o src/assets/css/tailwind.output.css",
+	 "prestart": "npm run build:tailwind",
+	 "prebuild": "npm run build:tailwind"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.29",
@@ -56,6 +59,7 @@
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
+    "tailwindcss": "^1.6.2",
     "yup": "^0.29.1"
   },
   "devDependencies": {

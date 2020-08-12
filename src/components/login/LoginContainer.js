@@ -1,24 +1,22 @@
 import React from 'react'
+// import * as from '../../assets/images/banner_login.jfif'
 
-import '../../assets/css/login.css'
-
-export default class LoginContainer extends React.PureComponent{
-
+export default class LoginContainer extends React.Component{
 	render(){
 		return(
-			<div className = "container-fluid">
-				<div className = "row no-gutter">
-					<div className = "d-none d-md-flex col-md-4 col-lg-6 bg-image" />
-					<div className = "col-md-8 col-lg-6">
-						<div className = "login d-flex align-items-center py-5">
-							<div className = "container">
-								<div className = "row">
-									<div className = "col-md-9 col-lg-8 mx-auto">
-										{ this.props.children }
-									</div>
-								</div>
-							</div>
-						</div>
+			// <div className = 'h-screen bg-gray-400'>
+
+			// </div>
+			<div className = 'h-screen flex'>
+				<div className = 'sm:w-2/5 img_banner_login' />
+				<div className = 'flex flex-col w-full sm:w-3/5'>
+					<div className = 'h-24 flex justify-center items-center'>
+						<h1 className = 'text-4xl'>
+							Bienvenido
+						</h1>
+					</div>
+					<div className = 'flex-1 flex justify-center'>
+						{ this.props.children }
 					</div>
 				</div>
 			</div>

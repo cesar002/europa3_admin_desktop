@@ -1,9 +1,9 @@
 import React from 'react'
-import { withRouter, useHistory } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 import LoginContainer from '../components/login/LoginContainer'
 import LoginForm from '../components/login/LoginForm'
-import LoginLoad from '../components/login/LoginLoading'
+// import LoginLoad from '../components/login/LoginLoading'
 
 class Login extends React.Component{
 
@@ -35,13 +35,16 @@ class Login extends React.Component{
 	render(){
 		return(
 			<LoginContainer>
-				{this.state.loadLogin &&
-				<LoginLoad />
-				}
-				{!this.state.loadLogin &&
-				<LoginForm loginHandle = { this.login } />
-				}
+				<LoginForm />
 			</LoginContainer>
+			// <LoginContainer>
+			// 	{this.state.loadLogin &&
+			// 	<LoginLoad />
+			// 	}
+			// 	{!this.state.loadLogin &&
+			// 	<LoginForm loginHandle = { this.login } />
+			// 	}
+			// </LoginContainer>
 		)
 	}
 }
