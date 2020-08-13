@@ -14,12 +14,9 @@ export default class LoginForm extends React.PureComponent{
 						username: Yup.string().required('Nombre de usuario requerido'),
 						password: Yup.string().required('Contraseña requerida')
 					})}
-					onSubmit={(values, { setSubmitting, resetForm }) => {
-							// this.props.loginHandle(values)
-							setTimeout(() => {
-								console.log(values)
-								setSubmitting(false);
-							}, 400);
+					onSubmit={async (values, { setSubmitting, resetForm }) => {
+							await this.props.loginHandle(values);
+							setSubmitting(false);
 					}}
 				>
 					{({
@@ -70,7 +67,8 @@ export default class LoginForm extends React.PureComponent{
 								}
 							</div>
 							<div className = 'flex justify-center mt-12'>
-								<button className = 'flex justify-center w-full bg-blue-500 hover:bg-blue-700 text-white font-bold rounded focus:outline-none focus:shadow-outline py-4'
+								<button
+									className = {`flex justify-center w-full ${!isSubmitting ? 'bg-blue-500 hover:bg-blue-700' : ''} ${isSubmitting ? 'bg-blue-300' : ''} text-white font-bold rounded focus:outline-none focus:shadow-outline py-4`}
 									type="submit"
 									disabled = { isSubmitting }
 								>

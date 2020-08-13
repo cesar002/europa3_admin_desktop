@@ -10,41 +10,28 @@ class Login extends React.Component{
 	constructor(props) {
 		super(props)
 
-		this.state = {
-			loadLogin: false,
-			username: '',
-			password: '',
-		}
-
 		this.login = this.login.bind(this);
 	}
 
 	login(values){
-		this.setState({
-			loadLogin: true
-		})
-
-		setTimeout(() => {
-			this.setState({
-				loadLogin: false
-			}, ()=> this.props.history.push('/dashboard'))
-		}, 2000);
+		// return new Promise((resolve, reject)=>{
+		// 	setTimeout(() => {
+		// 		this.props.history.push('/dashboard')
+		// 	}, 3000);
+		// 	resolve();
+		// })
+		return new Promise(resolve => setTimeout(() => {
+			this.props.history.push('/dashboard')
+			resolve()
+		}, 4000))
 	}
 
 
 	render(){
 		return(
 			<LoginContainer>
-				<LoginForm />
+				<LoginForm loginHandle = {this.login} />
 			</LoginContainer>
-			// <LoginContainer>
-			// 	{this.state.loadLogin &&
-			// 	<LoginLoad />
-			// 	}
-			// 	{!this.state.loadLogin &&
-			// 	<LoginForm loginHandle = { this.login } />
-			// 	}
-			// </LoginContainer>
 		)
 	}
 }

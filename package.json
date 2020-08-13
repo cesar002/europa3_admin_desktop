@@ -39,10 +39,10 @@
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot --host 0.0.0.0 --config=./webpack.dev.config.js --mode development",
     "build": "cross-env NODE_ENV=production webpack --config webpack.build.config.js --mode production",
     "package": "npm run build",
-	 "postpackage": "electron-packager ./ --out=./builds",
-	 "build:tailwind": "tailwindcss build src/assets/css/tailwind.css -o src/assets/css/tailwind.output.css",
-	 "prestart": "npm run build:tailwind",
-	 "prebuild": "npm run build:tailwind"
+    "postpackage": "electron-packager ./ --out=./builds",
+    "build:tailwind": "tailwindcss build src/assets/css/tailwind.css -o src/assets/css/tailwind.output.css",
+    "prestart": "npm run build:tailwind",
+    "prebuild": "npm run build:tailwind"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.29",
@@ -63,7 +63,9 @@
     "yup": "^0.29.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.6",
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/preset-flow": "^7.10.4",
     "@babel/preset-react": "^7.9.4",
     "babel-loader": "^8.1.0",
     "babili-webpack-plugin": "^0.1.2",
@@ -73,6 +75,7 @@
     "electron-devtools-installer": "^3.0.0",
     "electron-packager": "^14.2.1",
     "file-loader": "^6.0.0",
+    "flow-bin": "^0.131.0",
     "html-webpack-plugin": "^4.3.0",
     "mini-css-extract-plugin": "^0.9.0",
     "postcss-import": "^12.0.1",

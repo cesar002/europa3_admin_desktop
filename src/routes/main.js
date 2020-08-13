@@ -5,12 +5,13 @@ import {
 } from "react-router-dom";
 
 import Login from '../pages/Login'
+import Dashboard from '../pages/Dashboard'
 
 const MainRoute = () => (
 	<HashRouter>
 		<React.Fragment>
-			<Route path = '/' exact component = { Login } />
-			{/* <Route path = '/dashboard' component = { DashBoard } /> */}
+			<Route path = '/' exact component = { Dashboard } />
+			<Route path = '/dashboard' component = { Dashboard } />
 		</React.Fragment>
 	</HashRouter>
 )
