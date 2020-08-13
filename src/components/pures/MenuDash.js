@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 const MenuDash = (props) => (
 	<nav className = 'flex flex-row'>
-		<section className = 'bg-blue-800 fixed bottom-0 h-screen w-56'>
+		<section className = 'bg-blue-800 h-screen w-56'>
 			<div className = 'fixed content-center text-left justify-between px-3'>
 				<ul className="list-reset flex flex-row flex-col py-3 text-center text-left my-16">
 					<li className = 'flex-1'>
