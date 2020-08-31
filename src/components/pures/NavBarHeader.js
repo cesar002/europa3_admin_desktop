@@ -36,7 +36,7 @@ class NavBarHeader extends React.PureComponent{
 						</div>
 						<div className = 'flex-column'>
 							<div className = 'text-dark'>Hola tengo algunas dudas sobre la renta...</div>
-							<div className = 'small text-secondary'>Juan hace 1 día</div>
+							<div className = 'small text-secondary'>Juan haces 1 día</div>
 						</div>
 					</a>
 					<a className="dropdown-item text-center" href="#">Ver todos los mensajes</a>
