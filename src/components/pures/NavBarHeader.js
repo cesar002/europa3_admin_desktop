@@ -42,7 +42,7 @@ const DropdownItem = ({ type = '', title = '', badgeCount = 0, messages = []  })
 						{ type == 'notification' &&
 						<div> { msn.message } </div>
 						}
-						<div class="small text-gray-500">{type == 'chat' ? `${msn.user} - ` : '' }hace 58m</div>
+						<div className="small text-gray-500">{type == 'chat' ? `${msn.user} - ` : '' }hace 58m</div>
 					</div>
 				</a>
 			)) }
@@ -69,14 +69,14 @@ class NavBarHeader extends React.PureComponent{
 	render(){
 		return(
 			<nav className = 'navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow'>
-				<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+				<button id="sidebarToggleTop" className="btn btn-link d-md-none rounded-circle mr-3">
 					<FontAwesomeIcon icon = { faBars } />
 				</button>
 				<ul className = 'navbar-nav ml-auto'>
 					<DropdownItem type = 'notification' title = 'Notificaciones' badgeCount = {1} />
 					<DropdownItem type = 'chat' title = 'Chats' />
 
-					<div class="topbar-divider d-none d-sm-block"></div>
+					<div className="topbar-divider d-none d-sm-block"></div>
 
 					<li className = 'nav-item dropdown no-arrow'>
 						<a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -90,7 +90,7 @@ class NavBarHeader extends React.PureComponent{
 								<i className = 'fas fa-cogs fa-sm fa-fw mr-2 text-gray-400' />
 								Configuración
 							</a>
-							<div class="dropdown-divider" />
+							<div className="dropdown-divider" />
 							<a className="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
 								<i className = 'fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400' />
 								Cerrar sesión

@@ -10753,17 +10753,13 @@ a:focus {
   padding-right: 1.725rem;
   line-height: 51px;
   font-weight: 900;
-  content: '\f107';
+  /* content: '\f107'; */
   font-family: 'Font Awesome 5 Free';
   color: #d1d3e2;
 }
 
 .card .card-header[data-toggle="collapse"].collapsed {
   border-radius: 0.35rem;
-}
-
-.card .card-header[data-toggle="collapse"].collapsed::after {
-  content: '\f105';
 }
 
 .chart-area {
