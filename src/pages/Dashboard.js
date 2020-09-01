@@ -1,29 +1,20 @@
 import React from 'react'
 
-import NavBar from '../components/pures/NavBarHeader'
-import DashboardContainer from '../components/dashboard/DashboardContainer'
-import DashboardMenu from '../components/dashboard/DashboardMenu'
+import Container from '../components/pures/ContainerMaster'
+
+import DSCard from '../components/pures/DCardSimple'
 
 class Dashboard extends React.Component{
 
 	constructor(props){
 		super(props);
-
-		this.state = {
-			menuItems:[
-
-			]
-		}
 	}
 
 	render(){
 		return(
-			<React.Fragment>
-				<NavBar />
-				<DashboardContainer>
+			<Container title = 'Dashboard'>
 
-				</DashboardContainer>
-			</React.Fragment>
+			</Container>
 		)
 	}
 }

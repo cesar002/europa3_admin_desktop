@@ -1,70 +1,103 @@
 import React from 'react'
 // import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEnvelope } from '@fortawesome/free-solid-svg-icons'
+import { faBell, faEnvelope, faBars } from '@fortawesome/free-solid-svg-icons'
+
+
+const DropdownItem = ({ type = '', title = '', badgeCount = 0, messages = []  }) => (
+	<li className = 'nav-item dropdown no-arrow mx-1'>
+		<a className = 'nav-link dropdown-toggle' href ='#' id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			{/* <i className='fas fa-bell fa-fw' /> */}
+			<FontAwesomeIcon icon = { type == 'notification'? faBell : faEnvelope }/>
+			{ badgeCount > 0 &&
+			<span className = 'badge badge-danger badge-counter'>
+				{ badgeCount }
+			</span>
+			}
+		</a>
+		<div className = 'dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in' aria-labelledby="alertsDropdown">
+			<h4 className = 'dropdown-header'>
+				{ title }
+			</h4>
+			{ messages.length > 0 &&
+			<React.Fragment>
+			{ messages.map((msn, i) => (
+				<a key = {i} className = 'dropdown-item d-flex align-items-center' href = '#'>
+					<div className = 'dropdown-list-image mr-3'>
+						{type == 'notification' &&
+						<div className="icon-circle bg-warning">
+							<i className="fas fa-exclamation-triangle text-white" />
+						</div>
+						}
+						{type == 'chat' &&
+						<img className="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="" />
+						}
+					</div>
+					<div className = 'font-weight-bold'>
+						{ type == 'chat' &&
+						<div className = 'text-truncate'>
+							{ msn.message }
+						</div>
+						}
+						{ type == 'notification' &&
+						<div> { msn.message } </div>
+						}
+						<div class="small text-gray-500">{type == 'chat' ? `${msn.user} - ` : '' }hace 58m</div>
+					</div>
+				</a>
+			)) }
+			</React.Fragment>
+			}
+			{ !messages.length  &&
+			<div className = 'text-center mt-3'>
+				<h5>Sin mensajes recientes</h5>
+			</div>
+			}
+			<a className="dropdown-item text-center small text-gray-500" href="#">
+				Ver todas las alertas
+			</a>
+		</div>
+	</li>
+)
 
 class NavBarHeader extends React.PureComponent{
 
 	constructor(props){
 		super(props);
-
-		this.renderdropdownMenu = this.renderdropdownMenu.bind(this);
 	}
-
-	renderdropdownMenu(titulo, to, typeIcon){
-		return (
-			<li className = 'nav-link waves-effect waves-light dropdown'>
-				<a className = 'nav-link waves-effect waves-light dropdown-toggle' type = 'button' id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<span className="badge badge-pill badge-primary mr-2" >3</span>
-					<FontAwesomeIcon icon = { faEnvelope } className = 'mr-2' />
-					{ titulo }
-				</a>
-				<div className="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-					<a className="dropdown-item d-flex flex-row align-items-center border-bottom" style = {{backgroundColor: '' }} href="#">
-						<div className = 'mr-3'>
-							<img className = 'rounded-circle' src = 'https://semantic-ui.com/images/avatar2/large/molly.png' style = {{width: '2.5rem', height: '2.5rem'}}/>
-						</div>
-						<div className = 'flex-column'>
-							<div className = 'text-dark'>Hola tengo algunas dudas sobre la renta...</div>
-							<div className = 'small text-secondary'>Juan hace 1 día</div>
-						</div>
-					</a>
-					<a className="dropdown-item d-flex flex-row align-items-center border-bottom" style = {{backgroundColor: 'rgba(109, 163, 181, 0.09)' }} href="#">
-						{/* <span className="badge badge-pill badge-primary mr-2" >3</span> */}
-						<div className = 'mr-3'>
-							<img className = 'rounded-circle' src = 'https://semantic-ui.com/images/avatar2/large/molly.png' style = {{width: '2.5rem', height: '2.5rem'}}/>
-						</div>
-						<div className = 'flex-column'>
-							<div className = 'text-dark'>Hola tengo algunas dudas sobre la renta...</div>
-							<div className = 'small text-secondary'>Juan haces 1 día</div>
-						</div>
-					</a>
-					<a className="dropdown-item text-center" href="#">Ver todos los mensajes</a>
-				</div>
-			</li>
-		)
-	}
-
 
 	render(){
 		return(
-			<nav className = 'navbar navbar-expand-lg navbar-dark bg-dark'>
-				<div className = 'container'>
-					<div className = 'navbar-brand'><h4>Europa 3 admin</h4></div>
-					<button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-						<span className="navbar-toggler-icon"></span>
-					</button>
-					<div className="collapse navbar-collapse" id="navbarSupportedContent">
-						<ul className = 'nav navbar-nav nav-flex-icons ml-auto mr-5'>
-							{ this.renderdropdownMenu('Mensajes recepción') }
-							{ this.renderdropdownMenu('Chat soporte') }
-							<li className = 'nav-link'>
-								<span className = 'mr-2'>weona</span>
-								<img className = 'rounded-circle' src = 'https://semantic-ui.com/images/avatar2/large/molly.png' style = {{width: '2.5rem', height: '2.5rem'}}/>
-							</li>
-						</ul>
-					</div>
-				</div>
+			<nav className = 'navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow'>
+				<button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+					<FontAwesomeIcon icon = { faBars } />
+				</button>
+				<ul className = 'navbar-nav ml-auto'>
+					<DropdownItem type = 'notification' title = 'Notificaciones' badgeCount = {1} />
+					<DropdownItem type = 'chat' title = 'Chats' />
+
+					<div class="topbar-divider d-none d-sm-block"></div>
+
+					<li className = 'nav-item dropdown no-arrow'>
+						<a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<span className="mr-2 d-none d-lg-inline text-gray-600 small">
+								Usuario
+							</span>
+							<img className="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60" />
+						</a>
+						<div className = 'dropdown-menu dropdown-menu-right shadow animated--grow-in' aria-labelledby = 'userDropdown'>
+							<a className ='dropdown-item' href = '#'>
+								<i className = 'fas fa-cogs fa-sm fa-fw mr-2 text-gray-400' />
+								Configuración
+							</a>
+							<div class="dropdown-divider" />
+							<a className="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+								<i className = 'fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400' />
+								Cerrar sesión
+							</a>
+						</div>
+					</li>
+				</ul>
 			</nav>
 		);
 	}

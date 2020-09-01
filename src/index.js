@@ -1,6 +1,8 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './assets/css/styles.css'
+import './assets/js/sb-admin-2'
 import 'bootstrap';
+
 import React from 'react'
 import { render } from 'react-dom'
 import App from './App'
