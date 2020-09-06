@@ -1,7 +1,9 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-	faBuilding, faChair, faChevronRight, faEquals, faHome
+	faBuilding, faChair, faChevronRight, faBroom, faHome,
+	faUser, faPager, faCogs, faBell, faEnvelopeOpenText, faBriefcase,
+	faComment, faUserShield, faVial
 } from '@fortawesome/free-solid-svg-icons'
 
 const Divider = () => (
@@ -75,25 +77,63 @@ class SiderMenu extends React.PureComponent{
 				<SimpleNavItem title = 'Inicio' icon = { faHome } />
 				<Divider />
 
-				<Heading title = 'Edificios y oficinas'  />
-				<SimpleNavItem title = 'Edificios' icon = { faBuilding } />
-				<SimpleNavItem title = 'Oficinas' icon = { faChair } />
+				<Heading title = 'Usuarios y solicitudes' />
+				<SimpleNavItem title = 'Usuarios' icon = { faUser } />
+				<SimpleNavItem title = 'Solicitudes' icon = { faPager } />
 				<Divider />
 
-				<Heading title = 'Servicios' />
-				<DropdownNavItem id = 'servicio' title = 'servicios' icon = { faEquals }
+				<Heading title = 'Edificios y oficinas'  />
+				<SimpleNavItem title = 'Edificios' icon = { faBuilding } />
+				<SimpleNavItem title = 'Oficinas' icon = { faBriefcase } />
+				<Divider />
+
+				<Heading title = 'Gestión de mobiliario' />
+				{/* <SimpleNavItem title = 'Registro' icon = { faChair }  /> */}
+				<DropdownNavItem  id = 'mobiliario' icon = { faChair } title = 'Mobiliario'
 					items = {[
-						{ header: 'gestión de servicios', items:[
-							{ title: 'serviciso de oficina', to: '' },
-							{ title: 'idiomas de atención', to: '' },]
-						},
-						{header: 'gestión de insumos', items: [
-							{title: 'insumos', to : ''}
-						]
-						},
+						{ items: [
+							{ title: 'Registro de mobiliario', to: '' },
+							{ title: 'Gestión de mobiliario', to: '' },
+						] },
 					]}
 				/>
 				<Divider />
+
+				<Heading title = 'Servicios' />
+				<SimpleNavItem title = 'Servicios' icon = { faBroom } />
+				<SimpleNavItem title = 'Idiomas de atención' icon = { faComment } />
+				<DropdownNavItem id = 'consumibles' title = 'Consumibles' icon = { faVial }
+					items = {[
+						{ items:[
+							{ title: 'Insumos', to: '' },
+							{ title: 'Paquetes', to: '' },
+						] }
+					]}
+				/>
+				<Divider />
+
+				<Heading title = 'Envío de notificaciones' />
+				<DropdownNavItem id = 'push-notification' title = 'Notificaciones push' icon = { faBell }
+					items = {[
+						{ items: [
+							{ title: 'Notificacion a usuario', to: '' },
+							{ title: 'Notificacion global', to: ''}
+						]},
+					]}
+				/>
+				<DropdownNavItem  id = 'email-notification' title = 'Notificación por email' icon = { faEnvelopeOpenText }
+					items = {[
+						{ items: [
+							{ title: 'Email a usuario', to: '' },
+							{ title: 'Email global', to: '' }
+						] }
+					]}
+				/>
+				<Divider />
+
+				<Heading title = 'Admin' />
+				<SimpleNavItem title = 'Usuarios sistema' icon = { faUserShield } />
+				<SimpleNavItem title = 'Configuración' icon = { faCogs } />
 			</ul>
 		);
 	}
