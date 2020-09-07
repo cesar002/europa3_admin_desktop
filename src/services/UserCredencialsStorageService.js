@@ -3,7 +3,7 @@ import { LOCAL_STORAGE_KEY } from '../contants/globals'
 class UserCredencialsStorageService{
 
 	static setCredentials( userCredentials ){
-		window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userCredentials));
+		localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userCredentials));
 	}
 
 	static getCredentials(){

@@ -1,9 +1,12 @@
 import React from 'react'
-import { withRouter, useHistory } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import LoginContainer from '../components/login/LoginContainer'
 import LoginForm from '../components/login/LoginForm'
 import LoginLoad from '../components/login/LoginLoading'
+
+import { startFetchLogin } from '../redux/actions/loginActions'
 
 class Login extends React.Component{
 
@@ -11,7 +14,6 @@ class Login extends React.Component{
 		super(props)
 
 		this.state = {
-			loadLogin: false,
 			username: '',
 			password: '',
 		}
@@ -21,30 +23,43 @@ class Login extends React.Component{
 
 	login(values){
 		this.setState({
-			loadLogin: true
+			...values
 		})
 
-		setTimeout(() => {
-			this.setState({
-				loadLogin: false
-			}, ()=> this.props.history.push('/dashboard'))
-		}, 2000);
+		this.props.startLogin(values.username, values.password);
 	}
 
 
 	render(){
 		return(
 			<LoginContainer>
-				{this.state.loadLogin &&
+				{this.props.loginData.status.start &&
 				<LoginLoad />
 				}
-				{!this.state.loadLogin &&
-				<LoginForm loginHandle = { this.login } />
+				{!this.props.loginData.status.start &&
+				<LoginForm
+					loginHandle = { this.login }
+					loginData = {{
+						username: this.state.username,
+						password: this.state.password
+					}}
+					errorLogin = { this.props.loginData.error }
+				/>
 				}
 			</LoginContainer>
 		)
 	}
 }
 
+const mapStateToProps = state => ({
+	loginData: state.loginData
+})
 
-export default withRouter(Login);
+const mapDispatchToProps = dispatch => ({
+	startLogin(username, password){
+		dispatch(startFetchLogin(username, password))
+	},
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));

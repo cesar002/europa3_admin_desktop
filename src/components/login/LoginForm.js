@@ -2,7 +2,6 @@ import React from 'react'
 import { Formik } from 'formik';
 import * as Yup from "yup";
 
-
 export default class LoginForm extends React.PureComponent{
 
 	render(){
@@ -10,12 +9,15 @@ export default class LoginForm extends React.PureComponent{
 			<React.Fragment>
 				<h3 className="login-heading mb-4">Bienvenido!</h3>
 				<Formik
-					initialValues={{ username: '', password: '' }}
+					initialValues={{
+						username: this.props.loginData.username,
+						password: this.props.loginData.password
+					}}
 					validationSchema={Yup.object().shape({
 						username: Yup.string().required('Nombre de usuario requerido'),
 						password: Yup.string().required('Contraseña requerida')
 					})}
-					onSubmit={(values, { setSubmitting, resetForm }) => {
+					onSubmit={(values, { setSubmitting }) => {
 							this.props.loginHandle(values)
 							setSubmitting(false);
 					}}
@@ -71,9 +73,11 @@ export default class LoginForm extends React.PureComponent{
 							>
 							Iniciar sesión
 							</button>
-							{/* <div className="text-center text-danger font-weight-bold">
-								Usuario y/o contraseña incorrectos
-							</div> */}
+							{this.props.errorLogin &&
+							<div className="text-center text-danger font-weight-bold">
+								{ this.props.errorLogin.error }
+							</div>
+							}
 							<div className="text-center">
 								<a className="small" href="#">Olvide mi contraseña</a>
 							</div>

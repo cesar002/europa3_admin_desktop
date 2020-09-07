@@ -9785,10 +9785,10 @@ a:focus {
   flex: 1 0 auto;
 }
 
-.container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
+/* .container, .container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-}
+} */
 
 .scroll-to-top {
   position: fixed;
@@ -10478,7 +10478,8 @@ a:focus {
     width: 100%;
     text-align: left;
     padding: 0.6rem;
-    width: 14rem;
+	 width: 14rem;
+	 padding-left: 1rem;
   }
   .sidebar .nav-item .nav-link i {
     font-size: 0.85rem;
