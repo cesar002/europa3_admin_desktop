@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
 import Sider from '../pures/SiderMenu'
 
@@ -8,8 +9,12 @@ class SiderMenu extends React.Component{
 	}
 
 	render(){
-		return <Sider />
+		return <Sider permisos = { this.props.permisos } />
 	}
 }
 
-export default SiderMenu;
+const mapStateToProps = state => ({
+	permisos: state.userData.userData.permisos,
+})
+
+export default connect(mapStateToProps)(SiderMenu);

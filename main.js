@@ -1,6 +1,9 @@
+// import installExtension, { REDUX_DEVTOOLS } from 'electron-devtools-installer'
+
 'use strict'
 
 // Import parts of electron to use
+const { default: installExtension, REDUX_DEVTOOLS } = require('electron-devtools-installer');
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const url = require('url')
@@ -104,3 +107,12 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+if(dev){
+	app.whenReady().then(()=>{
+		installExtension(REDUX_DEVTOOLS)
+			.then(name => console.log(`Extension agregada: ${name}`))
+			.catch(err => console.log(`Ocurrio un error con ${err}`))
+	})
+
+}

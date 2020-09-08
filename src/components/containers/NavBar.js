@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
 import Nav from '../pures/NavBarHeader'
 
@@ -8,8 +9,14 @@ class NavBar extends React.Component{
 	}
 
 	render(){
-		return <Nav />
+		return (
+			<Nav userName = { this.props.userData.username }  />
+		)
 	}
 }
 
-export default NavBar
+const mapStateToProps = state => ({
+	userData: state.userData.userData,
+})
+
+export default connect(mapStateToProps)(NavBar)

@@ -17,17 +17,27 @@ class Login extends React.Component{
 		this.state = {
 			username: '',
 			password: '',
+			pass: true
 		}
 
 		this.login = this.login.bind(this);
+	}
+
+	componentDidUpdate(prevProps){
+		if(this.props.loginData.status.success && this.props.userStatus.success){
+				this.props.history.push('/dashboard');
+		}
+		// if(prevProps.loginData.status.finish !== this.props.loginData.status.finish){
+		// 	if(this.props.loginData.status.success && this.state.pass){
+		// 		this.props.history.push('/dashboard');
+		// 	}
+		// }
 	}
 
 	login(values){
 		this.setState({
 			...values
 		})
-
-		// DBService.saveTokens('wea', 'asdasdasd');
 
 		this.props.startLogin(values.username, values.password);
 	}
@@ -36,10 +46,10 @@ class Login extends React.Component{
 	render(){
 		return(
 			<LoginContainer>
-				{this.props.loginData.status.start &&
+				{(this.props.loginData.status.start || this.props.userStatus.start) &&
 				<LoginLoad />
 				}
-				{!this.props.loginData.status.start &&
+				{(!this.props.loginData.status.start && !this.props.userStatus.start) &&
 				<LoginForm
 					loginHandle = { this.login }
 					loginData = {{
@@ -55,7 +65,8 @@ class Login extends React.Component{
 }
 
 const mapStateToProps = state => ({
-	loginData: state.loginData
+	loginData: state.loginData,
+	userStatus: state.userData.status,
 })
 
 const mapDispatchToProps = dispatch => ({

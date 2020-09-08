@@ -11,7 +11,7 @@
   "homepage": "",
   "author": {
     "name": "Julio cesar castillo aguirre",
-    "email": "juliocastillo_13@gmail.com"
+    "email": "juliocastillo_13@hotmail.com"
   },
   "keywords": [
     "app",
@@ -60,7 +60,6 @@
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
     "redux-saga": "^1.1.3",
-    "sqlite3": "^5.0.0",
     "sweetalert": "^2.1.2",
     "yup": "^0.29.1"
   },
@@ -72,7 +71,7 @@
     "cross-env": "^7.0.2",
     "css-loader": "^3.5.3",
     "electron": "^9.0.0",
-    "electron-devtools-installer": "^3.0.0",
+    "electron-devtools-installer": "^3.1.1",
     "electron-packager": "^14.2.1",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",

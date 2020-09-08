@@ -23,13 +23,31 @@ class UserCredencialsStorageService{
 			return JSON.parse(data);
 		}
 
-		return {}
+		return null
 	}
 
 	static getAccessToken(){
 		const data = this.getCredentials();
 
 		return data == null ? data.access_token : '';
+	}
+
+	static getRefreshToken(){
+		const data = this.getCredentials();
+
+		return data == null ? data.refresh_token : '';
+	}
+
+	static tokenIsExpired(){
+		const data = this.getCredentials();
+
+		return (Date.now()) < data.expire_token
+	}
+
+	static existCredentials(){
+		const data = this.getCredentials();
+
+		return data !== null;
 	}
 }
 

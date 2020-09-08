@@ -1,5 +1,5 @@
 import React from 'react'
-// import { Link } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBell, faEnvelope, faBars } from '@fortawesome/free-solid-svg-icons'
 
@@ -73,15 +73,15 @@ class NavBarHeader extends React.PureComponent{
 					<FontAwesomeIcon icon = { faBars } />
 				</button>
 				<ul className = 'navbar-nav ml-auto'>
-					<DropdownItem type = 'notification' title = 'Notificaciones' badgeCount = {1} />
+					<DropdownItem type = 'notification' title = 'Notificaciones' />
 					<DropdownItem type = 'chat' title = 'Chats' />
 
 					<div className="topbar-divider d-none d-sm-block"></div>
 
 					<li className = 'nav-item dropdown no-arrow'>
 						<a className="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<span className="mr-2 d-none d-lg-inline text-gray-600 small">
-								Usuario
+							<span className="mr-2 d-none d-lg-inline text-gray-600 small mr-3">
+								{ this.props.userName }
 							</span>
 							<img className="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60" />
 						</a>
@@ -101,6 +101,10 @@ class NavBarHeader extends React.PureComponent{
 			</nav>
 		);
 	}
+}
+
+NavBarHeader.propTypes = {
+	userName: PropTypes.string.isRequired,
 }
 
 

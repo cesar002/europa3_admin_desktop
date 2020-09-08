@@ -64,7 +64,10 @@ export default (state = initialState, action) => {
 		case SET_ACCESS_TOKEN:
 			return{
 				...state,
-				accessToken: action.payload.token,
+				accessToken:{
+					token: action.payload.token.access_token,
+					refresh: action.payload.token.refresh_token,
+				},
 			}
 		default:
 			return state;
