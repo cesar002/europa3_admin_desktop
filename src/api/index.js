@@ -1,4 +1,5 @@
 import axios from './customAxios'
+import LocalStorage from '../services/UserCredencialsStorageService'
 
 import {
 	LOGIN
@@ -21,7 +22,7 @@ class Europa3Api {
 				password
 			})
 
-			console.log(loginData.data);
+			LocalStorage.setCredentials(loginData.data.access_token)
 
 			return {
 				status: 'success',

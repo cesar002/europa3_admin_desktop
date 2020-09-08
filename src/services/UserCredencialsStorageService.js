@@ -3,7 +3,17 @@ import { LOCAL_STORAGE_KEY } from '../contants/globals'
 class UserCredencialsStorageService{
 
 	static setCredentials( userCredentials ){
-		localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userCredentials));
+
+		localStorage.clear();
+
+		const data = {
+			access_token: userCredentials.access_token,
+			refresh_token: userCredentials.refresh_token,
+			expire_token: (new Date()).setDate((new Date()).getDate()+7),
+			expire_refresh_token: (new Date()).setDate((new Date()).getDate()+7),
+		}
+
+		localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
 	}
 
 	static getCredentials(){

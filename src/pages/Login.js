@@ -7,6 +7,7 @@ import LoginForm from '../components/login/LoginForm'
 import LoginLoad from '../components/login/LoginLoading'
 
 import { startFetchLogin } from '../redux/actions/loginActions'
+// import DBService from '../services/StorageTokensService'
 
 class Login extends React.Component{
 
@@ -25,6 +26,8 @@ class Login extends React.Component{
 		this.setState({
 			...values
 		})
+
+		// DBService.saveTokens('wea', 'asdasdasd');
 
 		this.props.startLogin(values.username, values.password);
 	}

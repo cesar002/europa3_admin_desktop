@@ -75,7 +75,7 @@ export default class LoginForm extends React.PureComponent{
 							</button>
 							{this.props.errorLogin &&
 							<div className="text-center text-danger font-weight-bold">
-								{ this.props.errorLogin.error }
+								{ this.props.errorLogin }
 							</div>
 							}
 							<div className="text-center">
