@@ -7,6 +7,7 @@ import {
 	EDIFICIO,
 	EDIFICIOS,
 	REGISTER_EDIFICIO,
+	UPDATE_EDIFICIO,
 	MUNICIPIOS,
 	ESTADOS,
 } from './URLS'
@@ -163,15 +164,12 @@ class Europa3Api {
 		}
 	}
 
-	/*
-	   "nombre" : "europa 3 cede",
-		"direccion" : "bulevar esquina avenida moscu",
-		"municipio_id" : 2174,
-		"telefono" : 5873928394,
-		"telefono_recepcion"  : 8738729,
-		"hora_apertura" : "09:00",
-		"hora_cierre" : "22:00"
-	*/
+	/**
+	 *
+	 * Registra un edificio
+	 *
+	 * @param {object} data
+	 */
 	static async registerEdificio(data){
 		try {
 			const resp = await axios.post(REGISTER_EDIFICIO, {
@@ -181,6 +179,31 @@ class Europa3Api {
 			return {
 				status: 'success',
 				data: resp.data
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response.data,
+			}
+		}
+	}
+
+	/**
+	 *
+	 * Actualiza un edificio dado su ID
+	 *
+	 * @param {object} data
+	 * @param {number} id
+	 */
+	static async updateEdificio(data, id){
+		try {
+			const resp = await axios.put(`${UPDATE_EDIFICIO}/${id}`, {
+				...data,
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
 			}
 		} catch (error) {
 			return{

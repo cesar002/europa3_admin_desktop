@@ -9,6 +9,13 @@ export const FINISH_FETCH_REGISTER_EDIFICIO_SUCCESS = 'FINISH_FETCH_REGISTER_EDI
 export const FINISH_FETCH_REGISTER_EDIFICIO_FAIL = 'FINISH_FETCH_REGISTER_EDIFICIO_FAIL'
 export const SET_REGISTER_EDIFICIO_ERROR = 'SET_REGISTER_EDIFICIO_ERROR'
 
+export const FIND_EDIFICIO_BY_ID = 'FIND_EDIFICIO_BY_ID';
+
+
+export const findEdificioById = id => ({
+	type: FIND_EDIFICIO_BY_ID,
+	payload: { id }
+})
 
 export const setRegisterEdificioError = error => ({
 	type: SET_REGISTER_EDIFICIO_ERROR,

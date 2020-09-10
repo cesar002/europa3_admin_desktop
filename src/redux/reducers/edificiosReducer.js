@@ -4,7 +4,7 @@ import {
 	SET_EDIFICIOS,
 	SET_FETCH_EDIFICIOS_ERROR,
 	START_FETCH_EDIFICIOS,
-
+	FIND_EDIFICIO_BY_ID,
 	START_FETCH_REGISTER_EDIFICIO,
 	FINISH_FETCH_REGISTER_EDIFICIO_SUCCESS,
 	FINISH_FETCH_REGISTER_EDIFICIO_FAIL,
@@ -27,6 +27,7 @@ const initialState = {
 		},
 	},
 	edificios: [],
+	selectedEdificio: {},
 	errors: {
 		edificios: null,
 		edificioRegister: null,
@@ -35,6 +36,11 @@ const initialState = {
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case FIND_EDIFICIO_BY_ID:
+			return{
+				...state,
+				selectedEdificio: state.edificios.find(e => e.id === action.payload.id)
+			}
 		case SET_REGISTER_EDIFICIO_ERROR:
 			return{
 				...state,

@@ -21,7 +21,7 @@ class Edificio extends React.Component{
 		super(props);
 
 		this.renderEdificios = this.renderEdificios.bind(this);
-
+		this.selectEdificio = this.selectEdificio.bind(this);
 	}
 
 	componentDidMount(){
@@ -30,25 +30,43 @@ class Edificio extends React.Component{
 		}
 	}
 
+	selectEdificio(id){
+		this.props.selectEdificio(id)
+		this.props.history.push('/edificios/update');
+	}
+
 	renderEdificios(){
 		return this.props.edificios.map(edi => {
 			return(
 				<div key = {edi.id} className = 'col-10 col-md-4 col-lg-4'>
-					<div className="card bg-light mb-3" style = {{ maxWidth: '20rem' }}>
-						<div className="card-header">
-							<div className="btn-group" role="group" aria-label="Basic example">
-								<a className = 'btn btn-secondary btn-sm' href = '#'>
-									<FontAwesomeIcon icon = { faEye } />
-								</a>
-								<a className = 'btn btn-secondary btn-sm' href = '#'>
-									<FontAwesomeIcon icon = { faPencilAlt } />
-								</a>
-							</div>
-						</div>
+					<div className="card mb-3 shadow-sm p-3 mb-5 bg-white rounded" style = {{ maxWidth: '20rem' }}>
 						<div className="card-body">
+							<div className = 'card-title'>
+								<div className = 'btn btn-primary btn-sm float-right mb-3'
+									onClick = {() => this.selectEdificio(edi.id)}
+								>
+									<FontAwesomeIcon icon = { faEye } />
+								</div>
+							</div>
 							<h5 className="card-title">{ edi.nombre }</h5>
 							<p className="card-text">{ edi.direccion }</p>
 						</div>
+						<ul className = 'list-group list-group-flush'>
+							<li className = 'list-group-item' style = {{fontSize: '0.8rem'}}>
+								{edi.horas_servicio.apertura} - {edi.horas_servicio.cierre}
+							</li>
+							<li className = 'list-group-item' style = {{fontSize: '0.8rem'}}>
+								Teléfono: {edi.telefono_1}
+							</li>
+							{edi.telefono_2 &&
+							<li className = 'list-group-item' style = {{fontSize: '0.8rem'}}>
+								Teléfono 2: {edi.telefono_2}
+							</li>
+							}
+							<li className = 'list-group-item' style = {{fontSize: '0.8rem'}}>
+								Recepción: {edi.telefono_recepcion}
+							</li>
+						</ul>
 					</div>
 				</div>
 			)
@@ -58,7 +76,7 @@ class Edificio extends React.Component{
 	render(){
 		return(
 			<Container title = 'Edificios'>
-				<section className = 'px-3'>
+				<section className = 'px-5 mt-3'>
 					<div className = 'row'>
 						<Link className = 'btn btn-primary btn-sm' to = '/edificios/create'>
 							Registrar edificio
@@ -89,7 +107,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 	fetchEdificios(){
 		dispatch(edificiosActions.startFetchEdificios())
-	}
+	},
+	selectEdificio(id){
+		dispatch(edificiosActions.findEdificioById(id))
+	},
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Edificio));

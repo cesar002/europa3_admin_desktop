@@ -22,7 +22,7 @@ class EdificioCreate extends React.Component{
 		}
 
 		this.fetchMunicipios = this.fetchMunicipios.bind(this);
-		this.registerEficio = this.registerEficio.bind(this);
+		this.registerEdificio = this.registerEdificio.bind(this);
 	}
 
 	fetchMunicipios(id){
@@ -31,7 +31,7 @@ class EdificioCreate extends React.Component{
 		}, ()=> this.props.fetchMunicipios(id))
 	}
 
-	registerEficio(data, resetForm, setSubmit){
+	registerEdificio(data, resetForm, setSubmit){
 		Europa3Api.registerEdificio(data).then(res => {
 			this.setState({
 				currentEstadoId: 0
@@ -81,7 +81,7 @@ class EdificioCreate extends React.Component{
 								hora_cierre: Yup.string().required('Hora de cierre requerido').matches('^([01]?[0-9]|2[0-3]):[0-5][0-9]$', 'Formato de hora incorrecta'),
 							})}
 							onSubmit={(values, { setSubmitting, resetForm }) => {
-								this.registerEficio(values, resetForm, setSubmitting)
+								this.registerEdificio(values, resetForm, setSubmitting)
 						}}
 						>
 						{({
