@@ -25,13 +25,15 @@ class Edificio extends React.Component{
 	}
 
 	componentDidMount(){
-		this.props.fetchEdificios();
+		if(this.props.edificios.length == 0){
+			this.props.fetchEdificios();
+		}
 	}
 
 	renderEdificios(){
-		return [1, 2, 3, 4, 5, 6].map(i => {
+		return this.props.edificios.map(edi => {
 			return(
-				<div className = 'col-10 col-md-6 col-lg-3'>
+				<div key = {edi.id} className = 'col-10 col-md-4 col-lg-4'>
 					<div className="card bg-light mb-3" style = {{ maxWidth: '20rem' }}>
 						<div className="card-header">
 							<div className="btn-group" role="group" aria-label="Basic example">
@@ -44,8 +46,8 @@ class Edificio extends React.Component{
 							</div>
 						</div>
 						<div className="card-body">
-							<h5 className="card-title">Light card title</h5>
-							<p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+							<h5 className="card-title">{ edi.nombre }</h5>
+							<p className="card-text">{ edi.direccion }</p>
 						</div>
 					</div>
 				</div>
@@ -69,7 +71,7 @@ class Edificio extends React.Component{
 						{this.props.edificiosStatus.finish && this.props.edificios.length == 0 &&
 						<EmptyScreen text = 'No hay edificios registrados aun' mt = { 8 } />
 						}
-						{this.props.edificios.length < 0 &&
+						{this.props.edificios.length > 0 &&
 						this.renderEdificios()
 						}
 					</div>

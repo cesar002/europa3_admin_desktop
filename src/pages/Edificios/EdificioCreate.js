@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 import swal from 'sweetalert2';
 
 import { startFetchMunicipios } from '../../redux/actions/locationActions'
+import { startFetchRegisterEdificio, startFetchEdificios } from '../../redux/actions/edificioAction'
+
+import Europa3Api from '../../api';
 
 import Container from '../../components/pures/ContainerMaster'
 
@@ -14,14 +17,42 @@ class EdificioCreate extends React.Component{
 		super(props);
 
 		this.state = {
-			currentEstadoId: 0
+			currentEstadoId: 0,
+			showSwal: false,
 		}
+
+		this.fetchMunicipios = this.fetchMunicipios.bind(this);
+		this.registerEficio = this.registerEficio.bind(this);
 	}
 
 	fetchMunicipios(id){
 		this.setState({
 			currentEstadoId: id
 		}, ()=> this.props.fetchMunicipios(id))
+	}
+
+	registerEficio(data, resetForm, setSubmit){
+		Europa3Api.registerEdificio(data).then(res => {
+			this.setState({
+				currentEstadoId: 0
+			}, ()=>{
+				this.props.fetchEdificios();
+				swal.fire({
+					icon: 'success',
+					title: 'Correcto',
+					text: 'Edificio registrado con éxito',
+				})
+				resetForm();
+			})
+		})
+		.catch(err => {
+			swal.fire({
+				icon: 'error',
+				title: 'Ocurrió un error',
+				text: 'Hubo un problema al registrar el edificio, intentelo nuevamente',
+			})
+		})
+		.finally(() => setSubmit(false) )
 	}
 
 	render(){
@@ -31,7 +62,7 @@ class EdificioCreate extends React.Component{
 					<div className = 'row pt-3'>
 						<Formik
 							initialValues = {{
-								nombre: '',
+								nombre:  '',
 								direccion: '',
 								municipio_id: 0,
 								telefono: '',
@@ -49,16 +80,8 @@ class EdificioCreate extends React.Component{
 								hora_apertura: Yup.string().required('Hora de apertura requerido').matches('^([01]?[0-9]|2[0-3]):[0-5][0-9]$', 'Formato de hora incorrecta'),
 								hora_cierre: Yup.string().required('Hora de cierre requerido').matches('^([01]?[0-9]|2[0-3]):[0-5][0-9]$', 'Formato de hora incorrecta'),
 							})}
-							onSubmit={(values, { setSubmitting }) => {
-								setTimeout(() => {
-									swal.fire({
-										icon: 'error',
-										title: 'Oops...',
-										text: 'Something went wrong!',
-									})
-									setSubmitting(false);
-								}, 3000);
-								// setSubmitting(false);
+							onSubmit={(values, { setSubmitting, resetForm }) => {
+								this.registerEficio(values, resetForm, setSubmitting)
 						}}
 						>
 						{({
@@ -79,7 +102,7 @@ class EdificioCreate extends React.Component{
 										name = 'nombre'
 										onChange={ handleChange }
 										onBlur={ handleBlur }
-										value = {values.nombre}
+										value = { values.nombre }
 									/>
 									{errors.nombre &&
 									<div className="invalid-feedback">
@@ -105,7 +128,7 @@ class EdificioCreate extends React.Component{
 									<div className = 'form-group col-10 col-md-6'>
 										<label htmlFor='municipio'>Municipio*</label>
 										<select id = 'municipio' value = {values.municipio_id} name = 'municipio_id'
-											className = 'form-control' disabled = { this.props.municipios.length == 0 || !this.props.municipiosStatus.finish }
+											className = 'form-control' disabled = { this.state.currentEstadoId == 0 && (this.props.municipios.length == 0 || !this.props.municipiosStatus.finish) }
 											onChange={ handleChange }
 											onBlur={ handleBlur }
 										>
@@ -247,11 +270,18 @@ const mapStateToProps = state => ({
 	estados: state.locationsData.estados,
 	municipios: state.locationsData.municipios,
 	municipiosStatus: state.locationsData.status.statusMunicipios,
+	registerStatus: state.edificiosData.status.statusRegister,
 })
 
 const mapDispatchToProps = dispatch => ({
 	fetchMunicipios(estado_id){
-		dispatch(startFetchMunicipios(estado_id))
+		dispatch(startFetchMunicipios(estado_id));
+	},
+	fetchEdificios(){
+		dispatch(startFetchEdificios());
+	},
+	fetchRegisterEdificio(data){
+		dispatch(startFetchRegisterEdificio(data));
 	},
 })
 

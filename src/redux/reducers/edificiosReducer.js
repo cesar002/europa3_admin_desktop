@@ -63,6 +63,7 @@ export default (state = initialState, action) => {
 					...state.status,
 					statusRegister:{
 						...state.status.statusRegister,
+						start:false,
 						finish: true,
 						success: true,
 					}
@@ -75,6 +76,7 @@ export default (state = initialState, action) => {
 					...state.status,
 					statusRegister:{
 						...state.status.statusRegister,
+						start: false,
 						finish: true,
 						fail: true,
 					}
