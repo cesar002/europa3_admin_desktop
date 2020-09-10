@@ -30,7 +30,6 @@ export default class LoginForm extends React.PureComponent{
 						handleBlur,
 						handleSubmit,
 						isSubmitting,
-						/* and other goodies */
 						}) => (
 						<form onSubmit={handleSubmit}>
 							<div className="form-label-group">

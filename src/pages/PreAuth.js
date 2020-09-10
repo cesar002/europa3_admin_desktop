@@ -3,7 +3,9 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import LocalStorage from '../services/UserCredencialsStorageService'
+import * as locationsActions from '../redux/actions/locationActions';
 import { startAutoLogin } from '../redux/actions/loginActions'
+
 
 class PreAuth extends React.Component{
 
@@ -14,12 +16,13 @@ class PreAuth extends React.Component{
 	}
 
 	componentDidMount(){
+		this.props.fetchEstados();
 		this.autoLogin();
 	}
 
 	componentDidUpdate(prevProps){
 		if(this.props.userData.status.success){
-			this.props.history.push('/dashboard');
+			this.props.history.push('/inicio');
 		}
 
 		if(this.props.userData.status.fail){
@@ -56,6 +59,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 	autoLogin(){
 		dispatch(startAutoLogin())
+	},
+	fetchEstados(){
+		dispatch(locationsActions.startFetchEstados());
 	},
 })
 

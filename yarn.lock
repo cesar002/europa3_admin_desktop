@@ -450,6 +450,18 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-0.14.0.tgz#9fb3a3cf3132328151f353de4632e01e52102bea"
   integrity sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==
 
+"@sweetalert/transformer@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@sweetalert/transformer/-/transformer-0.1.1.tgz#638bdd20b862f03579fd906578dc9355db00887a"
+  integrity sha512-QdV8CrelIoK95kWOrZNMKXL9oEQFsvaForZcw2UijhmVJX/wzopPRLT/sAg51436TJ4q5angt8BvHQInehGFHA==
+
+"@sweetalert/with-react@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@sweetalert/with-react/-/with-react-0.1.1.tgz#5fe4ca967ae8fb34868ef0b9e52013b783e665d5"
+  integrity sha512-LC9eMYKsv8ydvhvKufdVPOIMDgbAFsxn7eeKWadwvXPsFcflosfm/cXZSO0Ras5TuaO3WxHEgvitKD6UfpeIwQ==
+  dependencies:
+    "@sweetalert/transformer" "^0.1.1"
+
 "@szmarczak/http-timer@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-1.1.2.tgz#b1665e2c461a2cd92f4c1bbf50d5454de0d4b421"
@@ -6769,6 +6781,16 @@ supports-color@^5.5.0:
   integrity sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==
   dependencies:
     has-flag "^3.0.0"
+
+sweetalert2-react-content@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/sweetalert2-react-content/-/sweetalert2-react-content-3.2.0.tgz#fbbd219177901ef639b8b685c467e35ff8f28770"
+  integrity sha512-Zd75ZZZh7byFHIppsBl04NrIpqQUyjIazBrCb6NwZIDi7Uv7gbvTGO5+yJqgAzjrY29lXOUOyLmY2riKoc69Pg==
+
+sweetalert2@^10.0.2:
+  version "10.0.2"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-10.0.2.tgz#dd2ae80102b992c7acd683a68c5b875209ee77d0"
+  integrity sha512-norIgpVW16EAD+wgAnw86PTQn4WgBTXwSJUOUrWP0cd+gVjQKxYXyMNJWAcb1bBAMr9dL2dyS4LztbyErRZ/BA==
 
 sweetalert@^2.1.2:
   version "2.1.2"

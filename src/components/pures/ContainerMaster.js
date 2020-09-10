@@ -8,7 +8,7 @@ import View from './ContainerView'
 const ContainerMaster = props => (
 	<Wrapper>
 		<Screen>
-			<View headerTitle = {props.title}>
+			<View headerTitle = {props.title} elementHeader = {props.elementHeader} toBack = {props.toBack} >
 				{ props.children }
 			</View>
 		</Screen>
@@ -17,6 +17,8 @@ const ContainerMaster = props => (
 
 ContainerMaster.propTypes = {
 	title: PropTypes.string,
+	elementHeader: PropTypes.element,
+	toBack: PropTypes.string,
 }
 
 ContainerMaster.defaultProps = {

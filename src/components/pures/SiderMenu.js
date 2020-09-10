@@ -1,10 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
 	faBuilding, faChair, faChevronRight, faBroom, faHome,
 	faUser, faPager, faCogs, faBell, faEnvelopeOpenText, faBriefcase,
-	faComment, faUserShield, faVial
+	faComment, faUserShield, faVial, faCouch
 } from '@fortawesome/free-solid-svg-icons'
 
 const Divider = () => (
@@ -19,12 +20,12 @@ const Heading = ({ title = '' }) => (
 
 const SimpleNavItem = ({ icon = null, title = '', active = false, to = '' }) => (
 	<li className = {`nav-item ${active? 'active' : '' }`}>
-		<a className = 'nav-link' href='#'>
+		<Link className = 'nav-link' to = {to}>
 			{ icon &&
-			<FontAwesomeIcon icon = { icon } className = 'mr-2'/>
+				<FontAwesomeIcon icon = { icon } className = 'mr-2'/>
 			}
 			<span>{ title }</span>
-		</a>
+		</Link>
 	</li>
 )
 
@@ -66,6 +67,10 @@ class SiderMenu extends React.PureComponent{
 		super(props);
 	}
 
+	componentDidMount(){
+		// console.log(this.props.currentPath);
+	}
+
 	render(){
 		return(
 			<ul id = 'accordionSidebar' className = 'navbar-nav bg-gradient-primary sidebar sidebar-dark accordion'>
@@ -74,7 +79,12 @@ class SiderMenu extends React.PureComponent{
 				</div>
 				<Divider />
 
-				<SimpleNavItem title = 'Inicio' icon = { faHome } />
+				<SimpleNavItem
+					to = '/inicio'
+					active = { this.props.currentPath == '/inicio' }
+					title = 'Inicio'
+					icon = { faHome }
+				/>
 				<Divider />
 
 				{(this.props.permisos.filter(p => (p.id == 1 || p.id == 2 || p.id ==3))).length > 0 &&
@@ -89,8 +99,14 @@ class SiderMenu extends React.PureComponent{
 				{(this.props.permisos.filter(p => (p.id == 1 || p.id == 4 || p.id == 5))).length > 0 &&
 				<React.Fragment>
 					<Heading title = 'Edificios y oficinas'  />
-					<SimpleNavItem title = 'Edificios' icon = { faBuilding } />
+					<SimpleNavItem
+						to = '/edificios'
+						active = { this.props.currentPath.includes('/edificios') }
+						title = 'Edificios'
+						icon = { faBuilding }
+					/>
 					<SimpleNavItem title = 'Oficinas' icon = { faBriefcase } />
+					<SimpleNavItem title = 'Sala de juntas' icon = { faCouch } />
 					<Divider />
 				</React.Fragment>
 				}
@@ -165,6 +181,7 @@ class SiderMenu extends React.PureComponent{
 
 SiderMenu.propTypes = {
 	permisos: PropTypes.array.isRequired,
+	currentPath: PropTypes.string.isRequired,
 }
 
 export default SiderMenu
