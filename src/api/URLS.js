@@ -13,4 +13,8 @@ export const REGISTER_EDIFICIO = '/edificio';
 export const UPDATE_EDIFICIO = '/edificio'
 export const ESTADOS = '/estados';
 export const MUNICIPIOS = '/municipios/estado';
+export const OFICINAS_ALL = '/oficinas';
+export const OFICINAS_EDIFICIO = '/oficinas/edificio';
+export const GET_OFICINAS_SIZE = '/oficina-size';
+export const REGISTER_OFICINA = '/oficina';
 

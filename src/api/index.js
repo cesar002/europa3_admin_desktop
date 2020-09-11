@@ -10,6 +10,10 @@ import {
 	UPDATE_EDIFICIO,
 	MUNICIPIOS,
 	ESTADOS,
+	OFICINAS_ALL,
+	OFICINAS_EDIFICIO,
+	GET_OFICINAS_SIZE,
+	REGISTER_OFICINA,
 } from './URLS'
 
 
@@ -132,7 +136,7 @@ class Europa3Api {
 			}
 		} catch (error) {
 
-			console.log(error.response.data)
+
 			return{
 				status: 'error',
 				data: error.response.data,
@@ -209,6 +213,92 @@ class Europa3Api {
 			return{
 				status: 'error',
 				data: error.response.data,
+			}
+		}
+	}
+
+	/**
+	 * Obtiene las oficinas según el id del edificio
+	 *
+	 * @param {number} idEdificio
+	 */
+	static async getOficinasByEdificioId(idEdificio){
+		try {
+			const resp = await axios.get(`${OFICINAS_EDIFICIO}/${idEdificio}`);
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return {
+				status: 'error',
+				data: error.response.data,
+			}
+		}
+	}
+
+	/**
+	 *Retorna todas las oficinas
+	 */
+	static async getOficinas(){
+		try {
+			const resp = await axios.get(OFICINAS_ALL);
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+
+			return{
+				status: 'error',
+				data: error.response.data,
+			}
+		}
+	}
+
+	/**
+	 * Obtiene los tamaños del catalogo de tamaños de oficinas
+	 */
+	static async getSizesOficinas(){
+		try {
+			const resp = await axios.get(GET_OFICINAS_SIZE);
+
+			return{
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return {
+				status: 'error',
+				data: error.response.data,
+			}
+		}
+	}
+
+
+	/**
+	 *
+	 * @param {object} data
+	 */
+	static async registerOficina(data){
+		try {
+			const resp = await axios.post(REGISTER_OFICINA, {
+				...data
+			})
+
+			console.log(resp.data)
+
+			return{
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			console.error(error)
+			return{
+				status: 'error',
+				data: error.response.data
 			}
 		}
 	}

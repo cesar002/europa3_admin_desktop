@@ -4,6 +4,8 @@ import loginSaga from './loginSaga';
 import userSaga from './userDataSaga';
 import edificioSaga from './edificioSaga';
 import locationsSaga from './locationSaga';
+import oficinaSaga from './oficinasSaga';
+import configSaga from './configSaga';
 
 export default function* mainSaga(){
 	yield all([
@@ -11,5 +13,7 @@ export default function* mainSaga(){
 		userSaga(),
 		edificioSaga(),
 		locationsSaga(),
+		oficinaSaga(),
+		configSaga(),
 	]);
 }

@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import LocalStorage from '../services/UserCredencialsStorageService'
 import * as locationsActions from '../redux/actions/locationActions';
+import * as configActions from '../redux/actions/configAction';
 import { startAutoLogin } from '../redux/actions/loginActions'
 
 
@@ -16,6 +17,7 @@ class PreAuth extends React.Component{
 	}
 
 	componentDidMount(){
+		this.props.fetchOficinasSizes();
 		this.props.fetchEstados();
 		this.autoLogin();
 	}
@@ -63,6 +65,9 @@ const mapDispatchToProps = dispatch => ({
 	fetchEstados(){
 		dispatch(locationsActions.startFetchEstados());
 	},
+	fetchOficinasSizes(){
+		dispatch(configActions.startFetchOficinasSizes())
+	}
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(PreAuth))

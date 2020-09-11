@@ -3,6 +3,7 @@ import { Formik } from 'formik';
 import * as Yup from "yup";
 import { connect } from 'react-redux';
 import swal from 'sweetalert2';
+import moment from 'moment'
 
 import { startFetchMunicipios } from '../../redux/actions/locationActions'
 import { startFetchRegisterEdificio, startFetchEdificios } from '../../redux/actions/edificioAction'
@@ -19,6 +20,7 @@ class EdificioCreate extends React.Component{
 		this.state = {
 			currentEstadoId: 0,
 			showSwal: false,
+			timeError: null,
 		}
 
 		this.fetchMunicipios = this.fetchMunicipios.bind(this);
@@ -32,6 +34,18 @@ class EdificioCreate extends React.Component{
 	}
 
 	registerEdificio(data, resetForm, setSubmit){
+		if(!moment(data.hora_cierre, 'HH:mm').isAfter(moment(data.hora_apertura, 'HH:mm'))){
+			this.setState({
+				timeError: 'La hora de cierre debe ser mayor a la hora de apertura',
+			})
+
+			setSubmit(false)
+			return;
+		}
+
+		this.setState({
+			timeError: null
+		});
 		Europa3Api.registerEdificio(data).then(res => {
 			this.setState({
 				currentEstadoId: 0
@@ -77,8 +91,8 @@ class EdificioCreate extends React.Component{
 								municipio_id: Yup.number().required('Municipio requerido').min(1, 'Seleccione un municipio'),
 								telefono: Yup.number().typeError('Formato incorrecto').required('Número de teléfono requerido').positive('Número de telefono incorrecto').integer('Número de telefono incorrecto'),
 								telefono_recepcion: Yup.number().typeError('Formato incorrecto').required('Número de teléfono requerido').positive('Número de telefono incorrecto').integer('Número de telefono incorrecto'),
-								hora_apertura: Yup.string().required('Hora de apertura requerido').matches('^([01]?[0-9]|2[0-3]):[0-5][0-9]$', 'Formato de hora incorrecta'),
-								hora_cierre: Yup.string().required('Hora de cierre requerido').matches('^([01]?[0-9]|2[0-3]):[0-5][0-9]$', 'Formato de hora incorrecta'),
+								hora_apertura: Yup.string().required('Hora de apertura requerido'),
+								hora_cierre: Yup.string().required('Hora de cierre requerido'),
 							})}
 							onSubmit={(values, { setSubmitting, resetForm }) => {
 								this.registerEdificio(values, resetForm, setSubmitting)
@@ -127,7 +141,9 @@ class EdificioCreate extends React.Component{
 									</div>
 									<div className = 'form-group col-10 col-md-6'>
 										<label htmlFor='municipio'>Municipio*</label>
-										<select id = 'municipio' value = {values.municipio_id} name = 'municipio_id'
+										<select id = 'municipio'
+											value = {values.municipio_id}
+											name = 'municipio_id'
 											className = 'form-control' disabled = { this.state.currentEstadoId == 0 && (this.props.municipios.length == 0 || !this.props.municipiosStatus.finish) }
 											onChange={ handleChange }
 											onBlur={ handleBlur }
@@ -214,7 +230,7 @@ class EdificioCreate extends React.Component{
 									<label htmlFor = 'hora_apertura'>Hora de apertura*</label>
 									<input id='hora_apertura'
 										className = {`form-control ${errors.hora_apertura && touched.hora_apertura ? 'is-invalid' : ''}`}
-										type = 'text'
+										type = 'time'
 										name = 'hora_apertura'
 										value = {values.hora_apertura}
 										onChange = { handleChange }
@@ -231,7 +247,7 @@ class EdificioCreate extends React.Component{
 									<label htmlFor = 'hora_cierre'>Hora de cierre*</label>
 									<input id = 'hora_cierre'
 										className = {`form-control ${errors.hora_cierre && touched.hora_cierre ? 'is-invalid' : ''}`}
-										type = 'text'
+										type = 'time'
 										name = 'hora_cierre'
 										value = {values.hora_cierre}
 										onChange = { handleChange }
@@ -241,6 +257,11 @@ class EdificioCreate extends React.Component{
 									{errors.hora_cierre &&
 									<div className="invalid-feedback">
 										{errors.hora_cierre}
+									</div>
+									}
+									{this.state.timeError  &&
+									<div className="invalid-feedback">
+										{this.state.timeError }
 									</div>
 									}
 								</div>

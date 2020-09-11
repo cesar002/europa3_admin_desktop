@@ -105,7 +105,11 @@ class SiderMenu extends React.PureComponent{
 						title = 'Edificios'
 						icon = { faBuilding }
 					/>
-					<SimpleNavItem title = 'Oficinas' icon = { faBriefcase } />
+					<SimpleNavItem to = '/oficinas'
+						title = 'Oficinas'
+						icon = { faBriefcase }
+						active = { this.props.currentPath.includes('/oficinas') }
+					/>
 					<SimpleNavItem title = 'Sala de juntas' icon = { faCouch } />
 					<Divider />
 				</React.Fragment>
