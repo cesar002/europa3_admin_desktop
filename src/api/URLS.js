@@ -17,4 +17,5 @@ export const OFICINAS_ALL = '/oficinas';
 export const OFICINAS_EDIFICIO = '/oficinas/edificio';
 export const GET_OFICINAS_SIZE = '/oficina-size';
 export const REGISTER_OFICINA = '/oficina';
+export const UPLOAD_IMAGES_OFICINA = '/oficina-images';
 

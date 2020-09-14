@@ -4,7 +4,7 @@ import { BASE_URL } from './URLS'
 
 const instance = axios.create({
 	baseURL: BASE_URL,
-	timeout: 10000,
+	timeout: 20000,
 	headers: {
 		'Accept' : 'application/json'
 	},

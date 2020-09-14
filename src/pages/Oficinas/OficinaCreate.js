@@ -2,10 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux'
 import swal from 'sweetalert2';
 import { Formik } from 'formik';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
 import { startFetchOficinas } from '../../redux/actions/oficinasActions'
 
 import Container from '../../components/pures/ContainerMaster'
+import ThumbnailPreview from '../../components/pures/ThumbnailImagePreview'
+
 import Europa3Api from '../../api';
 
 class OficinaCreate extends React.Component{
@@ -16,10 +20,36 @@ class OficinaCreate extends React.Component{
 		this.renderOficinaFisica = this.renderOficinaFisica.bind(this);
 		this.renderOficinaVirtual = this.renderOficinaVirtual.bind(this);
 		this.registerOficina = this.registerOficina.bind(this);
+		this.setFiles = this.setFiles.bind(this);
+		this.renderImageThumbnails = this.renderImageThumbnails.bind(this);
+		this.removeImage = this.removeImage.bind(this);
 
 		this.state = {
 			tabIndex: 0,
+			files: null
 		}
+	}
+
+	componentDidUpdate(prevProps, prevState){
+		if(prevState.files && this.state.files){
+			if(prevState.files.length !== this.state.files.length){
+				if(this.state.files.length == 0){
+					this.setState({
+						files: null,
+					}, ()=>{
+						this.inputFiles.value = ''
+					})
+				}
+			}
+		}
+	}
+
+	removeImage(index){
+		const newImages = this.state.files.filter((f, i) => i !== index);
+
+		this.setState({
+			files: newImages
+		})
 	}
 
 	goToTab(index){
@@ -28,15 +58,65 @@ class OficinaCreate extends React.Component{
 		})
 	}
 
+	setFiles(e){
+		const files = Array.from(e.target.files)
+
+		this.setState({
+			files: files,
+		})
+	}
+
+	renderImageThumbnails(){
+		if(this.state.files){
+			if(this.state.files.length > 0){
+				return (
+					<div className = 'form-row py-4'>
+						{ this.state.files.map((file, i) =>(
+							<div className = {`col-6 col-sm-3 ${ this.state.files.length >= 3? 'mx-3' : 'mx-5' }`}
+								key = {file.name}
+							>
+								<React.Fragment>
+									<div className = 'btn btn-danger btn-sm float-right' style = {{ position: 'absolute' }}
+										onClick = { () => this.removeImage(i) }
+									>
+										<FontAwesomeIcon icon = { faTrashAlt } />
+									</div>
+									<ThumbnailPreview file = { file } />
+								</React.Fragment>
+							</div>
+						)) }
+					</div>
+				)
+			}
+		}
+	}
+
 	registerOficina(values, setSubmit, resetForm){
-		Europa3Api.registerOficina(values).then(resp => {
+		const { files } = this.state
+		const data = new FormData();
+		data.append('edificio_id', values.edificio_id);
+		data.append('tipo_oficina_id', values.tipo_oficina_id);
+		data.append('size_id', values.size_id);
+		data.append('nombre', values.nombre);
+		data.append('descripcion', values.descripcion);
+		data.append('capacidad_recomendada', values.capacidad_recomendada);
+		data.append('capacidad_maxima', values.capacidad_maxima);
+		data.append('dimension', values.dimension);
+		data.append('precio', values.precio);
+		if(files){
+			files.forEach(file => {
+				data.append('images[]', file)
+			})
+		}
+
+		Europa3Api.registerOficina(data).then(resp => {
 				this.props.fetchOficinas();
 				swal.fire({
 					icon: 'success',
 					title: 'Correcto',
 					text: resp.data.message,
 				})
-				resetForm()
+				this.setState({ files: null }, () => resetForm())
 			})
 			.catch(err => {
 				swal.fire({
@@ -57,9 +137,9 @@ class OficinaCreate extends React.Component{
 					nombre: '',
 					descripcion: '',
 					dimension: '',
-					capacidad_recomendada: 0,
-					capacidad_maxima: 0,
-					precio: 0,
+					capacidad_recomendada: '',
+					capacidad_maxima: '',
+					precio: '',
 					tipo_oficina_id: 1,
 				}}
 				validate = {values => {
@@ -204,6 +284,18 @@ class OficinaCreate extends React.Component{
 							}
 						</div>
 						<div className = 'form-group'>
+							<label htmlFor = 'images-input'>Imagenes de la oficina</label>
+							<input id = 'images-input' className = 'form-control-file'
+								type = 'file'
+								name = 'images[]'
+								onChange = { this.setFiles }
+								multiple
+								accept='image/x-png,image/gif,image/jpeg'
+								ref = {el => this.inputFiles = el}
+							/>
+						</div>
+						{ this.renderImageThumbnails() }
+						<div className = 'form-group'>
 							<label htmlFor = 'dimensiones'>Dimensiones de la oficina</label>
 							<input id = 'dimensiones'
 								name = 'dimension'
@@ -265,6 +357,7 @@ class OficinaCreate extends React.Component{
 									onChange = { handleChange }
 									onBlur = { handleBlur }
 									className = {`form-control ${errors.precio && touched.precio ? 'is-invalid' : ''}`}
+									style = {{ maxWidth: '10rem' }}
 								/>
 								{errors.precio &&
 								<div className = 'invalid-feedback'>

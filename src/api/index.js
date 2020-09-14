@@ -284,8 +284,11 @@ class Europa3Api {
 	 */
 	static async registerOficina(data){
 		try {
-			const resp = await axios.post(REGISTER_OFICINA, {
-				...data
+			const resp = await axios.post(REGISTER_OFICINA, data,{
+				headers:{
+					'Content-type' : 'multipart/form-data',
+					'Accept' : 'application/json',
+				}
 			})
 
 			console.log(resp.data)
