@@ -7,6 +7,7 @@ export const FIND_OFICINA_BY_ID = 'FIND_OFICINA_BY_ID';
 export const FILTER_OFICINA_BY_EDIFICIO_ID = 'FILTER_OFICINA_BY_EDIFICIO_ID';
 
 
+
 export const startFetchOficinas = () => ({
 	type: START_FETCH_OFICINAS,
 })

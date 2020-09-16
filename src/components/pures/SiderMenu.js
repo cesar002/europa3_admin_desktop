@@ -117,14 +117,11 @@ class SiderMenu extends React.PureComponent{
 
 				{(this.props.permisos.filter(p => (p.id == 1 || p.id == 6))).length > 0 &&
 				<React.Fragment>
-					<Heading title = 'Gestión de mobiliario' />
-					<DropdownNavItem  id = 'mobiliario' icon = { faChair } title = 'Mobiliario'
-						items = {[
-							{ items: [
-								{ title: 'Registro de mobiliario', to: '' },
-								{ title: 'Gestión de mobiliario', to: '' },
-							] },
-						]}
+					<SimpleNavItem
+						active = { this.props.currentPath.includes('/mobiliario') }
+						title = 'Mobiliario'
+						icon = { faChair }
+						to = '/mobiliario'
 					/>
 					<Divider />
 				</React.Fragment>

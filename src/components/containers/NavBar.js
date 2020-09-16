@@ -10,7 +10,7 @@ class NavBar extends React.Component{
 
 	render(){
 		return (
-			<Nav userName = { this.props.userData.username }  />
+			<Nav userName = { this.props.userData.username }  urlAvatar = { this.props.userData.infoPersonal.avatar } />
 		)
 	}
 }

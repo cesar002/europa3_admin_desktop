@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
-import { startFetchEstados } from '../redux/actions/locationActions'
+import * as initLoadActions from '../redux/actions/initLoadActions'
 
 import LoginContainer from '../components/login/LoginContainer'
 import LoginForm from '../components/login/LoginForm'
@@ -26,26 +26,19 @@ class Login extends React.Component{
 	}
 
 	componentDidMount(){
-		this.props.fetchEstados();
+		this.props.fetchSystemData();
 	}
 
 	componentDidUpdate(prevProps){
 		if(this.props.loginData.status.success && this.props.userStatus.success){
 				this.props.history.push('/inicio');
 		}
-		// if(prevProps.loginData.status.finish !== this.props.loginData.status.finish){
-		// 	if(this.props.loginData.status.success && this.state.pass){
-		// 		this.props.history.push('/dashboard');
-		// 	}
-		// }
 	}
 
 	login(values){
 		this.setState({
 			...values
-		})
-
-		this.props.startLogin(values.username, values.password);
+		}, () => this.props.startLogin(values.username, values.password));
 	}
 
 
@@ -79,8 +72,8 @@ const mapDispatchToProps = dispatch => ({
 	startLogin(username, password){
 		dispatch(startFetchLogin(username, password))
 	},
-	fetchEstados(){
-		dispatch(startFetchEstados())
+	fetchSystemData(){
+		dispatch(initLoadActions.startFetchSystemData())
 	},
 })
 

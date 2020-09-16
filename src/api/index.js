@@ -14,6 +14,8 @@ import {
 	OFICINAS_EDIFICIO,
 	GET_OFICINAS_SIZE,
 	REGISTER_OFICINA,
+	REGISTER_MOBILIARIO,
+	MOBILIARIO_ALL,
 } from './URLS'
 
 
@@ -291,8 +293,6 @@ class Europa3Api {
 				}
 			})
 
-			console.log(resp.data)
-
 			return{
 				status: 'success',
 				data: resp.data,
@@ -302,6 +302,38 @@ class Europa3Api {
 			return{
 				status: 'error',
 				data: error.response.data
+			}
+		}
+	}
+
+	static async registerMobiliario(data){
+		try {
+			const resp = await axios.post(REGISTER_MOBILIARIO, data);
+
+			return {
+				status: 'success',
+				data: resp.data
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response.data,
+			}
+		}
+	}
+
+	static async getMobiliario(){
+		try {
+			const resp = await axios.get(MOBILIARIO_ALL);
+
+			return{
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response.data,
 			}
 		}
 	}

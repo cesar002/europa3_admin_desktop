@@ -6,6 +6,8 @@ import edificioSaga from './edificioSaga';
 import locationsSaga from './locationSaga';
 import oficinaSaga from './oficinasSaga';
 import configSaga from './configSaga';
+import mobiliarioSaga from './mobiliarioSaga';
+import initLoadSaga from './initLoadSaga';
 
 export default function* mainSaga(){
 	yield all([
@@ -15,5 +17,7 @@ export default function* mainSaga(){
 		locationsSaga(),
 		oficinaSaga(),
 		configSaga(),
+		mobiliarioSaga(),
+		initLoadSaga(),
 	]);
 }

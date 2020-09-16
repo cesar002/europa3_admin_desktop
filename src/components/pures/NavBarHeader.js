@@ -83,7 +83,7 @@ class NavBarHeader extends React.PureComponent{
 							<span className="mr-2 d-none d-lg-inline text-gray-600 small mr-3">
 								{ this.props.userName }
 							</span>
-							<img className="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60" />
+							<img className="img-profile rounded-circle" src={this.props.urlAvatar? this.props.urlAvatar : 'https://source.unsplash.com/QAB-WJcbgJk/60x60'} />
 						</a>
 						<div className = 'dropdown-menu dropdown-menu-right shadow animated--grow-in' aria-labelledby = 'userDropdown'>
 							<a className ='dropdown-item' href = '#'>
@@ -105,6 +105,7 @@ class NavBarHeader extends React.PureComponent{
 
 NavBarHeader.propTypes = {
 	userName: PropTypes.string.isRequired,
+	urlAvatar: PropTypes.string,
 }
 
 

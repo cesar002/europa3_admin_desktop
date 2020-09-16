@@ -1,8 +1,9 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 import * as edificosActions from '../../redux/actions/edificioAction'
 import * as oficinaActions from '../../redux/actions/oficinasActions'
@@ -19,6 +20,7 @@ class Oficinas extends React.Component{
 		this.renderOficinas = this.renderOficinas.bind(this);
 		this.renderLoadinfgScreen = this.renderLoadinfgScreen.bind(this);
 		this.renderEmptyScreen = this.renderEmptyScreen.bind(this);
+		this.showOficina = this.showOficina.bind(this);
 
 		this.state = {
 			currentEdificioId: 0
@@ -34,8 +36,9 @@ class Oficinas extends React.Component{
 		}
 	}
 
-	renderOficinas(){
-
+	showOficina(idOficina){
+		this.props.selectOficina(idOficina)
+		this.props.history.push('/oficinas/update');
 	}
 
 	renderEmptyScreen(){
@@ -64,6 +67,14 @@ class Oficinas extends React.Component{
 							<h5 className = 'card-title'>{oficina.nombre}</h5>
 							<h6 className = 'card-subtitle mb-2 text-muted'>Tamaño: {oficina.size_tipo.tipo} - {oficina.size}</h6>
 						</div>
+						<div className = 'card-footer'>
+							<div className = 'btn btn-primary btn-sm mx-1' onClick = { () => this.showOficina(oficina.id) }>
+								<FontAwesomeIcon icon = { faEye } />
+							</div>
+							<div className = 'btn btn-danger btn-sm mx-1'>
+								<FontAwesomeIcon icon = { faTrashAlt } />
+							</div>
+						</div>
 					</div>
 				</div>
 			))
@@ -88,6 +99,7 @@ class Oficinas extends React.Component{
 									className = 'form-control ml-2 form-control-sm'
 									value = {this.state.currentEdificioId}
 									disabled = { !this.props.edificiosStatus.success || !this.props.oficinasStatus.finish }
+									style = {{ minWidth: '9rem' }}
 								>
 									<option value = {0}>Todos</option>
 									{this.props.edificios.map(ed =>
@@ -121,7 +133,10 @@ const mapDispatchToProps = dispatch => ({
 	},
 	fetchOficinas(){
 		dispatch(oficinaActions.startFetchOficinas())
+	},
+	selectOficina(idOficina){
+		dispatch(oficinaActions.findOficinaById(idOficina))
 	}
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Oficinas)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Oficinas))

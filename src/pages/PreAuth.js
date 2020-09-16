@@ -3,9 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import LocalStorage from '../services/UserCredencialsStorageService'
-import * as locationsActions from '../redux/actions/locationActions';
-import * as configActions from '../redux/actions/configAction';
-import { startAutoLogin } from '../redux/actions/loginActions'
+import * as initLoadAction from '../redux/actions/initLoadActions'
 
 
 class PreAuth extends React.Component{
@@ -17,8 +15,6 @@ class PreAuth extends React.Component{
 	}
 
 	componentDidMount(){
-		this.props.fetchOficinasSizes();
-		this.props.fetchEstados();
 		this.autoLogin();
 	}
 
@@ -36,7 +32,7 @@ class PreAuth extends React.Component{
 		if(!LocalStorage.existCredentials()){
 			this.props.history.push('/login');
 		}else{
-			this.props.autoLogin();
+			this.props.startInitLoad();
 		}
 	}
 
@@ -59,14 +55,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-	autoLogin(){
-		dispatch(startAutoLogin())
-	},
-	fetchEstados(){
-		dispatch(locationsActions.startFetchEstados());
-	},
-	fetchOficinasSizes(){
-		dispatch(configActions.startFetchOficinasSizes())
+	startInitLoad(){
+		dispatch(initLoadAction.startInitAll());
 	}
 })
 

@@ -6,6 +6,7 @@ import edificiosReducer from './reducers/edificiosReducer';
 import locationReducer from './reducers/locationReducer';
 import oficinasReducer from './reducers/oficinasReducer';
 import configReducer from './reducers/configReducer';
+import mobiliarioReducer from './reducers/mobiliarioReducer';
 
 const state = combineReducers({
 	userData: userReducer,
@@ -14,6 +15,7 @@ const state = combineReducers({
 	locationsData: locationReducer,
 	oficinasData: oficinasReducer,
 	configData: configReducer,
+	mobiliarioData: mobiliarioReducer,
 })
 
 export default state;
