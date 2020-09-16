@@ -14,6 +14,7 @@ import Oficinas from '../pages/Oficinas';
 import OficinasCreate from '../pages/Oficinas/OficinaCreate';
 import OficinasUpdate from '../pages/Oficinas/OficinaUpdate';
 import Mobiliario from '../pages/Mobiliario';
+import MobiliarioCreate from '../pages/Mobiliario/MobiliarioCreate';
 
 const MainRoute = () => (
 	<HashRouter>
@@ -28,6 +29,7 @@ const MainRoute = () => (
 			<Route path = '/oficinas/create' exact component = { OficinasCreate } />
 			<Route path = '/oficinas/update' exact component = { OficinasUpdate } />
 			<Route path = '/mobiliario' exact component = { Mobiliario } />
+			<Route path = '/mobiliario/create' exact component = { MobiliarioCreate } />
 		</div>
 	</HashRouter>
 )

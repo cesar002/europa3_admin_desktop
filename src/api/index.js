@@ -16,6 +16,7 @@ import {
 	REGISTER_OFICINA,
 	REGISTER_MOBILIARIO,
 	MOBILIARIO_ALL,
+	GET_TIPO_MOBILIARIO,
 } from './URLS'
 
 
@@ -334,6 +335,22 @@ class Europa3Api {
 			return{
 				status: 'error',
 				data: error.response.data,
+			}
+		}
+	}
+
+	static async getTipoMobiliario(){
+		try {
+			const resp = await axios.get(GET_TIPO_MOBILIARIO);
+
+			return{
+				status: 'success',
+				data: resp.data
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response.data
 			}
 		}
 	}

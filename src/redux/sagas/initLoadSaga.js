@@ -16,8 +16,9 @@ function* initAll(){
 function* fetchSystemData(){
 	yield put(configActions.startFetchOficinasSizes());
 	yield	put(locationsActions.startFetchEstados());
-	yield put(mobiliarioActions.startFetchMobiliario())
-	yield put(edificiosActions.startFetchEdificios())
+	yield put(mobiliarioActions.startFetchTipoMobiliario());
+	yield put(mobiliarioActions.startFetchMobiliario());
+	yield put(edificiosActions.startFetchEdificios());
 }
 
 function* autoLogin(){
