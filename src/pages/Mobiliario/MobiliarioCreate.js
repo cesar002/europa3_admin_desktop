@@ -2,14 +2,67 @@ import React from 'react';
 import { connect } from 'react-redux'
 import { Formik } from 'formik';
 import * as Yup from "yup";
+import swal from 'sweetalert2';
 
 import Container from '../../components/pures/ContainerMaster'
 
+import Europa3Api from '../../api';
+
+import { startFetchMobiliario } from '../../redux/actions/mobiliarioActions'
+
 class MobiliarioCreate extends React.Component{
+
+	constructor(props){
+		super(props)
+
+		this.registerMobiliario = this.registerMobiliario.bind(this);
+		this.selectImage = this.selectImage.bind(this);
+
+		this.state = {
+			image: null,
+			errorImage: null
+		}
+	}
+
+	selectImage(e){
+		this.setState({
+			image: e.target.files[0],
+			errorImage: null,
+		})
+	}
+
+	registerMobiliario(values, isSubmitting, resetForm){
+
+		const data = new FormData();
+		Object.keys(values).map(key => {
+			data.append(key, values[key]);
+		})
+		data.append('image', this.state.image)
+
+		Europa3Api.registerMobiliario(data)
+		.then(resp => {
+			this.setState({errorImage: null, image: null})
+			swal.fire({
+				icon: 'success',
+				title: 'Correcto',
+				text: 'Mobiliario registrado con éxito',
+			})
+			this.props.fetchMobiliario()
+			resetForm()
+		})
+		.catch(err => {
+			swal.fire({
+				icon: 'error',
+				title: 'Ocurrió un error',
+				text: 'Hubo un error al registrar el mobiliario, intente nuevamente'
+			})
+		})
+		.finally(() => isSubmitting(false))
+	}
 
 	render(){
 		return(
-			<Container title = 'Registrar mobiliario' toBack = '/mobiliario'>
+			<Container title = 'Registro de mobiliario' toBack = '/mobiliario'>
 				<section className = 'mt-4 px-4 d-flex justify-content-center'>
 					<div className = 'row mt-3'>
 						<Formik
@@ -28,10 +81,19 @@ class MobiliarioCreate extends React.Component{
 								tipo_id: Yup.number().required('Campo requerido').min(1, 'Seleccione un tipo de mobiliario'),
 								edificio_id: Yup.number().required('Campo requerido').min(1, 'Seleccione un edificio'),
 								cantidad: Yup.number().required('Campo requerido').min(1, 'La cantidad minima debe ser 1').integer('Formato incorrecto'),
-								image: Yup.mixed().test('image', 'Campo requerido', value => {
-									return value ? true : false
-								})
 							})}
+							onSubmit = {(values, { setSubmitting, resetForm }) => {
+								if(!this.state.image){
+									this.setState({
+										errorImage: 'La imagen es requerida'
+									}, ()=>{
+										setSubmitting(false)
+									})
+									return
+								}
+
+								this.registerMobiliario(values, setSubmitting, resetForm)
+							}}
 						>
 							{({
 								values,
@@ -149,22 +211,21 @@ class MobiliarioCreate extends React.Component{
 								</div>
 								<div className = 'form-group'>
 									<label htmlFor = 'image'>Imagen</label>
-									<input className = {`form-control-file ${errors.image && touched.image ? 'is-invalid' : ''}`}
+									<input className = {`form-control-file ${this.state.errorImage ? 'is-invalid' : ''}`}
 										id = 'image'
 										name = 'image'
 										accept='image/x-png,image/gif,image/jpeg'
 										type = 'file'
-										value = { values.image }
-										onChange = { handleChange }
-										onBlur = { handleBlur }
+										onChange = { this.selectImage }
 									/>
-									{errors.image && <div className = 'invalid-feedback'>{errors.image}</div>}
+									{this.state.errorImage && <div className = 'invalid-feedback'>{this.state.errorImage}</div>}
 								</div>
 								<div className = 'form-group'>
 									<button className = 'btn btn-primary btn-lg btn-block'
 										type = 'submit' disabled = { isSubmitting }
 									>
-										Registrar mobiliario
+										{ !isSubmitting && 'Registrar mobiliario' }
+										{ isSubmitting && <span className="spinner-border text-light" role="status" /> }
 									</button>
 								</div>
 							</form>
@@ -183,7 +244,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-
+	fetchMobiliario(){
+		dispatch(startFetchMobiliario())
+	}
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MobiliarioCreate)

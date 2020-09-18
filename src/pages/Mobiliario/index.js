@@ -60,7 +60,7 @@ class Mobiliario extends React.Component{
 									<img alt = {mob.modelo} src = {mob.images} style = {{ maxHeight: '100px', maxWidth: '100px' }} />
 								</td>
 								<td>{mob.observaciones}</td>
-								<td>{mob.cantidad}</td>
+								<td className = 'text-center'>{mob.cantidad}</td>
 								<td className = 'd-flex justify-content-between'>
 									<div className = 'btn btn-primary btn-sm'>
 										<FontAwesomeIcon icon = { faPenAlt } />
