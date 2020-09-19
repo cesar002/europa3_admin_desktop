@@ -17,6 +17,7 @@ import {
 	REGISTER_MOBILIARIO,
 	MOBILIARIO_ALL,
 	GET_TIPO_MOBILIARIO,
+	GET_MOBILIARIO_BY_EDIFICIO,
 } from './URLS'
 
 
@@ -286,25 +287,27 @@ class Europa3Api {
 	 * @param {object} data
 	 */
 	static async registerOficina(data){
-		try {
-			const resp = await axios.post(REGISTER_OFICINA, data,{
-				headers:{
-					'Content-type' : 'multipart/form-data',
-					'Accept' : 'application/json',
-				}
-			})
+		return new Promise(async (resolve, reject)=>{
+			try {
+				const resp = await axios.post(REGISTER_OFICINA, data,{
+					headers:{
+						'Content-type' : 'multipart/form-data',
+						'Accept' : 'application/json',
+					}
+				})
 
-			return{
-				status: 'success',
-				data: resp.data,
+
+				return resolve({
+					status: 'success',
+					data: resp.data,
+				})
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data
+				})
 			}
-		} catch (error) {
-			console.error(error)
-			return{
-				status: 'error',
-				data: error.response.data
-			}
-		}
+		})
 	}
 
 	static async registerMobiliario(data){
@@ -351,6 +354,22 @@ class Europa3Api {
 			return{
 				status: 'error',
 				data: error.response.data
+			}
+		}
+	}
+
+	static async getMobiliarioByEdificio(edificioId){
+		try {
+			const resp = await axios.get(`${GET_MOBILIARIO_BY_EDIFICIO}/${edificioId}`);
+
+			return{
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response.data,
 			}
 		}
 	}

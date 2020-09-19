@@ -21,3 +21,4 @@ export const UPLOAD_IMAGES_OFICINA = '/oficina-images';
 export const REGISTER_MOBILIARIO = '/mobiliario';
 export const MOBILIARIO_ALL = '/mobiliario';
 export const GET_TIPO_MOBILIARIO = '/tipo-mobiliario';
+export const GET_MOBILIARIO_BY_EDIFICIO = '/mobiliario/edificio';

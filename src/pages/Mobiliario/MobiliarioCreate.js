@@ -69,6 +69,7 @@ class MobiliarioCreate extends React.Component{
 							initialValues = {{
 								tipo_id: 0,
 								edificio_id: 0,
+								nombre: '',
 								marca: '',
 								modelo: '',
 								color: '',
@@ -80,6 +81,7 @@ class MobiliarioCreate extends React.Component{
 							validationSchema = {Yup.object().shape({
 								tipo_id: Yup.number().required('Campo requerido').min(1, 'Seleccione un tipo de mobiliario'),
 								edificio_id: Yup.number().required('Campo requerido').min(1, 'Seleccione un edificio'),
+								nombre: Yup.string().required('Campo requerido'),
 								cantidad: Yup.number().required('Campo requerido').min(1, 'La cantidad minima debe ser 1').integer('Formato incorrecto'),
 							})}
 							onSubmit = {(values, { setSubmitting, resetForm }) => {
@@ -142,6 +144,16 @@ class MobiliarioCreate extends React.Component{
 										<div className = 'invalid-feedback'>{errors.tipo_id}</div>
 										}
 									</div>
+								</div>
+								<div className = 'form-group'>
+									<label htmlFor = 'nombre'>Nombre del mueble</label>
+									<input id = 'nombre' className = {`form-control ${errors.nombre && touched.nombre ? 'is-invalid' : ''}`}
+										value = { values.nombre }
+										name = 'nombre'
+										onChange = { handleChange }
+										onBlur = { handleBlur }
+									/>
+									{ errors.nombre && <div className = 'invalid-feedback'>{errors.nombre}</div> }
 								</div>
 								<div className = 'form-row'>
 									<div className = 'form-group col-12 col-sm-4'>

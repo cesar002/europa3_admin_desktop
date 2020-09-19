@@ -36,7 +36,7 @@ class Mobiliario extends React.Component{
 					<thead className = 'thead-dark'>
 						<tr>
 							<th scope = 'col'>#</th>
-							<th scope = 'col'>Tipo</th>
+							<th scope = 'col'>Nombre</th>
 							<th scope = 'col'>Marca</th>
 							<th scope = 'col'>Modelo</th>
 							<th scope = 'col'>Color</th>
@@ -51,13 +51,13 @@ class Mobiliario extends React.Component{
 						{ this.props.mobiliario.map((mob, i)=>(
 							<tr key = {mob.id}>
 								<th scope = 'row'>{i+1}</th>
-								<td>{mob.tipo.nombre}</td>
+								<td>{mob.nombre}</td>
 								<td>{mob.marca}</td>
 								<td>{mob.modelo}</td>
 								<td>{mob.color}</td>
 								<td>{mob.descripcion}</td>
 								<td>
-									<img alt = {mob.modelo} src = {mob.images} style = {{ maxHeight: '100px', maxWidth: '100px' }} />
+									<img alt = {mob.modelo} src = {mob.image} style = {{ maxHeight: '100px', maxWidth: '100px' }} />
 								</td>
 								<td>{mob.observaciones}</td>
 								<td className = 'text-center'>{mob.cantidad}</td>
@@ -104,8 +104,8 @@ class Mobiliario extends React.Component{
 					</div>
 					<div className = 'row mt-4'>
 						{this.props.mobiliarioStatus.start && <LoadingScreen text = 'Cargando mobiliario...' />}
-						{this.props.mobiliario.length == 0 && <EmptyScreen text = 'No hay mobiliario registrado' />}
-						{ this.renderMobiliarioTable() }
+						{this.props.mobiliario.length == 0 && <EmptyScreen text = 'No hay mobiliario registrado' mt = {10} />}
+						{this.props.mobiliario.length !== 0 && this.renderMobiliarioTable() }
 					</div>
 				</section>
 			</Container>
