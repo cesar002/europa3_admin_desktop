@@ -6,6 +6,9 @@ import {
 	FINISH_FETCH_OFICINAS_FAIL,
 	FIND_OFICINA_BY_ID,
 	FILTER_OFICINA_BY_EDIFICIO_ID,
+	UPDATE_CANTIDAD_MOBILIARIO_TO_OFICINA_UPDATE,
+	DELETE_MOBILIARIO_TO_OFICINA_UPDATE,
+	ADD_MOBILIARIO_TO_OFICINA_UPDATE,
 } from '../actions/oficinasActions'
 
 const initialState = {
@@ -24,6 +27,31 @@ const initialState = {
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case ADD_MOBILIARIO_TO_OFICINA_UPDATE:
+			return {
+				...state,
+				selectedOficina:{
+					...state.selectedOficina,
+					mobiliario: [ ...state.selectedOficina.mobiliario, {...action.payload.mobiliario, cantidad: 1} ],
+				}
+			}
+		case DELETE_MOBILIARIO_TO_OFICINA_UPDATE:
+			return{
+				...state,
+				selectedOficina:{
+					...state.selectedOficina,
+					mobiliario: state.selectedOficina.mobiliario.filter(m => m.id != action.payload.id),
+				}
+			}
+		case UPDATE_CANTIDAD_MOBILIARIO_TO_OFICINA_UPDATE:
+			return {
+				...state,
+				selectedOficina:{
+					...state.selectedOficina,
+					mobiliario: state.selectedOficina.mobiliario.map(m => m.id == action.payload.mobiliarioId ?
+									{...m, cantidad: action.payload.cantidad} : m),
+				}
+			}
 		case START_FETCH_OFICINAS:
 			return {
 				...state,

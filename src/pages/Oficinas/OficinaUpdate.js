@@ -1,12 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenAlt } from '@fortawesome/free-solid-svg-icons'
+import { faPenAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import swal from 'sweetalert2';
 import { Formik } from 'formik';
 
 
-import Container from '../../components/pures/ContainerMaster'
+import Container from '../../components/pures/ContainerMaster';
+
+import * as oficinaActions from '../../redux/actions/oficinasActions';
 
 class OficinaUpdate extends React.Component{
 	constructor(props){
@@ -16,11 +18,45 @@ class OficinaUpdate extends React.Component{
 		this.updateImages = this.updateImages.bind(this)
 		this.updateInfo = this.updateInfo.bind(this)
 		this.renderUpdateImages = this.renderUpdateImages.bind(this)
+		this.renderMobiliario = this.renderMobiliario.bind(this);
+		this.updateCantidadMobiliario = this.updateCantidadMobiliario.bind(this);
+		this.edificioChange = this.edificioChange.bind(this);
+		this.addMobiliario = this.addMobiliario.bind(this);
 
 		this.state  = {
 			isEdit: false,
 			currentTabIndex: 0,
+			currentMobiliarioId: 0,
+			currentEdificioId: 0,
+			mobiliario: [],
 		}
+	}
+
+	componentDidMount(){
+		this.setState({
+			currentEdificioId: this.props.oficina.edificio.id,
+			mobiliario: this.props.mobiliario.filter(m => m.edificio.id == this.props.oficina.edificio.id),
+		})
+	}
+
+	edificioChange(e){
+		this.setState({
+			currentEdificioId: e.target.value,
+			mobiliario: this.props.mobiliario.filter(m => m.edificio.id == e.target.value),
+		})
+	}
+
+	addMobiliario(){
+		if(this.props.oficina.mobiliario.some(m => m.id == this.state.currentMobiliarioId)){
+			return
+		}
+
+		let mobiliario = this.state.mobiliario.find(m => m.id == this.state.currentMobiliarioId)
+		if(!mobiliario){
+			return;
+		}
+
+		this.props.addMobiliario(mobiliario)
 	}
 
 	updateInfo(){
@@ -29,6 +65,10 @@ class OficinaUpdate extends React.Component{
 
 	updateImages(){
 
+	}
+
+	updateCantidadMobiliario(id, cantidad){
+		this.props.updateCantidadMobiliario(id, cantidad)
 	}
 
 	goToTab(index){
@@ -67,11 +107,77 @@ class OficinaUpdate extends React.Component{
 		)
 	}
 
+	renderMobiliario(){
+		return(
+			<React.Fragment>
+				<div className = 'form-row'>
+					<div className = 'form-inline mb-3'>
+						<label htmlFor = 'mobiliario'>Mobiliario:</label>
+						<select className = 'form-control mx-3'
+							id = 'mobiliario'
+							style = {{ minWidth: '10rem' }}
+							value = {this.state.currentMobiliarioId}
+							onChange = {e => this.setState({ currentMobiliarioId: e.target.value }) }
+						>
+							<option value = {0}>Seleccione mobiliario</option>
+							{this.state.mobiliario.map(m => (
+							<option key = {m.id} value = {m.id}>{m.nombre}</option>
+							))}
+						</select>
+						<button type = 'button' className = 'btn btn-primary btn-sm'
+							disabled = {!this.state.isEdit}
+							onClick = { this.addMobiliario }
+						>
+							Agregar
+						</button>
+					</div>
+				</div>
+				{this.props.oficina.mobiliario.length > 0 &&
+				<table className = 'table table-responsive'>
+					<thead>
+						<tr>
+							<th scope = 'col'>Mueble</th>
+							<th scope = 'col'>imagen</th>
+							<th scope = 'col'>Cantidad</th>
+							<th scope = 'col'></th>
+						</tr>
+					</thead>
+					<tbody>
+						{this.props.oficina.mobiliario.map(m => (
+						<tr key = {m.id}>
+							<th>{m.nombre}</th>
+							<th>
+								<img alt = {m.nombre} src = {m.image} style = {{ width: '40px', height: '40px' }}/>
+							</th>
+							<th className = 'input-group-sm'>
+								<input type = 'number' value = { m.cantidad }
+									disabled = { !this.state.isEdit }
+									className = 'form-control'
+									onChange = { e => this.updateCantidadMobiliario(m.id, e.target.value) }
+								/>
+							</th>
+							<th className = 'd-flex justify-content-between'>
+								{this.state.isEdit &&
+								<div className = 'btn btn-danger btn-sm'
+									onClick = { () => this.props.deleteMobiliario(m.id) }>
+									<FontAwesomeIcon icon = { faTrashAlt } />
+								</div>
+								}
+							</th>
+						</tr>
+						))}
+					</tbody>
+				</table>
+				}
+			</React.Fragment>
+		);
+	}
+
 	renderForm(){
 		return(
 			<Formik
 				initialValues = {{
-					edificio_id: this.props.oficina.edificio.id,
+					// edificio_id: this.props.oficina.edificio.id,
 					size_id: this.props.oficina.size_tipo.id,
 					nombre: this.props.oficina.nombre,
 					descripcion: this.props.oficina.descripcion,
@@ -148,12 +254,12 @@ class OficinaUpdate extends React.Component{
 						<div className = 'form-row'>
 							<div className = 'form-group col-12 col-md-6'>
 								<label htmlFor = 'edificio'>Edificio:</label>
-								<select id = 'edificio' className = {`form-control ${errors.edificio_id && touched.edificio_id? 'is-invalid' : ''}`}
-									value = { values.edificio_id }
+								<select id = 'edificio' className = {`form-control ${this.state.currentEdificioId == 0 ? 'is-invalid' : ''}`}
+									value = { this.state.currentEdificioId }
 									disabled = { !this.state.isEdit }
 									name = 'edificio_id'
-									onChange = { handleChange }
-									onBlur = { handleBlur }
+									onChange = { this.edificioChange }
+									// onBlur = { handleBlur }
 									style = {{minWidth: '17rem' }}
 								>
 									<option value = {0}>
@@ -165,9 +271,9 @@ class OficinaUpdate extends React.Component{
 									</option>
 									))}
 								</select>
-								{errors.edificio_id &&
+								{this.state.currentEdificioId == 0&&
 								<div className = 'invalid-feedback'>
-									{errors.edificio_id}
+									Campo requerido
 								</div>
 								}
 							</div>
@@ -303,6 +409,7 @@ class OficinaUpdate extends React.Component{
 								}
 							</div>
 						</div>
+						{ this.renderMobiliario() }
 						{this.state.isEdit &&
 						<div className = 'form-group'>
 							<button className  = 'btn btn-primary btn-lg btn-block' disabled = {isSubmitting}>
@@ -336,6 +443,7 @@ class OficinaUpdate extends React.Component{
 		)
 	}
 
+
 	render(){
 		return(
 			<Container toBack = '/oficinas'
@@ -367,10 +475,19 @@ const mapStateToProps = state => ({
 	oficina: state.oficinasData.selectedOficina,
 	edificios: state.edificiosData.edificios,
 	oficinasSizes: state.configData.oficinasSizes,
+	mobiliario: state.mobiliarioData.mobiliario,
 })
 
 const mapDispatchToProps = dispatch => ({
-
+	updateCantidadMobiliario(id, cantidad){
+		dispatch(oficinaActions.updateCantidadMobiliarioToOficinaUpdate(id, cantidad));
+	},
+	deleteMobiliario(id){
+		dispatch(oficinaActions.deleteMobiliarioToOficinaUpdate(id))
+	},
+	addMobiliario(mobiliario){
+		dispatch(oficinaActions.addMobiliarioToOficinaUpdate(mobiliario));
+	},
 })
 
 

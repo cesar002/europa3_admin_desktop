@@ -158,8 +158,8 @@ class OficinaCreate extends React.Component{
 					<tbody>
 						{this.props.mobiliarioOficina.map(mob => (
 						<tr key = {mob.id}>
-							<th>{mob.modelo}</th>
-							<th><img alt = {mob.modelo} src = {mob.image} style = {{ width: '40px', height: '40px' }} /></th>
+							<th>{mob.nombre}</th>
+							<th><img alt = {mob.nombre} src = {mob.image} style = {{ width: '40px', height: '40px' }} /></th>
 							<th className = 'input-group-sm'>
 								<input type = 'number' value = { mob.cantidad }
 									className = 'form-control'

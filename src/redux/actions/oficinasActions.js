@@ -5,8 +5,26 @@ export const START_FETCH_OFICINAS_BY_EDIFICIO_ID = 'START_FETCH_OFICINAS_BY_EDIF
 export const SET_OFICINAS = 'SET_OFICINAS';
 export const FIND_OFICINA_BY_ID = 'FIND_OFICINA_BY_ID';
 export const FILTER_OFICINA_BY_EDIFICIO_ID = 'FILTER_OFICINA_BY_EDIFICIO_ID';
+export const UPDATE_CANTIDAD_MOBILIARIO_TO_OFICINA_UPDATE = 'UPDATE_CANTIDAD_MOBILIARIO_TO_OFICINA_UPDATE';
+export const DELETE_MOBILIARIO_TO_OFICINA_UPDATE = 'DELETE_MOBILIARIO_TO_OFICINA_UPDATE';
+export const ADD_MOBILIARIO_TO_OFICINA_UPDATE = 'ADD_MOBILIARIO_TO_OFICINA_UPDATE';
 
 
+export const addMobiliarioToOficinaUpdate = ( mobiliario ) => ({
+	type: ADD_MOBILIARIO_TO_OFICINA_UPDATE,
+	payload: { mobiliario }
+})
+
+
+export const deleteMobiliarioToOficinaUpdate = id => ({
+	type: DELETE_MOBILIARIO_TO_OFICINA_UPDATE,
+	payload: { id }
+})
+
+export const updateCantidadMobiliarioToOficinaUpdate = (mobiliarioId, cantidad) => ({
+	type: UPDATE_CANTIDAD_MOBILIARIO_TO_OFICINA_UPDATE,
+	payload: { mobiliarioId, cantidad },
+})
 
 export const startFetchOficinas = () => ({
 	type: START_FETCH_OFICINAS,
