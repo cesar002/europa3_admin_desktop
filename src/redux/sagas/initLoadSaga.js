@@ -7,6 +7,7 @@ import * as locationsActions from '../actions/locationActions';
 import * as configActions from '../actions/configAction';
 import * as mobiliarioActions from '../actions/mobiliarioActions';
 import * as edificiosActions from '../actions/edificioAction';
+import * as serviciosActions from '../actions/serviciosActions';
 
 function* initAll(){
 	yield put(initLoadAction.startFetchSystemData());
@@ -19,6 +20,7 @@ function* fetchSystemData(){
 	yield put(mobiliarioActions.startFetchTipoMobiliario());
 	yield put(mobiliarioActions.startFetchMobiliario());
 	yield put(edificiosActions.startFetchEdificios());
+	yield put(serviciosActions.startFetchServicios());
 }
 
 function* autoLogin(){

@@ -18,6 +18,9 @@ import {
 	MOBILIARIO_ALL,
 	GET_TIPO_MOBILIARIO,
 	GET_MOBILIARIO_BY_EDIFICIO,
+	GET_SERVICIOS,
+	CREATE_SERVICIO,
+	UPDATE_SERVICIO,
 } from './URLS'
 
 
@@ -358,6 +361,10 @@ class Europa3Api {
 		}
 	}
 
+	/**
+	 *
+	 * @param {number} edificioId
+	 */
 	static async getMobiliarioByEdificio(edificioId){
 		try {
 			const resp = await axios.get(`${GET_MOBILIARIO_BY_EDIFICIO}/${edificioId}`);
@@ -372,6 +379,70 @@ class Europa3Api {
 				data: error.response.data,
 			}
 		}
+	}
+
+
+	static async getServicios(){
+		return new Promise(async (resolve, reject)=>{
+			try {
+				const resp = await axios.get(GET_SERVICIOS);
+
+				return resolve({
+					status: 'success',
+					data: resp.data,
+				})
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data,
+				})
+			}
+		})
+	}
+
+	/**
+	 *
+	 * @param {string} nombre
+	 */
+	static registerServicio(nombre){
+		return new Promise(async (resolve, reject)=>{
+			try {
+				const resp = await axios.post(CREATE_SERVICIO, { nombre });
+
+				return resolve({
+					status: 'success',
+					data: resp.data
+				});
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data
+				})
+			}
+		})
+	}
+
+	/**
+	 *
+	 * @param {number} id
+	 * @param {string} nombre
+	 */
+	static updateServicio(id, nombre){
+		return new Promise(async (resolve, reject) => {
+			try {
+				const resp = await axios.patch(`${UPDATE_SERVICIO}/${id}`, { nombre });
+
+				return resolve({
+					status: 'success',
+					data: resp.data,
+				});
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data
+				});
+			}
+		})
 	}
 
 }
