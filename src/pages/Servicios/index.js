@@ -28,6 +28,10 @@ class Servicios extends React.Component{
 	}
 
 	addServicio(){
+		if(!this.state.servicio){
+			return
+		}
+
 		Europa3Api.registerServicio(this.state.servicio)
 		.then(resp =>  this.props.fetchServicios() )
 		.catch(err => {
@@ -41,6 +45,10 @@ class Servicios extends React.Component{
 	}
 
 	updateServicio(servicio){
+		if(!servicio.servicio){
+			return;
+		}
+
 		this.props.enableUpdateServicio(servicio.id)
 
 		Europa3Api.updateServicio(servicio.id, servicio.servicio)

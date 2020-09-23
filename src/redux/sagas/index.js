@@ -8,6 +8,7 @@ import oficinaSaga from './oficinasSaga';
 import configSaga from './configSaga';
 import mobiliarioSaga from './mobiliarioSaga';
 import serviciosSaga from './serviciosSaga';
+import idiomasAtencionSaga from './idiomasAtencionSaga';
 import initLoadSaga from './initLoadSaga';
 
 export default function* mainSaga(){
@@ -21,5 +22,6 @@ export default function* mainSaga(){
 		mobiliarioSaga(),
 		serviciosSaga(),
 		initLoadSaga(),
+		idiomasAtencionSaga(),
 	]);
 }

@@ -21,6 +21,10 @@ import {
 	GET_SERVICIOS,
 	CREATE_SERVICIO,
 	UPDATE_SERVICIO,
+	GET_IDIOMAS_ATENCION,
+	CREATE_IDIOMA_ATENCION,
+	UPDATE_IDIOMA_ATENCION,
+	UPLOAD_IMAGES_OFICINA,
 } from './URLS'
 
 
@@ -440,6 +444,64 @@ class Europa3Api {
 				return reject({
 					status: 'error',
 					data: error.response.data
+				});
+			}
+		})
+	}
+
+	static getIdiomasAtencion(){
+		return new Promise(async (resolve, reject)=>{
+			try {
+				const resp = await axios.get(GET_IDIOMAS_ATENCION);
+
+				return resolve({
+					status: 'success',
+					data: resp.data,
+				});
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data,
+				});
+			}
+		})
+	}
+
+	static registerIdiomaAtencion(idioma){
+		return new Promise(async (resolve, reject)=>{
+			try {
+				const resp = await axios.post(CREATE_IDIOMA_ATENCION, {
+					nombre: idioma
+				});
+
+				return resolve({
+					status: 'success',
+					data: resp.data,
+				});
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data,
+				})
+			}
+		})
+	}
+
+	static updateIdiomaAtencion(id, idioma){
+		return new Promise(async (resolve, reject)=>{
+			try {
+				const resp = await axios.put(`${UPDATE_IDIOMA_ATENCION}/${id}`, {
+					nombre: idioma
+				})
+
+				return resolve({
+					status: 'success',
+					data: resp.data
+				})
+			} catch (error) {
+				return reject({
+					status: 'success',
+					data: error.response.data,
 				});
 			}
 		})

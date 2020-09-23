@@ -25,3 +25,6 @@ export const GET_MOBILIARIO_BY_EDIFICIO = '/mobiliario/edificio';
 export const GET_SERVICIOS = '/servicios';
 export const CREATE_SERVICIO = '/servicio';
 export const UPDATE_SERVICIO= '/servicio';
+export const GET_IDIOMAS_ATENCION = '/idiomas-atencion';
+export const CREATE_IDIOMA_ATENCION = '/idioma-atencion';
+export const UPDATE_IDIOMA_ATENCION = '/idioma-atencion';

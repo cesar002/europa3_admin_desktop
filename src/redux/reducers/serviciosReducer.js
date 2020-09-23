@@ -44,7 +44,6 @@ export default (state = initialState, action) => {
 			}
 		case RESTORE_SERVICIO_TO_SERVICIO:
 			let serv =  state.serviciosBackup.find(s => s.id == action.payload.id);
-			console.log(serv)
 			return{
 				...state,
 				servicios: state.servicios.map(s => s.id == action.payload.id ?

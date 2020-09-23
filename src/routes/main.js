@@ -16,6 +16,7 @@ import OficinasUpdate from '../pages/Oficinas/OficinaUpdate';
 import Mobiliario from '../pages/Mobiliario';
 import MobiliarioCreate from '../pages/Mobiliario/MobiliarioCreate';
 import Servicios from '../pages/Servicios';
+import IdiomasAtencion from '../pages/IdiomasAtencion';
 
 const MainRoute = () => (
 	<HashRouter>
@@ -32,6 +33,7 @@ const MainRoute = () => (
 			<Route path = '/mobiliario' exact component = { Mobiliario } />
 			<Route path = '/mobiliario/create' exact component = { MobiliarioCreate } />
 			<Route path = '/servicios' exact component = {Servicios}/>
+			<Route path = '/idiomas-atencion'exact component = {IdiomasAtencion} />
 		</div>
 	</HashRouter>
 )
