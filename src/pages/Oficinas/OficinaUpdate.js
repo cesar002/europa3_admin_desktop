@@ -22,6 +22,8 @@ class OficinaUpdate extends React.Component{
 		this.updateCantidadMobiliario = this.updateCantidadMobiliario.bind(this);
 		this.edificioChange = this.edificioChange.bind(this);
 		this.addMobiliario = this.addMobiliario.bind(this);
+		this.renderServicios = this.renderServicios.bind(this);
+		this.addServicio = this.addServicio.bind(this);
 
 		this.state  = {
 			isEdit: false,
@@ -29,6 +31,7 @@ class OficinaUpdate extends React.Component{
 			currentMobiliarioId: 0,
 			currentEdificioId: 0,
 			mobiliario: [],
+			currentServicioId: 0,
 		}
 	}
 
@@ -46,12 +49,27 @@ class OficinaUpdate extends React.Component{
 		})
 	}
 
+	addServicio(){
+		const { currentServicioId } = this.state
+		if(this.props.oficina.servicios.some(m => m.id == currentServicioId)){
+			return;
+		}
+
+		let servicio = this.props.servicios.find(s => s.id == currentServicioId)
+		if(!servicio){
+			return;
+		}
+
+		this.props.addServicio(servicio);
+	}
+
 	addMobiliario(){
-		if(this.props.oficina.mobiliario.some(m => m.id == this.state.currentMobiliarioId)){
+		const { currentMobiliarioId } = this.state
+		if(this.props.oficina.mobiliario.some(m => m.id == currentMobiliarioId)){
 			return
 		}
 
-		let mobiliario = this.state.mobiliario.find(m => m.id == this.state.currentMobiliarioId)
+		let mobiliario = this.state.mobiliario.find(m => m.id == currentMobiliarioId)
 		if(!mobiliario){
 			return;
 		}
@@ -107,9 +125,63 @@ class OficinaUpdate extends React.Component{
 		)
 	}
 
+	renderServicios(){
+		return(
+			<div className = 'py-3'>
+				<div className = 'form-row'>
+					<div className = 'form-inline mb-3'>
+						<label htmlFor = 'servicios'>Servicios:</label>
+						<select className = 'form-control mx-3'
+							id = 'servicios'
+							style = {{ minWidth: '10rem' }}
+							value = { this.state.currentServicioId }
+							onChange = { e => this.setState({ currentServicioId: Number(e.target.value) }) }
+						>
+							<option value = {0}>Seleccione un servicio</option>
+							{this.props.servicios.map(s => (
+							<option key = {s.id} value = {s.id}>{s.servicio}</option>
+							))}
+						</select>
+						<button className = 'btn btn-primary btn-sm' disabled = { !this.state.isEdit }
+							type = 'button' onClick = { this.addServicio }
+						>
+							Agregar
+						</button>
+					</div>
+				</div>
+				{this.props.oficina.servicios.length > 0 &&
+				<table className = 'table'>
+					<thead>
+						<tr>
+							<th scope = 'col'>Servicio</th>
+							<th scope = 'col'></th>
+							<th scope = 'col'></th>
+						</tr>
+					</thead>
+					<tbody>
+						{this.props.oficina.servicios.map(s => (
+						<tr key = {s.id}>
+							<th colSpan = {2}>{s.servicio}</th>
+							<th>
+								<button className = 'btn btn-danger btn-sm' disabled = { !this.state.isEdit }
+									type = 'button'
+									onClick = {() => this.props.deleteServicio(s.id)}
+								>
+									<FontAwesomeIcon icon = { faTrashAlt } />
+								</button>
+							</th>
+						</tr>
+						))}
+					</tbody>
+				</table>
+				}
+			</div>
+		);
+	}
+
 	renderMobiliario(){
 		return(
-			<React.Fragment>
+			<div className = 'py-3'>
 				<div className = 'form-row'>
 					<div className = 'form-inline mb-3'>
 						<label htmlFor = 'mobiliario'>Mobiliario:</label>
@@ -169,7 +241,7 @@ class OficinaUpdate extends React.Component{
 					</tbody>
 				</table>
 				}
-			</React.Fragment>
+			</div>
 		);
 	}
 
@@ -409,6 +481,7 @@ class OficinaUpdate extends React.Component{
 								}
 							</div>
 						</div>
+						{ this.renderServicios() }
 						{ this.renderMobiliario() }
 						{this.state.isEdit &&
 						<div className = 'form-group'>
@@ -476,6 +549,7 @@ const mapStateToProps = state => ({
 	edificios: state.edificiosData.edificios,
 	oficinasSizes: state.configData.oficinasSizes,
 	mobiliario: state.mobiliarioData.mobiliario,
+	servicios: state.serviciosData.servicios,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -488,6 +562,12 @@ const mapDispatchToProps = dispatch => ({
 	addMobiliario(mobiliario){
 		dispatch(oficinaActions.addMobiliarioToOficinaUpdate(mobiliario));
 	},
+	addServicio(servicio){
+		dispatch(oficinaActions.addServicioToOficinaUpdate(servicio));
+	},
+	deleteServicio(id){
+		dispatch(oficinaActions.deleteServiciotoOficinaUpdate(id));
+	}
 })
 
 

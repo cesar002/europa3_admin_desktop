@@ -8,7 +8,20 @@ export const FILTER_OFICINA_BY_EDIFICIO_ID = 'FILTER_OFICINA_BY_EDIFICIO_ID';
 export const UPDATE_CANTIDAD_MOBILIARIO_TO_OFICINA_UPDATE = 'UPDATE_CANTIDAD_MOBILIARIO_TO_OFICINA_UPDATE';
 export const DELETE_MOBILIARIO_TO_OFICINA_UPDATE = 'DELETE_MOBILIARIO_TO_OFICINA_UPDATE';
 export const ADD_MOBILIARIO_TO_OFICINA_UPDATE = 'ADD_MOBILIARIO_TO_OFICINA_UPDATE';
+export const DELETE_SERVICIO_TO_OFICINA_UPDATE = 'DELETE_SERVICIO_TO_OFICINA_UPDATE';
+export const ADD_SERVICIO_TO_OFICINA_UPDATE = 'ADD_SERVICIO_TO_OFICINA_UPDATE';
 
+
+
+export const addServicioToOficinaUpdate = servicio => ({
+	type: ADD_SERVICIO_TO_OFICINA_UPDATE,
+	payload: { servicio }
+})
+
+export const deleteServiciotoOficinaUpdate = id => ({
+	type: DELETE_SERVICIO_TO_OFICINA_UPDATE,
+	payload: { id }
+})
 
 export const addMobiliarioToOficinaUpdate = ( mobiliario ) => ({
 	type: ADD_MOBILIARIO_TO_OFICINA_UPDATE,

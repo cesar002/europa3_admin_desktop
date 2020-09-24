@@ -20,7 +20,7 @@ import IdiomasAtencion from '../pages/IdiomasAtencion';
 
 const MainRoute = () => (
 	<HashRouter>
-		<div>
+		<React.Fragment>
 			<Route path = '/' exact component = { PreAuth } />
 			<Route path = '/login' exact component = { Login } />
 			<Route path = '/inicio' exact component = { Inicio } />
@@ -34,7 +34,7 @@ const MainRoute = () => (
 			<Route path = '/mobiliario/create' exact component = { MobiliarioCreate } />
 			<Route path = '/servicios' exact component = {Servicios}/>
 			<Route path = '/idiomas-atencion'exact component = {IdiomasAtencion} />
-		</div>
+		</React.Fragment>
 	</HashRouter>
 )
 

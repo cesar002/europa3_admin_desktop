@@ -9,6 +9,8 @@ import {
 	UPDATE_CANTIDAD_MOBILIARIO_TO_OFICINA_UPDATE,
 	DELETE_MOBILIARIO_TO_OFICINA_UPDATE,
 	ADD_MOBILIARIO_TO_OFICINA_UPDATE,
+	DELETE_SERVICIO_TO_OFICINA_UPDATE,
+	ADD_SERVICIO_TO_OFICINA_UPDATE,
 } from '../actions/oficinasActions'
 
 const initialState = {
@@ -27,6 +29,22 @@ const initialState = {
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case DELETE_SERVICIO_TO_OFICINA_UPDATE:
+			return{
+				...state,
+				selectedOficina:{
+					...state.selectedOficina,
+					servicios: state.selectedOficina.servicios.filter(s => s.id !== action.payload.id)
+				}
+			}
+		case ADD_SERVICIO_TO_OFICINA_UPDATE:
+			return{
+				...state,
+				selectedOficina:{
+					...state.selectedOficina,
+					servicios: [...state.selectedOficina.servicios, action.payload.servicio]
+				}
+			}
 		case ADD_MOBILIARIO_TO_OFICINA_UPDATE:
 			return {
 				...state,

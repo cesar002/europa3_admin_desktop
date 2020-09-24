@@ -30,6 +30,9 @@ class OficinaCreate extends React.Component{
 		this.addMobiliario = this.addMobiliario.bind(this);
 		this.updateCantidad = this.updateCantidad.bind(this)
 		this.deleteMobiliario = this.deleteMobiliario.bind(this);
+		this.renderServiciosSelection = this.renderServiciosSelection.bind(this);
+		this.addServicio = this.addServicio.bind(this);
+		this.deleteServicio = this.deleteServicio.bind(this);
 
 
 		this.state = {
@@ -39,6 +42,9 @@ class OficinaCreate extends React.Component{
 			files: null,
 			currentMobiliarioId: 0,
 			errorMobiliario: null,
+			currentServicioId: 0,
+			serviciosSelected: [],
+			errorServicio: null,
 		}
 	}
 
@@ -115,12 +121,88 @@ class OficinaCreate extends React.Component{
 		}, () => this.props.addMobiliario(this.state.currentMobiliarioId))
 	}
 
+	addServicio(){
+		if(this.state.currentServicioId == 0){
+			return;
+		}
+
+		if(this.state.serviciosSelected.some(s => s.id == this.state.currentServicioId)){
+			return;
+		}
+
+		let servicio = this.props.servicios.find(s => s.id == this.state.currentServicioId);
+
+		this.setState({
+			errorServicio: null,
+			serviciosSelected: [...this.state.serviciosSelected, servicio]
+		})
+	}
+
 	updateCantidad(id, cantidad){
 		this.props.updateCantidad(id, cantidad)
 	}
 
 	deleteMobiliario(id){
 		this.props.deleteMobiliario(id)
+	}
+
+	deleteServicio(id){
+		this.setState({
+			serviciosSelected: this.state.serviciosSelected.filter(s => s.id != id),
+		})
+	}
+
+	renderServiciosSelection(){
+		return(
+			<React.Fragment>
+				<div className = 'form-row'>
+					<div className = 'form-inline mb-3'>
+						<label htmlFor = 'servicio'>Servicios:</label>
+						<select id = 'servicio' className = {`form-control mx-3 ${this.state.errorServicio ? 'is-invalid' : ''}`}
+							style = {{ minWidth: '10rem' }}
+							value = { this.state.currentServicioId }
+							onChange = { e => this.setState({ currentServicioId: Number(e.target.value) }) }
+						>
+							<option value = {0}>Seleccione el servicio</option>
+							{this.props.servicios.map(s => (
+							<option key = {s.id} value = {s.id}>{s.servicio}</option>
+							))}
+						</select>
+						{this.state.errorServicio && <span className = 'invalid-feedback'>{this.state.errorServicio}</span>}
+						<button type = 'button' className = 'btn btn-primary btn-sm'
+							onClick = { this.addServicio }
+						>
+							Agregar
+						</button>
+					</div>
+				</div>
+				{ this.state.serviciosSelected.length > 0  &&
+				<table className = 'table table-responsive'>
+					<thead>
+						<tr>
+							<th scope = 'col'>Servicio</th>
+							<th scope = 'col'></th>
+							<th scope = 'col'></th>
+						</tr>
+					</thead>
+					<tbody>
+						{this.state.serviciosSelected.map(s => (
+						<tr key = {s.id}>
+							<th colSpan = '2'>{s.servicio}</th>
+							<th className = 'd-flex justify-content-between'>
+								<div className = 'btn btn-danger btn-sm'
+									onClick = {() => this.deleteServicio(s.id)}
+								>
+									<FontAwesomeIcon icon = { faTrashAlt } />
+								</div>
+							</th>
+						</tr>
+						))}
+					</tbody>
+				</table>
+				}
+			</React.Fragment>
+		)
 	}
 
 	renderMobiliarioSelection(){
@@ -132,7 +214,7 @@ class OficinaCreate extends React.Component{
 						<select id = 'mobiliario' className = {`form-control mx-3 ${this.props.mobiliarioOficinaError ? 'is-invalid' : ''}`}
 							style = {{ minWidth: '10rem' }}
 							value = {this.state.currentMobiliarioId}
-							onChange = { e => this.setState({ currentMobiliarioId: e.target.value }) }
+							onChange = { e => this.setState({ currentMobiliarioId: Number(e.target.value) }) }
 						>
 							<option value = {0}>Seleccione mobiliario</option>
 							{this.props.mobiliario.map(m => (
@@ -150,7 +232,7 @@ class OficinaCreate extends React.Component{
 					<thead>
 						<tr>
 							<th scope = 'col'>Mueble</th>
-							<th scope = 'col'>imagen</th>
+							<th scope = 'col'>Imagen</th>
 							<th scope = 'col'>Cantidad</th>
 							<th scope = 'col'></th>
 						</tr>
@@ -167,7 +249,9 @@ class OficinaCreate extends React.Component{
 								/>
 							</th>
 							<th className = 'd-flex justify-content-between'>
-								<div className = 'btn btn-danger btn-sm' onClick = { () => this.deleteMobiliario(mob.id) }>
+								<div className = 'btn btn-danger btn-sm'
+									onClick = { () => this.deleteMobiliario(mob.id) }
+								>
 									<FontAwesomeIcon icon = { faTrashAlt } />
 								</div>
 							</th>
@@ -209,18 +293,28 @@ class OficinaCreate extends React.Component{
 		if(this.state.currentEdificioId == 0){
 			this.setState({
 				edificioIdError: 'Campo obligatorio'
-			}, ()=>console.log(this.state.edificioIdError))
+			})
 
-			setSubmit(false)
-			return
+			setSubmit(false);
+			return;
 		}
 		if(this.props.mobiliarioOficina.length == 0){
 			this.setState({
 				mobiliarioOficinaError: 'Campo obligatorio',
 			})
+
 			setSubmit(false);
-			return
+			return;
 		}
+		if(this.state.serviciosSelected.length == 0){
+			this.setState({
+				errorServicio: 'Campo obligatorio'
+			})
+
+			setSubmit(false);
+			return;
+		}
+
 		const { files } = this.state
 		const data = new FormData();
 		data.append('edificio_id', this.state.currentEdificioId)
@@ -231,6 +325,9 @@ class OficinaCreate extends React.Component{
 			for (let index = 0; index < m.cantidad; index++) {
 				data.append('mobiliario[]', m.id)
 			}
+		})
+		this.state.serviciosSelected.forEach(s => {
+			data.append('servicios[]', s.id)
 		})
 		if(files){
 			files.forEach(file => {
@@ -246,7 +343,12 @@ class OficinaCreate extends React.Component{
 					title: 'Correcto',
 					text: 'Oficina registrada con éxito',
 				})
-				this.setState({ files: null }, () => {
+				this.setState({
+					files: null,
+					currentServicioId: 0,
+					serviciosSelected: [],
+					errorServicio: null,
+				}, () => {
 					resetForm();
 					this.props.clearMobiliarioOficina();
 					this.inputFiles.value = ''
@@ -494,7 +596,10 @@ class OficinaCreate extends React.Component{
 								}
 							</div>
 						</div>
-						{ this.renderMobiliarioSelection() }
+						<div className = 'pb-3'>
+							{ this.renderServiciosSelection() }
+							{ this.renderMobiliarioSelection() }
+						</div>
 						<div className = 'form-group'>
 							<button className  = 'btn btn-primary btn-lg btn-block' disabled = {isSubmitting}>
 								{!isSubmitting &&
@@ -555,6 +660,7 @@ const mapStateToProps = state => ({
 	oficinasSizes: state.configData.oficinasSizes,
 	mobiliario: state.mobiliarioData.mobiliarioCreate.mobiliario,
 	mobiliarioOficina: state.mobiliarioData.mobiliarioCreate.mobiliarioOficina,
+	servicios: state.serviciosData.servicios,
 })
 
 const mapDispatchToProps = dispatch => ({
