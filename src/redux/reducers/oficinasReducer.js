@@ -11,6 +11,7 @@ import {
 	ADD_MOBILIARIO_TO_OFICINA_UPDATE,
 	DELETE_SERVICIO_TO_OFICINA_UPDATE,
 	ADD_SERVICIO_TO_OFICINA_UPDATE,
+	DELETE_IMAGE_TO_OFICINA_UPDATE,
 } from '../actions/oficinasActions'
 
 const initialState = {
@@ -29,6 +30,14 @@ const initialState = {
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case DELETE_IMAGE_TO_OFICINA_UPDATE:
+			return{
+				...state,
+				selectedOficina:{
+					...state.selectedOficina,
+					images: state.selectedOficina.images.filter(o => o.id !== action.payload.id),
+				}
+			}
 		case DELETE_SERVICIO_TO_OFICINA_UPDATE:
 			return{
 				...state,

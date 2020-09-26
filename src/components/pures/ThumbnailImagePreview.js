@@ -1,25 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react';
 
-const ThumbnailPreview = ({ file }) => {
+const ThumbnailImagePreview = ({ uri }) => (
+	<img className = 'img-fluid p-3' alt = {uri} src = { uri }
+		style = {{ maxWidth: '200px', maxHeight: '200px' }}
+	/>
+)
 
-	const [image, setImage] = useState(null)
-
-	useEffect(()=> {
-		const reader = new FileReader();
-		reader.onloadend = () =>{
-			setImage(reader.result)
-		}
-		reader.readAsDataURL(file)
-	}, [])
-
-
-
-
-	return(
-		<img className = 'img-fluid img-thumbnail' alt = {file.name} src = { image }
-			style = {{ maxWidth: '200px', maxHeight: '200px' }}
-		/>
-	)
-}
-
-export default ThumbnailPreview;
+export default ThumbnailImagePreview;

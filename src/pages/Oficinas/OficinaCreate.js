@@ -9,7 +9,7 @@ import { startFetchOficinas } from '../../redux/actions/oficinasActions'
 import * as mobiliarioActions from '../../redux/actions/mobiliarioActions'
 
 import Container from '../../components/pures/ContainerMaster'
-import ThumbnailPreview from '../../components/pures/ThumbnailImagePreview'
+import ThumbnailPreview from '../../components/pures/ThumbnailImageLocalPreview'
 
 import Europa3Api from '../../api';
 

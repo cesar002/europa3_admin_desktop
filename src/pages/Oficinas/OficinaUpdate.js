@@ -1,14 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faPenAlt, faTrashAlt, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import swal from 'sweetalert2';
 import { Formik } from 'formik';
 
-
 import Container from '../../components/pures/ContainerMaster';
+import ThumbnailPreview from '../../components/pures/ThumbnailImagePreview';
+import ThumbnailLocalPreview from '../../components/pures/ThumbnailImageLocalPreview';
 
 import * as oficinaActions from '../../redux/actions/oficinasActions';
+
 
 class OficinaUpdate extends React.Component{
 	constructor(props){
@@ -24,6 +26,9 @@ class OficinaUpdate extends React.Component{
 		this.addMobiliario = this.addMobiliario.bind(this);
 		this.renderServicios = this.renderServicios.bind(this);
 		this.addServicio = this.addServicio.bind(this);
+		this.addNewImages = this.addNewImages.bind(this);
+		this.edificioChange = this.edificioChange.bind(this);
+		this.removeImageOficina = this.removeImageOficina.bind(this);
 
 		this.state  = {
 			isEdit: false,
@@ -32,6 +37,8 @@ class OficinaUpdate extends React.Component{
 			currentEdificioId: 0,
 			mobiliario: [],
 			currentServicioId: 0,
+			newImages: null,
+			deletedImages: [],
 		}
 	}
 
@@ -46,6 +53,25 @@ class OficinaUpdate extends React.Component{
 		this.setState({
 			currentEdificioId: e.target.value,
 			mobiliario: this.props.mobiliario.filter(m => m.edificio.id == e.target.value),
+		})
+	}
+
+	removeImageOficina(image){
+		this.setState({
+			deletedImages: [...this.state.deletedImages, image]
+		}, () => this.props.deleteImageOficina(image.id) )
+	}
+
+	removeNewImage(name){
+		this.setState({
+			newImages: this.state.newImages.filter(e => e.name !== name)
+		})
+	}
+
+	addNewImages(e){
+		const images = Array.from(e.target.files);
+		this.setState({
+			newImages: images,
 		})
 	}
 
@@ -249,7 +275,6 @@ class OficinaUpdate extends React.Component{
 		return(
 			<Formik
 				initialValues = {{
-					// edificio_id: this.props.oficina.edificio.id,
 					size_id: this.props.oficina.size_tipo.id,
 					nombre: this.props.oficina.nombre,
 					descripcion: this.props.oficina.descripcion,
@@ -503,16 +528,53 @@ class OficinaUpdate extends React.Component{
 
 	renderUpdateImages(){
 		return(
-			<React.Fragment>
+			<div className = 'container pt-5'>
 				<div className = 'row'>
-
+					<div className = 'col-12'>
+						<label htmlFor = 'newImages'>Agregar imagenes</label>
+						<input className = 'form-control-file'
+							multiple
+							type = 'file'
+							name = 'images[]'
+							accept='image/x-png,image/gif,image/jpeg'
+							ref = {el => this.inputFiles = el}
+							id = 'newImages'
+							onChange = { this.addNewImages }
+						/>
+					</div>
 				</div>
-				<div className = 'row'>
+				<div className = 'row mt-4'>
+					{ this.props.oficina.images.map(o => (
+					<div className = 'col-6 col-sm-3' key = {o.id}>
+						<React.Fragment>
+							<div className = 'btn btn-danger btn-sm float-right' style = {{ position: 'absolute' }}
+								onClick = { () => this.removeImageOficina(o) }
+							>
+								<FontAwesomeIcon icon = { faTrashAlt } />
+							</div>
+							<ThumbnailPreview uri = { o.uri } />
+						</React.Fragment>
+					</div>
+					))}
+					{this.state.newImages && this.state.newImages.map(n => (
+					<div className = 'col-6 col-sm-3' key = {n.name}>
+						<React.Fragment>
+							<div className = 'btn btn-danger btn-sm float-right' style = {{ position: 'absolute' }}
+								onClick = { () => this.removeNewImage(n.name) }
+							>
+								<FontAwesomeIcon icon = { faTrashAlt } />
+							</div>
+							<ThumbnailLocalPreview file = {n} />
+						</React.Fragment>
+					</div>
+					))}
+				</div>
+				<div className = 'row mt-3'>
 					<button className = 'btn btn-primary btn-lg btn-block'>
 						Actualizar imagenes
 					</button>
 				</div>
-			</React.Fragment>
+			</div>
 		)
 	}
 
@@ -567,7 +629,10 @@ const mapDispatchToProps = dispatch => ({
 	},
 	deleteServicio(id){
 		dispatch(oficinaActions.deleteServiciotoOficinaUpdate(id));
-	}
+	},
+	deleteImageOficina(id){
+		dispatch(oficinaActions.deleteImageToOficinaUpdate(id))
+	},
 })
 
 
