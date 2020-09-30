@@ -11,8 +11,31 @@ export const ADD_MOBILIARIO_TO_OFICINA_UPDATE = 'ADD_MOBILIARIO_TO_OFICINA_UPDAT
 export const DELETE_SERVICIO_TO_OFICINA_UPDATE = 'DELETE_SERVICIO_TO_OFICINA_UPDATE';
 export const ADD_SERVICIO_TO_OFICINA_UPDATE = 'ADD_SERVICIO_TO_OFICINA_UPDATE';
 export const DELETE_IMAGE_TO_OFICINA_UPDATE = 'DELETE_IMAGE_TO_OFICINA_UPDATE';
+export const START_FETCH_IMAGES_OFICINA = 'START_FETCH_IMAGES_OFICINA';
+export const FINISH_FETCH_IMAGES_OFICINA_SUCCESS = 'FINISH_FETCH_IMAGES_OFICINA_SUCCESS';
+export const FINISH_FETCH_IMAGES_OFICINA_FAIL = 'FINISH_FETCH_IMAGES_OFICINA_FAIL';
+export const UPDATE_IMAGE_OFICINA_SELECTED = 'UPDATE_IMAGE_OFICINA_SELECTED'
 
 
+
+
+export const startFetchImagesOficina = id => ({
+	type: START_FETCH_IMAGES_OFICINA,
+	payload: { id }
+})
+
+export const finishFetchImagesOficinaSuccess = () => ({
+	type: FINISH_FETCH_IMAGES_OFICINA_SUCCESS,
+})
+
+export const finishFetchImagesOficinaFail = () => ({
+	type: FINISH_FETCH_IMAGES_OFICINA_FAIL
+})
+
+export const updateImagesOficinaSelected = images => ({
+	type: UPDATE_IMAGE_OFICINA_SELECTED,
+	payload: { images }
+})
 
 export const deleteImageToOficinaUpdate = id => ({
 	type: DELETE_IMAGE_TO_OFICINA_UPDATE,

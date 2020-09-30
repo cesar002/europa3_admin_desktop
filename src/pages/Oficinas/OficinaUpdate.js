@@ -11,6 +11,8 @@ import ThumbnailLocalPreview from '../../components/pures/ThumbnailImageLocalPre
 
 import * as oficinaActions from '../../redux/actions/oficinasActions';
 
+import Europa3Api from '../../api';
+
 
 class OficinaUpdate extends React.Component{
 	constructor(props){
@@ -39,6 +41,7 @@ class OficinaUpdate extends React.Component{
 			currentServicioId: 0,
 			newImages: null,
 			deletedImages: [],
+			updatingImages: false,
 		}
 	}
 
@@ -103,12 +106,93 @@ class OficinaUpdate extends React.Component{
 		this.props.addMobiliario(mobiliario)
 	}
 
-	updateInfo(){
+	updateInfo(values, setSubmit){
+		const serviciosIds = this.props.oficina.servicios.map(s => s.id);
+		const mobiliarioIds = [];
+		this.props.oficina.mobiliario.forEach(m => {
+			for (let i = 0; i < m.cantidad; i++) {
+				mobiliarioIds.push(m.id)
+			}
+		})
 
+		const data = {
+			edificio_id: this.state.currentEdificioId,
+			...values,
+			servicios: serviciosIds,
+			mobiliario: mobiliarioIds,
+		}
+
+		Europa3Api.updateOficina(this.props.oficina.id, data)
+		.then(resp => {
+			swal.fire({
+				icon: 'success',
+				title: 'Correcto',
+				text: 'La oficina se actualizó con éxito'
+			});
+			this.setState({
+				isEdit: false,
+			}, () => this.props.fetchOficinas() )
+		})
+		.catch(err => {
+			console.error(err);
+			swal.fire({
+				icon: 'error',
+				title: 'Ocurrió un error',
+				text: 'Hubo un error al intentar actualizar la información, vuelva a intentarlo'
+			})
+		})
+		.finally(() => setSubmit(false))
 	}
 
 	updateImages(){
+		if(!this.state.newImages && this.state.deletedImages.length == 0){
+			return;
+		}
 
+		this.setState({
+			updatingImages: true,
+		})
+
+		const updateData = new FormData();
+
+		if(this.state.newImages){
+			this.state.newImages.forEach(file => {
+				updateData.append('new_images[]', file)
+			})
+		}
+
+		if(this.state.deletedImages.length > 0){
+			this.state.deletedImages.forEach(image => {
+				updateData.append('images_delete[]', image.id)
+			})
+		}
+
+		Europa3Api.updateImagesOficina(this.props.oficina.id, updateData)
+		.then(resp => {
+			swal.fire({
+				icon: 'success',
+				title: 'Correcto',
+				text: 'Imagenes actualizadas con éxito',
+			})
+
+			this.setState({
+				deletedImages: [],
+				newImages: null,
+			})
+
+			this.props.fetchImagesOficinas(this.props.oficina.id)
+			this.props.fetchOficinas();
+			this.inputFiles.value = '';
+		})
+		.catch(err => {
+			console.error(err);
+			swal.fire({
+				icon: 'error',
+				title: 'Ocurrió un error',
+				text: 'Hubo un error al intentar actualizar las imagenes',
+			});
+		})
+		.finally( () => this.setState({updatingImages: false,}) )
 	}
 
 	updateCantidadMobiliario(id, cantidad){
@@ -176,30 +260,34 @@ class OficinaUpdate extends React.Component{
 					</div>
 				</div>
 				{this.props.oficina.servicios.length > 0 &&
-				<table className = 'table'>
-					<thead>
-						<tr>
-							<th scope = 'col'>Servicio</th>
-							<th scope = 'col'></th>
-							<th scope = 'col'></th>
-						</tr>
-					</thead>
-					<tbody>
-						{this.props.oficina.servicios.map(s => (
-						<tr key = {s.id}>
-							<th colSpan = {2}>{s.servicio}</th>
-							<th>
-								<button className = 'btn btn-danger btn-sm' disabled = { !this.state.isEdit }
-									type = 'button'
-									onClick = {() => this.props.deleteServicio(s.id)}
-								>
-									<FontAwesomeIcon icon = { faTrashAlt } />
-								</button>
-							</th>
-						</tr>
-						))}
-					</tbody>
-				</table>
+				<div className = 'row'>
+					<div className = 'col d-flex justify-content-center'>
+						<table className = 'table'>
+							<thead>
+								<tr>
+									<th scope = 'col'>Servicio</th>
+									<th scope = 'col'></th>
+									<th scope = 'col'></th>
+								</tr>
+							</thead>
+							<tbody>
+								{this.props.oficina.servicios.map(s => (
+								<tr key = {s.id}>
+									<th colSpan = {2}>{s.servicio}</th>
+									<th>
+										<button className = 'btn btn-danger btn-sm' disabled = { !this.state.isEdit }
+											type = 'button'
+											onClick = {() => this.props.deleteServicio(s.id)}
+										>
+											<FontAwesomeIcon icon = { faTrashAlt } />
+										</button>
+									</th>
+								</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				</div>
 				}
 			</div>
 		);
@@ -215,7 +303,7 @@ class OficinaUpdate extends React.Component{
 							id = 'mobiliario'
 							style = {{ minWidth: '10rem' }}
 							value = {this.state.currentMobiliarioId}
-							onChange = {e => this.setState({ currentMobiliarioId: e.target.value }) }
+							onChange = {e => this.setState({ currentMobiliarioId: Number(e.target.value) }) }
 						>
 							<option value = {0}>Seleccione mobiliario</option>
 							{this.state.mobiliario.map(m => (
@@ -231,41 +319,45 @@ class OficinaUpdate extends React.Component{
 					</div>
 				</div>
 				{this.props.oficina.mobiliario.length > 0 &&
-				<table className = 'table table-responsive'>
-					<thead>
-						<tr>
-							<th scope = 'col'>Mueble</th>
-							<th scope = 'col'>imagen</th>
-							<th scope = 'col'>Cantidad</th>
-							<th scope = 'col'></th>
-						</tr>
-					</thead>
-					<tbody>
-						{this.props.oficina.mobiliario.map(m => (
-						<tr key = {m.id}>
-							<th>{m.nombre}</th>
-							<th>
-								<img alt = {m.nombre} src = {m.image} style = {{ width: '40px', height: '40px' }}/>
-							</th>
-							<th className = 'input-group-sm'>
-								<input type = 'number' value = { m.cantidad }
-									disabled = { !this.state.isEdit }
-									className = 'form-control'
-									onChange = { e => this.updateCantidadMobiliario(m.id, e.target.value) }
-								/>
-							</th>
-							<th className = 'd-flex justify-content-between'>
-								{this.state.isEdit &&
-								<div className = 'btn btn-danger btn-sm'
-									onClick = { () => this.props.deleteMobiliario(m.id) }>
-									<FontAwesomeIcon icon = { faTrashAlt } />
-								</div>
-								}
-							</th>
-						</tr>
-						))}
-					</tbody>
-				</table>
+				<div className = 'row'>
+					<div className = 'col d-flex justify-content-center'>
+						<table className = 'table table-responsive'>
+							<thead>
+								<tr>
+									<th scope = 'col'>Mueble</th>
+									<th scope = 'col'>imagen</th>
+									<th scope = 'col'>Cantidad</th>
+									<th scope = 'col'></th>
+								</tr>
+							</thead>
+							<tbody>
+								{this.props.oficina.mobiliario.map(m => (
+								<tr key = {m.id}>
+									<th>{m.nombre}</th>
+									<th>
+										<img alt = {m.nombre} src = {m.image} style = {{ width: '40px', height: '40px' }}/>
+									</th>
+									<th className = 'input-group-sm'>
+										<input type = 'number' value = { m.cantidad }
+											disabled = { !this.state.isEdit }
+											className = 'form-control'
+											onChange = { e => this.updateCantidadMobiliario(m.id, e.target.value) }
+										/>
+									</th>
+									<th className = 'd-flex justify-content-between'>
+										{this.state.isEdit &&
+										<div className = 'btn btn-danger btn-sm'
+											onClick = { () => this.props.deleteMobiliario(m.id) }>
+											<FontAwesomeIcon icon = { faTrashAlt } />
+										</div>
+										}
+									</th>
+								</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				</div>
 				}
 			</div>
 		);
@@ -334,9 +426,7 @@ class OficinaUpdate extends React.Component{
 
 					return errors;
 				}}
-				onSubmit = {(values)=>{
-
-				}}
+				onSubmit = { (values, { setSubmitting }) => this.updateInfo(values, setSubmitting) }
 			>
 				{({
 					values,
@@ -533,6 +623,7 @@ class OficinaUpdate extends React.Component{
 					<div className = 'col-12'>
 						<label htmlFor = 'newImages'>Agregar imagenes</label>
 						<input className = 'form-control-file'
+							disabled = { !this.state.isEdit }
 							multiple
 							type = 'file'
 							name = 'images[]'
@@ -544,34 +635,47 @@ class OficinaUpdate extends React.Component{
 					</div>
 				</div>
 				<div className = 'row mt-4'>
-					{ this.props.oficina.images.map(o => (
+					{this.props.oficinaImagesStatus.start &&
+					<div className = 'col d-flex justify-content-center my-5'>
+						<div className="spinner-border text-primary" role="status" />
+					</div>
+					}
+					{!this.props.oficinaImagesStatus.start && this.props.oficina.images.map(o => (
 					<div className = 'col-6 col-sm-3' key = {o.id}>
 						<React.Fragment>
-							<div className = 'btn btn-danger btn-sm float-right' style = {{ position: 'absolute' }}
-								onClick = { () => this.removeImageOficina(o) }
+							{this.state.isEdit &&
+							<button type = 'button' className = 'btn btn-danger btn-sm float-right' style = {{ position: 'absolute' }}
+								disabled = { this.state.updatingImages }	onClick = { () => this.removeImageOficina(o) }
 							>
 								<FontAwesomeIcon icon = { faTrashAlt } />
-							</div>
-							<ThumbnailPreview uri = { o.uri } />
+							</button>
+							}
+							<ThumbnailPreview uri = { o.url } />
 						</React.Fragment>
 					</div>
 					))}
 					{this.state.newImages && this.state.newImages.map(n => (
 					<div className = 'col-6 col-sm-3' key = {n.name}>
 						<React.Fragment>
-							<div className = 'btn btn-danger btn-sm float-right' style = {{ position: 'absolute' }}
-								onClick = { () => this.removeNewImage(n.name) }
+							{this.state.isEdit &&
+							<button type = 'button' className = 'btn btn-danger btn-sm float-right' style = {{ position: 'absolute' }}
+								disabled = { this.state.updatingImages } onClick = { () => this.removeNewImage(n.name) }
 							>
 								<FontAwesomeIcon icon = { faTrashAlt } />
-							</div>
+							</button>
+							}
 							<ThumbnailLocalPreview file = {n} />
 						</React.Fragment>
 					</div>
 					))}
 				</div>
 				<div className = 'row mt-3'>
-					<button className = 'btn btn-primary btn-lg btn-block'>
-						Actualizar imagenes
+					<button className = 'btn btn-primary btn-lg btn-block'
+						disabled = { !this.state.isEdit || this.state.updatingImages }
+						onClick = { this.updateImages }
+					>
+						{ !this.state.updatingImages && 'Actualizar imagenes'}
+						{ this.state.updatingImages && <div className="spinner-border text-light" role="status" /> }
 					</button>
 				</div>
 			</div>
@@ -612,6 +716,7 @@ const mapStateToProps = state => ({
 	oficinasSizes: state.configData.oficinasSizes,
 	mobiliario: state.mobiliarioData.mobiliario,
 	servicios: state.serviciosData.servicios,
+	oficinaImagesStatus: state.oficinasData.status.imagesOficinaStatus,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -632,6 +737,12 @@ const mapDispatchToProps = dispatch => ({
 	},
 	deleteImageOficina(id){
 		dispatch(oficinaActions.deleteImageToOficinaUpdate(id))
+	},
+	fetchOficinas(){
+		dispatch(oficinaActions.startFetchOficinas());
+	},
+	fetchImagesOficinas(id){
+		dispatch(oficinaActions.startFetchImagesOficina(id))
 	},
 })
 

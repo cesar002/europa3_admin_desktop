@@ -62,7 +62,7 @@ class Oficinas extends React.Component{
 			return this.props.oficinas.map(oficina => (
 				<div key = {oficina.id} className = 'col-10 col-sm-6 col-md-6 col-lg-4'>
 					<div className = 'card mb-3 shadow-sm p-2 mb-5 bg-white rounded' style = {{ maxWidth: '19rem' }}>
-						<img className = 'card-img-top rounded' alt = {oficina.nombre} src = {oficina.images[0].uri} />
+						<img className = 'card-img-top rounded' alt = {oficina.nombre} src = {oficina.images[0].url} />
 						<div className = 'card-body'>
 							<h5 className = 'card-title'>{oficina.nombre}</h5>
 							<h6 className = 'card-subtitle mb-2 text-muted'>Tamaño: {oficina.size_tipo.tipo} - {oficina.size}</h6>

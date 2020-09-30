@@ -12,6 +12,10 @@ import {
 	DELETE_SERVICIO_TO_OFICINA_UPDATE,
 	ADD_SERVICIO_TO_OFICINA_UPDATE,
 	DELETE_IMAGE_TO_OFICINA_UPDATE,
+	START_FETCH_IMAGES_OFICINA,
+	FINISH_FETCH_IMAGES_OFICINA_SUCCESS,
+	FINISH_FETCH_IMAGES_OFICINA_FAIL,
+	UPDATE_IMAGE_OFICINA_SELECTED,
 } from '../actions/oficinasActions'
 
 const initialState = {
@@ -21,7 +25,13 @@ const initialState = {
 			finish:false,
 			success: false,
 			fail: false,
-		}
+		},
+		imagesOficinaStatus:{
+			start: false,
+			finish:false,
+			success: false,
+			fail: false,
+		},
 	},
 	oficinas: [],
 	oficinasFilter: [],
@@ -30,6 +40,53 @@ const initialState = {
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case UPDATE_IMAGE_OFICINA_SELECTED:
+			return{
+				...state,
+				selectedOficina:{
+					...state.selectedOficina,
+					images: action.payload.images,
+				}
+			}
+		case START_FETCH_IMAGES_OFICINA:
+			return{
+				...state,
+				status:{
+					...state.status,
+					imagesOficinaStatus:{
+						start: true,
+						finish:false,
+						success: false,
+						fail: false,
+					}
+				}
+			}
+		case FINISH_FETCH_IMAGES_OFICINA_SUCCESS:
+			return{
+				...state,
+				status:{
+					...state.status,
+					imagesOficinaStatus:{
+						...state.status.imagesOficinaStatus,
+						start: false,
+						finish:false,
+						success: true,
+					}
+				}
+			}
+		case FINISH_FETCH_IMAGES_OFICINA_FAIL:
+			return{
+				...state,
+				status:{
+					...state.status,
+					imagesOficinaStatus:{
+						...state.status.imagesOficinaStatus,
+						start: false,
+						finish:false,
+						fail: true,
+					}
+				}
+			}
 		case DELETE_IMAGE_TO_OFICINA_UPDATE:
 			return{
 				...state,

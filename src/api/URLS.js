@@ -17,7 +17,8 @@ export const OFICINAS_ALL = '/oficinas';
 export const OFICINAS_EDIFICIO = '/oficinas/edificio';
 export const GET_OFICINAS_SIZE = '/oficina-size';
 export const REGISTER_OFICINA = '/oficina';
-export const UPLOAD_IMAGES_OFICINA = '/oficina-images';
+export const UPDATE_OFICINA = '/oficina';
+export const UPDATE_IMAGES_OFICINA = '/oficina-images';
 export const REGISTER_MOBILIARIO = '/mobiliario';
 export const MOBILIARIO_ALL = '/mobiliario';
 export const GET_TIPO_MOBILIARIO = '/tipo-mobiliario';
@@ -28,3 +29,5 @@ export const UPDATE_SERVICIO= '/servicio';
 export const GET_IDIOMAS_ATENCION = '/idiomas-atencion';
 export const CREATE_IDIOMA_ATENCION = '/idioma-atencion';
 export const UPDATE_IDIOMA_ATENCION = '/idioma-atencion';
+export const GET_IMAGES_OFICINA = '/oficina';
+

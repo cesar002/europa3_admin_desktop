@@ -24,7 +24,9 @@ import {
 	GET_IDIOMAS_ATENCION,
 	CREATE_IDIOMA_ATENCION,
 	UPDATE_IDIOMA_ATENCION,
-	UPLOAD_IMAGES_OFICINA,
+	UPDATE_IMAGES_OFICINA,
+	GET_IMAGES_OFICINA,
+	UPDATE_OFICINA,
 } from './URLS'
 
 
@@ -500,9 +502,68 @@ class Europa3Api {
 				})
 			} catch (error) {
 				return reject({
-					status: 'success',
+					status: 'error',
 					data: error.response.data,
 				});
+			}
+		})
+	}
+
+	static getOficinaImages(id){
+		return new Promise(async(resolve, reject) => {
+			try {
+				const resp = await axios.get(`${GET_IMAGES_OFICINA}/${id}/images`)
+
+				return resolve({
+					status: 'success',
+					data: resp.data
+				});
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data,
+				});
+			}
+		})
+	}
+
+	static updateImagesOficina(id, data){
+		return new Promise(async(resolve, reject)=>{
+			try{
+				const resp = await axios.post(`${UPDATE_IMAGES_OFICINA}/${id}`, data, {
+					headers:{
+						'Content-type' : 'multipart/form-data',
+					}
+				})
+
+				return resolve({
+					status: 'success',
+					data: resp.data
+				});
+
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data,
+				});
+			}
+		})
+	}
+
+	static updateOficina(id, data){
+		return new Promise(async(resolve, reject)=>{
+			try {
+				const resp = await axios.put(`${UPDATE_OFICINA}/${id}`, data)
+
+				return resolve({
+					status: 'success',
+					data: resp.data,
+				});
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data
+				})
 			}
 		})
 	}
