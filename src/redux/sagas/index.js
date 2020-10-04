@@ -10,6 +10,7 @@ import mobiliarioSaga from './mobiliarioSaga';
 import serviciosSaga from './serviciosSaga';
 import idiomasAtencionSaga from './idiomasAtencionSaga';
 import initLoadSaga from './initLoadSaga';
+import salaJuntasSaga from './salaJuntasSaga';
 
 export default function* mainSaga(){
 	yield all([
@@ -23,5 +24,6 @@ export default function* mainSaga(){
 		serviciosSaga(),
 		initLoadSaga(),
 		idiomasAtencionSaga(),
+		salaJuntasSaga(),
 	]);
 }

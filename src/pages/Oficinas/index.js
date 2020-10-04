@@ -1,16 +1,17 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faEye, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
-import * as edificosActions from '../../redux/actions/edificioAction'
-import * as oficinaActions from '../../redux/actions/oficinasActions'
+import * as edificosActions from '../../redux/actions/edificioAction';
+import * as oficinaActions from '../../redux/actions/oficinasActions';
 
-import Container from '../../components/pures/ContainerMaster'
-import Loading from '../../components/pures/LoadingSpinner'
-import EmptyScreen from '../../components/pures/EmptyScreen'
+import Container from '../../components/pures/ContainerMaster';
+import Loading from '../../components/pures/LoadingSpinner';
+import EmptyScreen from '../../components/pures/EmptyScreen';
+import CardOficinaSaga from '../../components/pures/CardOficinaSala';
 
 class Oficinas extends React.Component{
 
@@ -60,23 +61,15 @@ class Oficinas extends React.Component{
 	renderOficinas(){
 		if(this.props.oficinas.length > 0){
 			return this.props.oficinas.map(oficina => (
-				<div key = {oficina.id} className = 'col-10 col-sm-6 col-md-6 col-lg-4'>
-					<div className = 'card mb-3 shadow-sm p-2 mb-5 bg-white rounded' style = {{ maxWidth: '19rem' }}>
-						<img className = 'card-img-top rounded' alt = {oficina.nombre} src = {oficina.images[0].url} />
-						<div className = 'card-body'>
-							<h5 className = 'card-title'>{oficina.nombre}</h5>
-							<h6 className = 'card-subtitle mb-2 text-muted'>Tamaño: {oficina.size_tipo.tipo} - {oficina.size}</h6>
-						</div>
-						<div className = 'card-footer'>
-							<div className = 'btn btn-primary btn-sm mx-1' onClick = { () => this.showOficina(oficina.id) }>
-								<FontAwesomeIcon icon = { faEye } />
-							</div>
-							<div className = 'btn btn-danger btn-sm mx-1'>
-								<FontAwesomeIcon icon = { faTrashAlt } />
-							</div>
-						</div>
-					</div>
-				</div>
+				<CardOficinaSaga key = { oficina.id }
+					id = { oficina.id }
+					nombre = { oficina.nombre }
+					urlImage = { oficina.images[0].url }
+					precio = { oficina.precio }
+					tipo_size = { oficina.size_tipo.tipo }
+					dimensiones = { oficina.size }
+					handleShow = { this.showOficina }
+				/>
 			))
 		}
 	}
@@ -109,7 +102,7 @@ class Oficinas extends React.Component{
 							</div>
 						</div>
 					</div>
-					<div className = 'row mt-5'>
+					<div className = 'row px-3'>
 						{ this.renderLoadinfgScreen() }
 						{ this.renderEmptyScreen() }
 						{ this.renderOficinas() }

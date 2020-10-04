@@ -27,6 +27,7 @@ import {
 	UPDATE_IMAGES_OFICINA,
 	GET_IMAGES_OFICINA,
 	UPDATE_OFICINA,
+	GET_SALA_JUNTAS,
 } from './URLS'
 
 
@@ -451,6 +452,9 @@ class Europa3Api {
 		})
 	}
 
+	/**
+	 * Retorna los idiomas de atención registrados
+	 */
 	static getIdiomasAtencion(){
 		return new Promise(async (resolve, reject)=>{
 			try {
@@ -564,6 +568,24 @@ class Europa3Api {
 					status: 'error',
 					data: error.response.data
 				})
+			}
+		})
+	}
+
+	static getSalasJuntas(){
+		return new Promise(async(resolve, reject) => {
+			try {
+				const resp = await axios.get(GET_SALA_JUNTAS);
+
+				return resolve({
+					status: 'success',
+					data: resp.data,
+				});
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data,
+				});
 			}
 		})
 	}

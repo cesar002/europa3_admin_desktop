@@ -1,6 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-import NavBar from '../containers/NavBar'
+import NavBar from '../containers/NavBar';
+import Footer from './Footer';
 
 const ContainerScreen = (props) => (
 	<section id='content-wrapper' className= 'd-flex flex-column'>
@@ -8,13 +9,7 @@ const ContainerScreen = (props) => (
 			<NavBar />
 			{ props.children }
 		</div>
-		<footer className = 'sticky-footer bg-white'>
-			<div className = 'container my-auto'>
-				<div className = 'copyright text-center my-auto'>
-					<span>Desarrollado por topito</span>
-				</div>
-			</div>
-		</footer>
+		<Footer />
 	</section>
 )
 

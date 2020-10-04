@@ -30,4 +30,4 @@ export const GET_IDIOMAS_ATENCION = '/idiomas-atencion';
 export const CREATE_IDIOMA_ATENCION = '/idioma-atencion';
 export const UPDATE_IDIOMA_ATENCION = '/idioma-atencion';
 export const GET_IMAGES_OFICINA = '/oficina';
-
+export const GET_SALA_JUNTAS = '/salas-juntas';
