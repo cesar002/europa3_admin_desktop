@@ -18,6 +18,7 @@ function* initAll(){
 
 function* fetchSystemData(){
 	yield put( configActions.startFetchOficinasSizes() );
+	yield put( configActions.startFetchCatTiemposRenta() );
 	yield	put( locationsActions.startFetchEstados() );
 	yield put( salaJuntasActions.startFetchSalaJuntas() );
 	yield put( mobiliarioActions.startFetchTipoMobiliario() );

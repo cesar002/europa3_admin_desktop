@@ -28,6 +28,7 @@ import {
 	GET_IMAGES_OFICINA,
 	UPDATE_OFICINA,
 	GET_SALA_JUNTAS,
+	GET_CAT_TIPOS_TIEMPOS_RENTA,
 } from './URLS'
 
 
@@ -576,6 +577,24 @@ class Europa3Api {
 		return new Promise(async(resolve, reject) => {
 			try {
 				const resp = await axios.get(GET_SALA_JUNTAS);
+
+				return resolve({
+					status: 'success',
+					data: resp.data,
+				});
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data,
+				});
+			}
+		})
+	}
+
+	static getCatTiemposRenta(){
+		return new Promise(async(resolve, reject) => {
+			try {
+				const resp = await axios.get(GET_CAT_TIPOS_TIEMPOS_RENTA);
 
 				return resolve({
 					status: 'success',

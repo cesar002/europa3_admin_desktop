@@ -5,17 +5,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 
 import Container from '../../components/pures/ContainerMaster';
+import Thumbnail from '../../components/pures/ThumbnailImageLocalPreview';
 
+import Europa3Api from '../../api';
 
 class SalaJuntaCreate extends React.Component{
 	constructor(props){
 		super(props);
 
 		this.validateForm = this.validateForm.bind(this);
-		this.fetchMobiliario = this.fetchMobiliario.bind(this);
+		this.filterMobiliarioByEdificio = this.filterMobiliarioByEdificio.bind(this);
 		this.addServicio = this.addServicio.bind(this);
 		this.renderMobiliario = this.renderMobiliario.bind(this);
 		this.addMobiliario = this.addMobiliario.bind(this);
+		this.addSalaJuntasImages = this.addSalaJuntasImages.bind(this);
+		this.removeSalaJuntasImage = this.removeSalaJuntasImage.bind(this);
+		this.registerSalaJuntas = this.registerSalaJuntas.bind(this);
 
 		this.state = {
 			mobiliario: [],
@@ -23,16 +28,12 @@ class SalaJuntaCreate extends React.Component{
 			currentServicioId: 0,
 			currentMobiliarioId: 0,
 			mobiliarioOficinaError: null,
+			images: [],
+			imagesError: null,
 		}
 	}
 
-	validateForm(values){
-		const errors = {}
-
-		return errors;
-	}
-
-	fetchMobiliario(e){
+	filterMobiliarioByEdificio(e){
 		const id = Number(e.target.value);
 		this.setState({
 			mobiliario: this.props.mobiliario.filter(m => m.edificio.id == id),
@@ -68,6 +69,25 @@ class SalaJuntaCreate extends React.Component{
 	updateCantidadMobiliario(id, cantidad){
 		this.setState({
 			mobiliarioSala: this.state.mobiliarioSala.map(m => m.id == id ? {...m, cantidad} : m)
+		})
+	}
+
+	addSalaJuntasImages(e){
+		const files = Array.from(e.target.files);
+
+		this.setState({
+			images : files,
+			imagesError: null,
+		})
+	}
+
+	removeSalaJuntasImage(index){
+		this.setState({
+			images: this.state.images.filter((img, i) => i !== index)
+		}, () => {
+			if(this.state.images.length == 0){
+				this.inputImages.value = '';
+			}
 		})
 	}
 
@@ -133,6 +153,103 @@ class SalaJuntaCreate extends React.Component{
 		)
 	}
 
+	validateForm(values){
+		const errors = {}
+
+		if(values.edificio_id == 0){
+			errors.edificio_id = 'Campo obligatorio'
+		}
+
+		if(values.size_id == 0){
+			errors.size_id = 'Campo obligatorio'
+		}
+
+		if(values.tipo_tiempo_id == 0){
+			errors.tipo_tiempo_id = 'Campo obligatorio'
+		}
+
+		if(values.nombre == ''){
+			errors.nombre = 'Campo obligatorio'
+		}
+
+		if(values.size_dimension == ''){
+			errors.size_dimension = 'Campo obligatorio'
+		}
+
+		if(values.capacidad_recomendada == ''){
+			errors.capacidad_recomendada = 'Campo obligatorio'
+		}else if(Number(values.capacidad_recomendada) <= 0){
+			errors.capacidad_recomendada = 'La capacidad recomendada debe ser minimo 1'
+		}
+
+		if(values.capacidad_maxima == ''){
+			errors.capacidad_maxima = 'Campo obligatorio'
+		}else if(Number(values.capacidad_maxima) < Number(values.capacidad_recomendada)){
+			errors.capacidad_maxima = 'La capacidad maxima debe ser igual o mayor a la capacidad recomendada'
+		}
+
+		if(values.precio == ''){
+			errors.precio = 'Campo obligatorio'
+		}else if(Number(values.precio) == 0){
+			errors.precio = 'El precio debe ser mayor a 0'
+		}
+
+		if(values.servicios.length == 0){
+			errors.servicios = 'Debe de haber al menos un servicio'
+		}
+
+		if(values.descripcion == ''){
+			errors.descripcion = 'Campo obligatorio'
+		}
+
+		return errors;
+	}
+
+	registerSalaJuntas(values, setSubmitting, resetForm){
+		if(this.state.images.length == 0){
+			this.setState({
+				imagesError: 'Debe haber almenos una imagen',
+			}, () => setSubmitting(false))
+
+			return;
+		}
+
+		if(this.state.mobiliarioSala.length == 0){
+			this.setState({
+				mobiliarioOficinaError: 'Debe haber almenos un mobiliario agregado'
+			}, () => setSubmitting(false))
+
+			return;
+		}
+
+		const data = new FormData();
+		Object.keys(values).forEach(k => {
+			if(k == 'servicios'){
+				values[k].forEach(s => {
+					data.append('servicios[]', s.id)
+				})
+			}else{
+				data.append(k, values[k]);
+			}
+		})
+
+		this.state.mobiliarioSala.forEach(m => {
+			for (let i = 0; i < m.cantidad; i++) {
+				data.append('mobiliario[]', m.id)
+			}
+		})
+
+		this.state.images.forEach(img => {
+			data.append('images[]', img)
+		})
+
+		for(let p of data.entries()){
+			console.log(p[0], p[1])
+		}
+
+		setSubmitting(false)
+	}
+
 	render(){
 		return(
 			<Container
@@ -152,11 +269,10 @@ class SalaJuntaCreate extends React.Component{
 								capacidad_recomendada: '',
 								capacidad_maxima: '',
 								precio: '',
-								mobiliario: [],
 								servicios: [],
 							}}
 							validate = { values => this.validateForm(values) }
-							onSubmit = { (values, { setSubmitting, resetForm }) => {} }
+							onSubmit = { (values, { setSubmitting, resetForm }) => this.registerSalaJuntas(values, setSubmitting, resetForm) }
 						>
 							{({
 								values,
@@ -178,7 +294,7 @@ class SalaJuntaCreate extends React.Component{
 											value = {values.edificio_id}
 											style = {{minWidth: '10rem' }}
 											onChange = { e => {
-												this.fetchMobiliario(e);
+												this.filterMobiliarioByEdificio(e);
 												handleChange(e);
 											}}
 											onBlur = { handleBlur }
@@ -219,6 +335,9 @@ class SalaJuntaCreate extends React.Component{
 										onBlur = { handleBlur }
 									>
 										<option value = {0}>Seleccione una opción</option>
+										{this.props.tipoTiempos.map(m => (
+										<option key = {m.id} value = {m.id}>{m.tiempo}</option>
+										))}
 									</select>
 									{errors.tipo_tiempo_id && <div className = 'invalid-feedback'>{errors.tipo_tiempo_id}</div>}
 								</div>
@@ -245,6 +364,33 @@ class SalaJuntaCreate extends React.Component{
 									{errors.descripcion && <div className = 'invalid-feedback'>{errors.descripcion}</div>}
 								</div>
 								<div className = 'form-group'>
+									<label htmlFor = 'sala-images'>Imagenes de la sala de juntas</label>
+									<input id = 'sala-images'
+										className = 'form-control-file'
+										type = 'file'
+										multiple
+										accept='image/x-png,image/gif,image/jpeg'
+										onChange = { e => this.addSalaJuntasImages(e) }
+										ref = { el => this.inputImages = el }
+									/>
+									{ this.state.imagesError && <div className = 'text-danger'>{this.state.imagesError}</div> }
+								</div>
+								{ this.state.images.length > 0 &&
+									<div className = 'row'>
+										{ this.state.images.map((img, i) => (
+										<div key = { img.name } className = {`col-6 col-sm-3 ${ this.state.images.length >= 3? 'mx-3' : 'mx-5' }`}>
+											<button type = 'button' className = 'btn btn-danger btn-sm float-right'
+												style = {{ position : 'absolute' }}
+												onClick = { () => this.removeSalaJuntasImage(i) }
+											>
+												<FontAwesomeIcon icon = { faTrashAlt } />
+											</button>
+											<Thumbnail file = { img } />
+										</div>
+										)) }
+									</div>
+								}
+								<div className = 'form-group'>
 									<label htmlFor = 'dimensiones'>Dimensiones</label>
 									<input id = 'dimensiones'
 										className = {`form-control ${errors.size_dimension && touched.size_dimension ? 'is-invalid' : ''}`}
@@ -252,7 +398,7 @@ class SalaJuntaCreate extends React.Component{
 										name = 'size_dimension'
 										onChange = { handleChange }
 										onBlur = { handleBlur }
-										style = {{ maxWidth: '8rem' }}
+										style = {{ maxWidth: '10rem' }}
 									/>
 									{errors.size_dimension && <div className = 'invalid-feedback'>{errors.size_dimension}</div>}
 								</div>
@@ -279,6 +425,18 @@ class SalaJuntaCreate extends React.Component{
 										/>
 										{errors.capacidad_maxima && <div className = 'invalid-feedback'>{errors.capacidad_maxima}</div>}
 									</div>
+								</div>
+								<div className = 'form-group'>
+									<label htmlFor = 'precio'>Precio</label>
+									<input id = 'precio' className = {`form-control ${errors.precio && touched.precio ? 'is-invalid' : ''}`}
+										type = 'number'
+										name = 'precio'
+										value = { values.precio }
+										onChange = { handleChange }
+										onBlur = { handleBlur }
+										style = {{ maxWidth: '10rem' }}
+									/>
+									{errors.precio && <div className = 'invalid-feedback'>{errors.precio}</div>}
 								</div>
 								<FieldArray
 									name = 'servicios'
@@ -338,6 +496,14 @@ class SalaJuntaCreate extends React.Component{
 									)}
 								/>
 								{ this.renderMobiliario() }
+								<div className = 'form-group'>
+									<button className = 'btn btn-primary btn-lg btn-block' disabled = { isSubmitting }>
+										{ !isSubmitting && 'Registro de la sala de juntas' }
+										{isSubmitting &&
+										<div className="spinner-border text-light" role="status" />
+										}
+									</button>
+								</div>
 							</form>
 							)}
 						</Formik>
@@ -353,6 +519,7 @@ const mapStateToProps = state => ({
 	oficinasSizes: state.configData.oficinasSizes,
 	mobiliario: state.mobiliarioData.mobiliario,
 	servicios: state.serviciosData.servicios,
+	tipoTiempos: state.configData.catTiemposRenta,
 })
 
 const mapDispatchToProps = dispatch => ({

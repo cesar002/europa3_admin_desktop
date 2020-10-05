@@ -273,14 +273,12 @@ class OficinaCreate extends React.Component{
 							<div className = {`col-6 col-sm-3 ${ this.state.files.length >= 3? 'mx-3' : 'mx-5' }`}
 								key = {file.name}
 							>
-								<React.Fragment>
-									<div className = 'btn btn-danger btn-sm float-right' style = {{ position: 'absolute' }}
-										onClick = { () => this.removeImage(i) }
-									>
-										<FontAwesomeIcon icon = { faTrashAlt } />
-									</div>
-									<ThumbnailPreview file = { file } />
-								</React.Fragment>
+								<div className = 'btn btn-danger btn-sm float-right' style = {{ position: 'absolute' }}
+									onClick = { () => this.removeImage(i) }
+								>
+									<FontAwesomeIcon icon = { faTrashAlt } />
+								</div>
+								<ThumbnailPreview file = { file } />
 							</div>
 						)) }
 					</div>

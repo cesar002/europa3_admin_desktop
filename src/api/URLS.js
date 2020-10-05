@@ -31,3 +31,4 @@ export const CREATE_IDIOMA_ATENCION = '/idioma-atencion';
 export const UPDATE_IDIOMA_ATENCION = '/idioma-atencion';
 export const GET_IMAGES_OFICINA = '/oficina';
 export const GET_SALA_JUNTAS = '/salas-juntas';
+export const GET_CAT_TIPOS_TIEMPOS_RENTA = '/tiempos-renta';

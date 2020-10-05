@@ -15,7 +15,7 @@ const ThumbnailPreview = ({ file }) => {
 
 	return(
 		<img className = 'img-fluid p-3' alt = {file.name} src = { image }
-			style = {{ maxWidth: '200px', maxHeight: '200px' }}
+			style = {{ maxWidth: '150px', maxHeight: '150px' }}
 		/>
 	)
 }
