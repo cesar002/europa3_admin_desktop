@@ -27,8 +27,9 @@ import {
 	UPDATE_IMAGES_OFICINA,
 	GET_IMAGES_OFICINA,
 	UPDATE_OFICINA,
-	GET_SALA_JUNTAS,
+	GET_SALAS_JUNTAS,
 	GET_CAT_TIPOS_TIEMPOS_RENTA,
+	REGISTER_SALA_JUNTAS,
 } from './URLS'
 
 
@@ -576,7 +577,7 @@ class Europa3Api {
 	static getSalasJuntas(){
 		return new Promise(async(resolve, reject) => {
 			try {
-				const resp = await axios.get(GET_SALA_JUNTAS);
+				const resp = await axios.get(GET_SALAS_JUNTAS);
 
 				return resolve({
 					status: 'success',
@@ -595,6 +596,28 @@ class Europa3Api {
 		return new Promise(async(resolve, reject) => {
 			try {
 				const resp = await axios.get(GET_CAT_TIPOS_TIEMPOS_RENTA);
+
+				return resolve({
+					status: 'success',
+					data: resp.data,
+				});
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data,
+				});
+			}
+		})
+	}
+
+	static registerSalaJuntas(data){
+		return new Promise(async(resolve, reject)=>{
+			try {
+				const resp = await axios.post(REGISTER_SALA_JUNTAS, data, {
+					headers:{
+						'Content-type' : 'multipart/form-data',
+					}
+				})
 
 				return resolve({
 					status: 'success',

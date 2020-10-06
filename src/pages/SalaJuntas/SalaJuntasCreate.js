@@ -1,4 +1,5 @@
 import React from 'react';
+import swal from 'sweetalert2';
 import { Formik, FieldArray } from 'formik';
 import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,6 +9,8 @@ import Container from '../../components/pures/ContainerMaster';
 import Thumbnail from '../../components/pures/ThumbnailImageLocalPreview';
 
 import Europa3Api from '../../api';
+
+import * as salaJuntasActions from '../../redux/actions/salaJuntasActions'
 
 class SalaJuntaCreate extends React.Component{
 	constructor(props){
@@ -243,11 +246,35 @@ class SalaJuntaCreate extends React.Component{
 			data.append('images[]', img)
 		})
 
-		for(let p of data.entries()){
-			console.log(p[0], p[1])
-		}
-
-		setSubmitting(false)
+		Europa3Api.registerSalaJuntas(data)
+		.then(resp => {
+			swal.fire({
+				icon: 'success',
+				title: 'Correcto',
+				text: 'Sala de juntas registrada con éxito'
+			});
+			this.setState({
+				mobiliario: [],
+				mobiliarioSala: [],
+				currentServicioId: 0,
+				currentMobiliarioId: 0,
+				mobiliarioOficinaError: null,
+				images: [],
+				imagesError: null,
+			}, () => {
+				this.props.fetchSalaJuntas();
+				resetForm();
+			})
+		})
+		.catch(err => {
+			console.error(err)
+			swal.fire({
+				icon: 'error',
+				title: 'Ocurrió un error',
+				text: 'Hubo un error al intentar registrar la sala de juntas',
+			})
+		})
+		.finally(() => setSubmitting(false))
 	}
 
 	render(){
@@ -523,7 +550,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-
+	fetchSalaJuntas(){
+		dispatch(salaJuntasActions.startFetchSalaJuntas())
+	}
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SalaJuntaCreate);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +10,8 @@ import CardOficinaSala from '../../components/pures/CardOficinaSala';
 import EmptyScreen from '../../components/pures/EmptyScreen';
 import LoadingScreen from '../../components/pures/LoadingScreen';
 
+import * as salaJuntasActions from '../../redux/actions/salaJuntasActions';
+
 class SalaJuntas extends React.Component{
 	constructor(props){
 		super(props);
@@ -16,10 +19,16 @@ class SalaJuntas extends React.Component{
 		this.renderSalasJuntas = this.renderSalasJuntas.bind(this);
 		this.renderEmptyScreen = this.renderEmptyScreen.bind(this);
 		this.renderLoadingScreen = this.renderLoadingScreen.bind(this);
+		this.selectSalaJunta = this.selectSalaJunta.bind(this);
 
 		this.state = {
 			currentEdificioId: 0,
 		}
+	}
+
+	selectSalaJunta(id){
+		this.props.selectSala(id);
+		this.props.history.push('/sala-juntas/update');
 	}
 
 	renderLoadingScreen(){
@@ -41,9 +50,10 @@ class SalaJuntas extends React.Component{
 					id = { s.id }
 					nombre = { s.nombre }
 					precio = { s.precio }
-					dimensiones = { s.dimensiones }
+					dimensiones = { s.dimension }
 					urlImage = { s.images[0].url }
-					tipo_size = 'Alo'
+					tipo_size = { s.size_tipo.tipo }
+					handleShow = { this.selectSalaJunta }
 				/>
 			))
 		}
@@ -78,7 +88,7 @@ class SalaJuntas extends React.Component{
 							</div>
 						</div>
 					</div>
-					<div className = 'row px-3'>
+					<div className = 'row px-3 mt-4'>
 						{ this.renderSalasJuntas() }
 						{ this.renderEmptyScreen() }
 						{ this.renderLoadingScreen() }
@@ -96,7 +106,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-
+	selectSala(id){
+		dispatch(salaJuntasActions.selectSalaJuntas(id))
+	}
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SalaJuntas)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SalaJuntas));

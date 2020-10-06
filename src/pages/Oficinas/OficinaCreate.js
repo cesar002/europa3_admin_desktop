@@ -632,7 +632,7 @@ class OficinaCreate extends React.Component{
 							</a>
 						</li>
 						<li className = 'nav-item'>
-							<a className = {`nav-link ${this.state.tabIndex == 2 ? 'active' : ''}`} onClick = {( )=> this.goToTab(2) } style = {{ cursor: 'pointer' }}>
+							<a className = {`nav-link ${this.state.tabIndex == 1 ? 'active' : ''}`} onClick = {( )=> this.goToTab(1) } style = {{ cursor: 'pointer' }}>
 								Oficina virtual
 							</a>
 						</li>

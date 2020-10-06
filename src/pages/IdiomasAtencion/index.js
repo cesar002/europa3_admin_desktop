@@ -24,6 +24,7 @@ class IdiomasAtencion extends React.Component{
 
 		this.state = {
 			idioma : '',
+			registerLoading: false,
 		}
 	}
 
@@ -74,8 +75,16 @@ class IdiomasAtencion extends React.Component{
 			return
 		}
 
+		this.setState({
+			registerLoading: true,
+		})
+
 		Europa3Api.registerIdiomaAtencion(this.state.idioma)
-		.then(resp => this.props.fetchIdiomasAtencion())
+		.then(resp => {
+			this.setState({
+				registerLoading: false
+			}, () => this.props.fetchIdiomasAtencion())
+		})
 		.catch(err => {
 			swal.fire({
 				icon: 	'error',
@@ -99,14 +108,21 @@ class IdiomasAtencion extends React.Component{
 								value = { this.state.idioma }
 								onChange = { e => this.setState({ idioma: e.target.value }) }
 								placeholder = 'Nombre del servicio'
+								disabled = { this.state.registerLoading }
 							/>
 						</div>
 						<div className = 'col-6'>
 							<button className = 'btn btn-primary btn-sm'
 								onClick = { this.addIdioma }
+								disabled = { this.state.registerLoading }
 							>
-								<FontAwesomeIcon icon = { faPlusCircle } className = 'mr-2' />
-								Agregar servicio
+								{ !this.state.registerLoading &&
+								<React.Fragment>
+									<FontAwesomeIcon icon = { faPlusCircle } className = 'mr-2' />
+									Agregar servicio
+								</React.Fragment>
+								}
+								{ this.state.registerLoading && <div className="spinner-border spinner-border-sm text-light" role="status" />}
 							</button>
 						</div>
 					</div>

@@ -24,6 +24,7 @@ class Servicios extends React.Component{
 
 		this.state = {
 			servicio: '',
+			registerLoading: false,
 		}
 	}
 
@@ -32,8 +33,16 @@ class Servicios extends React.Component{
 			return
 		}
 
+		this.setState({
+			registerLoading: true,
+		});
+
 		Europa3Api.registerServicio(this.state.servicio)
-		.then(resp =>  this.props.fetchServicios() )
+		.then(resp => {
+			this.setState({
+				registerLoading: false
+			},() => this.props.fetchServicios())
+		})
 		.catch(err => {
 			swal.fire({
 				icon: 'error',
@@ -104,9 +113,15 @@ class Servicios extends React.Component{
 						<div className = 'col-6'>
 							<button className = 'btn btn-primary btn-sm'
 								onClick = { this.addServicio }
+								disabled = { this.state.registerLoading }
 							>
-								<FontAwesomeIcon icon = { faPlusCircle } className = 'mr-2' />
-								Agregar servicio
+								{ !this.state.registerLoading &&
+								<React.Fragment>
+									<FontAwesomeIcon icon = { faPlusCircle } className = 'mr-2' />
+									Agregar servicio
+								</React.Fragment>
+								}
+								{ this.state.registerLoading && <div className="spinner-border spinner-border-sm text-light" role="status" /> }
 							</button>
 						</div>
 					</div>
