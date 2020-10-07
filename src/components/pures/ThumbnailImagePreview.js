@@ -1,8 +1,8 @@
 import React from 'react';
 
-const ThumbnailImagePreview = ({ uri }) => (
+const ThumbnailImagePreview = ({ uri, maxWidth = 150, maxHeight = 150 }) => (
 	<img className = 'img-fluid p-3' alt = {uri} src = { uri }
-		style = {{ maxWidth: '150px', maxHeight: '150px' }}
+		style = {{ maxWidth: `${maxWidth}px`, maxHeight: `${maxHeight}px` }}
 	/>
 )
 

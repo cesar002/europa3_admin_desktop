@@ -30,6 +30,9 @@ import {
 	GET_SALAS_JUNTAS,
 	GET_CAT_TIPOS_TIEMPOS_RENTA,
 	REGISTER_SALA_JUNTAS,
+	GET_IMAGES_SALA_JUNTAS,
+	UPDATE_IMAGES_SALA_JUNTAS,
+	UPDATE_SALA_JUNTAS,
 } from './URLS'
 
 
@@ -628,6 +631,64 @@ class Europa3Api {
 					status: 'error',
 					data: error.response.data,
 				});
+			}
+		})
+	}
+
+	static getSalaJuntasImage(id){
+		return new Promise(async (resolve, reject) => {
+			try {
+				const resp = await axios.get(`${GET_IMAGES_SALA_JUNTAS}/${id}/images`)
+
+				return resolve({
+					status: 'success',
+					data: resp.data
+				})
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data,
+				})
+			}
+		})
+	}
+
+	static updateSalaJuntas(id, data){
+		return new Promise(async (resolve, reject) => {
+			try {
+				const resp = await axios.put(`${UPDATE_SALA_JUNTAS}/${id}`, data);
+
+				return resolve({
+					status: 'success',
+					data: resp.data
+				})
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data,
+				})
+			}
+		})
+	}
+
+	static updateImagesSalaJuntas(id, data){
+		return new Promise(async (resolve, reject) => {
+			try {
+				const resp = await axios.post(`${UPDATE_IMAGES_SALA_JUNTAS}/${id}`, data, {
+					headers:{
+						'Content-type' : 'multipart/form-data',
+					}
+				});
+
+				return resolve({
+					status: 'success',
+					data: resp.data,
+				});
+			} catch (error) {
+				return reject({
+					status: 'error',
+					data: error.response.data,
+				})
 			}
 		})
 	}

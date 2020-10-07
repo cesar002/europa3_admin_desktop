@@ -32,4 +32,7 @@ export const UPDATE_IDIOMA_ATENCION = '/idioma-atencion';
 export const GET_IMAGES_OFICINA = '/oficina';
 export const GET_SALAS_JUNTAS = '/salas-juntas';
 export const REGISTER_SALA_JUNTAS = '/sala-juntas';
+export const UPDATE_SALA_JUNTAS = '/sala-juntas';
 export const GET_CAT_TIPOS_TIEMPOS_RENTA = '/tiempos-renta';
+export const GET_IMAGES_SALA_JUNTAS = '/sala-juntas';
+export const UPDATE_IMAGES_SALA_JUNTAS = '/sala-juntas-images';

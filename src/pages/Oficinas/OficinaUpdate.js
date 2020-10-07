@@ -642,7 +642,6 @@ class OficinaUpdate extends React.Component{
 					}
 					{!this.props.oficinaImagesStatus.start && this.props.oficina.images.map(o => (
 					<div className = 'col-6 col-sm-3' key = {o.id}>
-						<React.Fragment>
 							{this.state.isEdit &&
 							<button type = 'button' className = 'btn btn-danger btn-sm float-right' style = {{ position: 'absolute' }}
 								disabled = { this.state.updatingImages }	onClick = { () => this.removeImageOficina(o) }
@@ -651,12 +650,10 @@ class OficinaUpdate extends React.Component{
 							</button>
 							}
 							<ThumbnailPreview uri = { o.url } />
-						</React.Fragment>
 					</div>
 					))}
 					{this.state.newImages && this.state.newImages.map(n => (
 					<div className = 'col-6 col-sm-3' key = {n.name}>
-						<React.Fragment>
 							{this.state.isEdit &&
 							<button type = 'button' className = 'btn btn-danger btn-sm float-right' style = {{ position: 'absolute' }}
 								disabled = { this.state.updatingImages } onClick = { () => this.removeNewImage(n.name) }
@@ -665,7 +662,6 @@ class OficinaUpdate extends React.Component{
 							</button>
 							}
 							<ThumbnailLocalPreview file = {n} />
-						</React.Fragment>
 					</div>
 					))}
 				</div>
