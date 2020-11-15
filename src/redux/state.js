@@ -10,6 +10,7 @@ import mobiliarioReducer from './reducers/mobiliarioReducer';
 import serviciosReducer from './reducers/serviciosReducer';
 import idiomasAtencionReducer from './reducers/idiomasAtencionReducer';
 import salaJuntasReducer from './reducers/salaJuntasReducer';
+import usersReducer from './reducers/usersReducer';
 
 const state = combineReducers({
 	userData: userReducer,
@@ -22,6 +23,7 @@ const state = combineReducers({
 	serviciosData: serviciosReducer,
 	idiomasAtencionData: idiomasAtencionReducer,
 	salaJuntasData: salaJuntasReducer,
+	usersData: usersReducer,
 })
 
 export default state;

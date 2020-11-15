@@ -374,7 +374,6 @@ class OficinaUpdate extends React.Component{
 					capacidad_recomendada: this.props.oficina.capacidad.recomendada,
 					capacidad_maxima: this.props.oficina.capacidad.maxima,
 					precio: this.props.oficina.precio,
-					tipo_oficina_id: 1,
 				}}
 				validate = {values => {
 					const errors = {};

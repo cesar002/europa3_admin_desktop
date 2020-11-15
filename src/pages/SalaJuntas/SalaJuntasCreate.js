@@ -289,7 +289,8 @@ class SalaJuntaCreate extends React.Component{
 							initialValues = {{
 								edificio_id: 0,
 								size_id: 0,
-								tipo_tiempo_id: 0,
+								tipo_tiempo_id: 2,
+								tipo_oficina_id: 2,
 								nombre: '',
 								descripcion: '',
 								size_dimension: '',

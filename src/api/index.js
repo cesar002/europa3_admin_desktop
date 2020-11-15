@@ -4,6 +4,7 @@ import LocalStorage from '../services/UserCredencialsStorageService'
 import {
 	LOGIN,
 	INFO_PERSONAL,
+	GET_NOTIFICATIONS,
 	EDIFICIO,
 	EDIFICIOS,
 	REGISTER_EDIFICIO,
@@ -33,6 +34,7 @@ import {
 	GET_IMAGES_SALA_JUNTAS,
 	UPDATE_IMAGES_SALA_JUNTAS,
 	UPDATE_SALA_JUNTAS,
+	GET_USERS,
 } from './URLS'
 
 
@@ -691,6 +693,46 @@ class Europa3Api {
 				})
 			}
 		})
+	}
+
+	static async getUsuarios(accesstoken){
+		try {
+			const resp = await axios.get(GET_USERS, {
+				headers:{
+					Authorization: `Bearer ${accesstoken}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async getNotifications(accessToken){
+		try {
+			const resp = await axios.get(GET_NOTIFICATIONS, {
+				headers:{
+					Authorization: `Bearer ${accessToken}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
 	}
 
 }

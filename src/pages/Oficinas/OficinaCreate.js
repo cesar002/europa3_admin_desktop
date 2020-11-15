@@ -177,29 +177,31 @@ class OficinaCreate extends React.Component{
 					</div>
 				</div>
 				{ this.state.serviciosSelected.length > 0  &&
-				<table className = 'table table-responsive'>
-					<thead>
-						<tr>
-							<th scope = 'col'>Servicio</th>
-							<th scope = 'col'></th>
-							<th scope = 'col'></th>
-						</tr>
-					</thead>
-					<tbody>
-						{this.state.serviciosSelected.map(s => (
-						<tr key = {s.id}>
-							<th colSpan = '2'>{s.servicio}</th>
-							<th className = 'd-flex justify-content-between'>
-								<div className = 'btn btn-danger btn-sm'
-									onClick = {() => this.deleteServicio(s.id)}
-								>
-									<FontAwesomeIcon icon = { faTrashAlt } />
-								</div>
-							</th>
-						</tr>
-						))}
-					</tbody>
-				</table>
+				<div className = 'row d-flex justify-content-center'>
+					<table className = 'table table-responsive'>
+						<thead>
+							<tr>
+								<th scope = 'col'>Servicio</th>
+								<th scope = 'col'></th>
+								<th scope = 'col'></th>
+							</tr>
+						</thead>
+						<tbody>
+							{this.state.serviciosSelected.map(s => (
+							<tr key = {s.id}>
+								<th colSpan = '2'>{s.servicio}</th>
+								<th className = 'd-flex justify-content-between'>
+									<div className = 'btn btn-danger btn-sm'
+										onClick = {() => this.deleteServicio(s.id)}
+									>
+										<FontAwesomeIcon icon = { faTrashAlt } />
+									</div>
+								</th>
+							</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
 				}
 			</React.Fragment>
 		)
@@ -228,37 +230,39 @@ class OficinaCreate extends React.Component{
 					</div>
 				</div>
 				{ this.props.mobiliarioOficina.length > 0  &&
-				<table className = 'table table-responsive'>
-					<thead>
-						<tr>
-							<th scope = 'col'>Mueble</th>
-							<th scope = 'col'>Imagen</th>
-							<th scope = 'col'>Cantidad</th>
-							<th scope = 'col'></th>
-						</tr>
-					</thead>
-					<tbody>
-						{this.props.mobiliarioOficina.map(mob => (
-						<tr key = {mob.id}>
-							<th>{mob.nombre}</th>
-							<th><img alt = {mob.nombre} src = {mob.image} style = {{ width: '40px', height: '40px' }} /></th>
-							<th className = 'input-group-sm'>
-								<input type = 'number' value = { mob.cantidad }
-									className = 'form-control'
-									onChange = { e => this.updateCantidad(mob.id, e.target.value) }
-								/>
-							</th>
-							<th className = 'd-flex justify-content-between'>
-								<div className = 'btn btn-danger btn-sm'
-									onClick = { () => this.deleteMobiliario(mob.id) }
-								>
-									<FontAwesomeIcon icon = { faTrashAlt } />
-								</div>
-							</th>
-						</tr>
-						))}
-					</tbody>
-				</table>
+				<div className = 'row d-flex justify-content-center'>
+					<table className = 'table table-responsive'>
+						<thead>
+							<tr>
+								<th scope = 'col'>Mueble</th>
+								<th scope = 'col'>Imagen</th>
+								<th scope = 'col'>Cantidad</th>
+								<th scope = 'col'></th>
+							</tr>
+						</thead>
+						<tbody>
+							{this.props.mobiliarioOficina.map(mob => (
+							<tr key = {mob.id}>
+								<th>{mob.nombre}</th>
+								<th><img alt = {mob.nombre} src = {mob.image} style = {{ width: '40px', height: '40px' }} /></th>
+								<th className = 'input-group-sm'>
+									<input type = 'number' value = { mob.cantidad }
+										className = 'form-control'
+										onChange = { e => this.updateCantidad(mob.id, e.target.value) }
+									/>
+								</th>
+								<th className = 'd-flex justify-content-between'>
+									<div className = 'btn btn-danger btn-sm'
+										onClick = { () => this.deleteMobiliario(mob.id) }
+									>
+										<FontAwesomeIcon icon = { faTrashAlt } />
+									</div>
+								</th>
+							</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
 				}
 			</React.Fragment>
 		)
@@ -288,6 +292,11 @@ class OficinaCreate extends React.Component{
 	}
 
 	registerOficina(values, setSubmit, resetForm){
+		if(!this.state.files){
+			setSubmit(false);
+			return;
+		}
+
 		if(this.state.currentEdificioId == 0){
 			this.setState({
 				edificioIdError: 'Campo obligatorio'
@@ -367,16 +376,20 @@ class OficinaCreate extends React.Component{
 			<Formik
 				initialValues = {{
 					size_id: 0,
+					tipo_tiempo_id: 1,
 					nombre: '',
 					descripcion: '',
 					dimension: '',
 					capacidad_recomendada: '',
 					capacidad_maxima: '',
 					precio: '',
-					tipo_oficina_id: 1,
 				}}
 				validate = {values => {
 					const errors = {};
+
+					if(values.tipo_tiempo_id == 0){
+						errors.tipo_tiempo_id = 'Campo obligatorio';
+					}
 
 					if(!values.nombre){
 						errors.nombre = 'Campo obligatorio';
@@ -478,6 +491,22 @@ class OficinaCreate extends React.Component{
 								</div>
 								}
 							</div>
+						</div>
+						<div className = 'form-group'>
+							<label htmlFor = 'tiempo'>Tipo de tiempo de renta</label>
+							<select id = 'tiempo'
+								className = {`form-control ${errors.tipo_tiempo_id && touched.tipo_tiempo_id ? 'is-invalid' : ''}`}
+								value = { values.tipo_tiempo_id }
+								name = 'tipo_tiempo_id'
+								onChange = { handleChange }
+								onBlur = { handleBlur }
+							>
+								<option value = {0}>Seleccione una opción</option>
+								{this.props.tipoTiempos.map(m => (
+								<option key = {m.id} value = {m.id}>{m.tiempo}</option>
+								))}
+							</select>
+							{errors.tipo_tiempo_id && <div className = 'invalid-feedback'>{errors.tipo_tiempo_id}</div>}
 						</div>
 						<div className = 'form-group'>
 							<label htmlFor = 'nombre'>Nombre de la oficina:</label>
@@ -637,8 +666,8 @@ class OficinaCreate extends React.Component{
 							</a>
 						</li>
 					</ul>
-					<section className = 'pt-4 d-flex justify-content-center'>
-						<div className = 'row'>
+					<section className = 'mt-4 d-flex justify-content-center'>
+						<div className = 'row mt-3'>
 						{this.state.tabIndex == 0 &&
 						this.renderOficinaFisica()
 						}
@@ -659,6 +688,7 @@ const mapStateToProps = state => ({
 	mobiliario: state.mobiliarioData.mobiliarioCreate.mobiliario,
 	mobiliarioOficina: state.mobiliarioData.mobiliarioCreate.mobiliarioOficina,
 	servicios: state.serviciosData.servicios,
+	tipoTiempos: state.configData.catTiemposRenta,
 })
 
 const mapDispatchToProps = dispatch => ({

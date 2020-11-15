@@ -20,6 +20,7 @@ import IdiomasAtencion from '../pages/IdiomasAtencion';
 import SalaJuntas from '../pages/SalaJuntas';
 import SalaJuntasCreate from '../pages/SalaJuntas/SalaJuntasCreate';
 import SalaJuntasUpdate from '../pages/SalaJuntas/SalaJuntasUpdate';
+import Usuarios from '../pages/usuarios';
 
 const MainRoute = () => (
 	<HashRouter>
@@ -27,6 +28,7 @@ const MainRoute = () => (
 			<Route path = '/' exact component = { PreAuth } />
 			<Route path = '/login' exact component = { Login } />
 			<Route path = '/inicio' exact component = { Inicio } />
+			<Route path = '/usuarios' exact component = { Usuarios } />
 			<Route path = '/edificios' exact component = { EdificioInicio } />
 			<Route path = '/edificios/create' exact component = { EdificioCreate }/>
 			<Route path = '/edificios/update' exact component = { EdificioUpdate } />

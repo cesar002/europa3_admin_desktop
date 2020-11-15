@@ -10,6 +10,7 @@ import * as edificiosActions from '../actions/edificioAction';
 import * as serviciosActions from '../actions/serviciosActions';
 import * as idiomasAtencionActions from '../actions/idiomasAtencionActions';
 import * as salaJuntasActions from '../actions/salaJuntasActions';
+import * as usersActions from '../actions/usersAction';
 
 function* initAll(){
 	yield put( initLoadAction.startFetchSystemData() );
@@ -26,6 +27,7 @@ function* fetchSystemData(){
 	yield put( edificiosActions.startFetchEdificios() );
 	yield put( serviciosActions.startFetchServicios() );
 	yield put( idiomasAtencionActions.startFetchIdiomasAtencion() );
+	yield put( usersActions.startFetchUsers() )
 }
 
 function* autoLogin(){

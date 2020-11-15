@@ -102,7 +102,7 @@ class Oficinas extends React.Component{
 							</div>
 						</div>
 					</div>
-					<div className = 'row px-3'>
+					<div className = 'row px-3 mt-4'>
 						{ this.renderLoadinfgScreen() }
 						{ this.renderEmptyScreen() }
 						{ this.renderOficinas() }

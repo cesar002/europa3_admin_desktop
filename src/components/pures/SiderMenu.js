@@ -90,7 +90,12 @@ class SiderMenu extends React.PureComponent{
 				{(this.props.permisos.filter(p => (p.id == 1 || p.id == 2 || p.id ==3))).length > 0 &&
 				<React.Fragment>
 					<Heading title = 'Usuarios y solicitudes' />
-					<SimpleNavItem title = 'Usuarios' icon = { faUser } />
+					<SimpleNavItem
+						title = 'Usuarios'
+						icon = { faUser }
+						to = '/usuarios'
+						active = { this.props.currentPath.includes('/usuarios') }
+					/>
 					<SimpleNavItem title = 'Solicitudes' icon = { faPager } />
 					<Divider />
 				</React.Fragment>

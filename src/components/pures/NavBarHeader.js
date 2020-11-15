@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBell, faEnvelope, faBars } from '@fortawesome/free-solid-svg-icons'
-
+import { faBell, faEnvelope, faBars, faBook } from '@fortawesome/free-solid-svg-icons'
+import Moment from 'react-moment'
+import 'moment/locale/es'
 
 const DropdownItem = ({ type = '', title = '', badgeCount = 0, messages = []  }) => (
 	<li className = 'nav-item dropdown no-arrow mx-1'>
@@ -19,42 +20,46 @@ const DropdownItem = ({ type = '', title = '', badgeCount = 0, messages = []  })
 			<h4 className = 'dropdown-header'>
 				{ title }
 			</h4>
-			{ messages.length > 0 &&
-			<React.Fragment>
-			{ messages.map((msn, i) => (
-				<a key = {i} className = 'dropdown-item d-flex align-items-center' href = '#'>
-					<div className = 'dropdown-list-image mr-3'>
-						{type == 'notification' &&
-						<div className="icon-circle bg-warning">
-							<i className="fas fa-exclamation-triangle text-white" />
+			<div className = 'overflow-auto notifications-container'>
+				{ messages.length > 0 &&
+				<React.Fragment>
+				{ messages.map((not) => (
+					<a key = {not.id} className = 'dropdown-item d-flex align-items-center' href = '#'>
+						<div className = 'dropdown-list-image mr-3'>
+							{type == 'notification' &&
+							<div className="icon-circle bg-primary text-white">
+								<FontAwesomeIcon icon = { faBook } />
+							</div>
+							}
+							{type == 'chat' &&
+							<img className="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="" />
+							}
 						</div>
-						}
-						{type == 'chat' &&
-						<img className="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="" />
-						}
-					</div>
-					<div className = 'font-weight-bold'>
-						{ type == 'chat' &&
-						<div className = 'text-truncate'>
-							{ msn.message }
+						<div className = 'font-weight-bold'>
+							{ type == 'chat' &&
+							<div className = 'text-truncate'>
+								{ not.message }
+							</div>
+							}
+							{ type == 'notification' &&
+							<div style = {{ fontSize: 12, }}> { not.data.body } </div>
+							}
+							<div className="small text-gray-500">
+								{not.data.email} <Moment fromNow>{not.created_at}</Moment>
+							</div>
 						</div>
-						}
-						{ type == 'notification' &&
-						<div> { msn.message } </div>
-						}
-						<div className="small text-gray-500">{type == 'chat' ? `${msn.user} - ` : '' }hace 58m</div>
-					</div>
-				</a>
-			)) }
-			</React.Fragment>
-			}
-			{ !messages.length  &&
-			<div className = 'text-center mt-3'>
-				<h5>Sin mensajes recientes</h5>
+					</a>
+				)) }
+				</React.Fragment>
+				}
+				{ !messages.length  &&
+				<div className = 'text-center mt-3'>
+					<h5>Sin mensajes recientes</h5>
+				</div>
+				}
 			</div>
-			}
 			<a className="dropdown-item text-center small text-gray-500" href="#">
-				Ver todas las alertas
+				{ type == 'notification' ? 'Ver todas las notificaciones' : 'Ver todos los mensajes' }
 			</a>
 		</div>
 	</li>
@@ -73,7 +78,12 @@ class NavBarHeader extends React.PureComponent{
 					<FontAwesomeIcon icon = { faBars } />
 				</button>
 				<ul className = 'navbar-nav ml-auto'>
-					<DropdownItem type = 'notification' title = 'Notificaciones' />
+					<DropdownItem
+						type = 'notification'
+						title = 'Notificaciones'
+						badgeCount = { this.props.notificaciones.length }
+						messages = { this.props.notificaciones }
+					/>
 					<DropdownItem type = 'chat' title = 'Chats' />
 
 					<div className="topbar-divider d-none d-sm-block"></div>
@@ -106,6 +116,7 @@ class NavBarHeader extends React.PureComponent{
 NavBarHeader.propTypes = {
 	userName: PropTypes.string.isRequired,
 	urlAvatar: PropTypes.string,
+	notificaciones: PropTypes.array.isRequired,
 }
 
 

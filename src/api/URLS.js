@@ -1,12 +1,15 @@
 import isDev from 'electron-is-dev'
 
 const PROD_BASE_URL = ''
-const DEV_BASE_URL = 'http://europa3_backend.oo/api/v1'
+const DEV_BASE_URL = 'http://europa3.test/api/v1';
+
+export const SOCKET_URL = 'europa3.test:6001';
 
 export const BASE_URL = isDev ? DEV_BASE_URL : PROD_BASE_URL;
 
 export const LOGIN = '/auth/admin';
 export const INFO_PERSONAL = '/auth/admin/me';
+export const GET_NOTIFICATIONS = '/auth/admin/me/notifications';
 export const EDIFICIOS = '/edificios';
 export const EDIFICIO = '/edificio';
 export const REGISTER_EDIFICIO = '/edificio';
@@ -36,3 +39,5 @@ export const UPDATE_SALA_JUNTAS = '/sala-juntas';
 export const GET_CAT_TIPOS_TIEMPOS_RENTA = '/tiempos-renta';
 export const GET_IMAGES_SALA_JUNTAS = '/sala-juntas';
 export const UPDATE_IMAGES_SALA_JUNTAS = '/sala-juntas-images';
+export const GET_USERS = '/users';
+

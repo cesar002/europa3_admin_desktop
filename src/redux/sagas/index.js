@@ -11,6 +11,7 @@ import serviciosSaga from './serviciosSaga';
 import idiomasAtencionSaga from './idiomasAtencionSaga';
 import initLoadSaga from './initLoadSaga';
 import salaJuntasSaga from './salaJuntasSaga';
+import usersSaga from './usersSaga';
 
 export default function* mainSaga(){
 	yield all([
@@ -25,5 +26,6 @@ export default function* mainSaga(){
 		initLoadSaga(),
 		idiomasAtencionSaga(),
 		salaJuntasSaga(),
+		usersSaga(),
 	]);
 }
