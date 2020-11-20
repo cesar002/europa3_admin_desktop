@@ -1,15 +1,19 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBell, faEnvelope, faBars, faBook } from '@fortawesome/free-solid-svg-icons'
+import {
+	faBell, faEnvelope, faBars, faBook,
+	faTrash
+} from '@fortawesome/free-solid-svg-icons'
 import Moment from 'react-moment'
 import 'moment/locale/es'
 
-const DropdownItem = ({ type = '', title = '', badgeCount = 0, messages = []  }) => (
+
+
+const DropdownChat = ({badgeCount = 0, chatNotificaciones = []}) => (
 	<li className = 'nav-item dropdown no-arrow mx-1'>
 		<a className = 'nav-link dropdown-toggle' href ='#' id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			{/* <i className='fas fa-bell fa-fw' /> */}
-			<FontAwesomeIcon icon = { type == 'notification'? faBell : faEnvelope }/>
+			<FontAwesomeIcon icon = { faEnvelope } />
 			{ badgeCount > 0 &&
 			<span className = 'badge badge-danger badge-counter'>
 				{ badgeCount }
@@ -17,49 +21,99 @@ const DropdownItem = ({ type = '', title = '', badgeCount = 0, messages = []  })
 			}
 		</a>
 		<div className = 'dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in' aria-labelledby="alertsDropdown">
-			<h4 className = 'dropdown-header'>
-				{ title }
-			</h4>
+			<div className = 'dropdown-header d-flex justify-content-between'>
+				<span>Chats</span>
+				<div>
+					<FontAwesomeIcon icon = { faTrash } style = {{ fontSize: '13px' }} />
+				</div>
+			</div>
 			<div className = 'overflow-auto notifications-container'>
-				{ messages.length > 0 &&
+				{ chatNotificaciones.length > 0 &&
 				<React.Fragment>
-				{ messages.map((not) => (
-					<a key = {not.id} className = 'dropdown-item d-flex align-items-center' href = '#'>
+				{ chatNotificaciones.map((chat) => (
+					<a key = {chat.id} className = 'dropdown-item d-flex align-items-center' href = '#'>
 						<div className = 'dropdown-list-image mr-3'>
-							{type == 'notification' &&
-							<div className="icon-circle bg-primary text-white">
-								<FontAwesomeIcon icon = { faBook } />
-							</div>
-							}
-							{type == 'chat' &&
 							<img className="rounded-circle" src="https://source.unsplash.com/fn_BT9fwg_E/60x60" alt="" />
-							}
 						</div>
 						<div className = 'font-weight-bold'>
-							{ type == 'chat' &&
 							<div className = 'text-truncate'>
-								{ not.message }
+								{ chat.message }
 							</div>
-							}
-							{ type == 'notification' &&
-							<div style = {{ fontSize: 12, }}> { not.data.body } </div>
-							}
 							<div className="small text-gray-500">
-								{not.data.email} <Moment fromNow>{not.created_at}</Moment>
+								<Moment fromNow>{chat.created_at}</Moment>
 							</div>
 						</div>
 					</a>
 				)) }
 				</React.Fragment>
 				}
-				{ !messages.length  &&
+				{ !chatNotificaciones.length  &&
 				<div className = 'text-center mt-3'>
 					<h5>Sin mensajes recientes</h5>
 				</div>
 				}
 			</div>
 			<a className="dropdown-item text-center small text-gray-500" href="#">
-				{ type == 'notification' ? 'Ver todas las notificaciones' : 'Ver todos los mensajes' }
+				Ver todos los mensajes
+			</a>
+		</div>
+	</li>
+)
+
+const DropdownNotification = ({badgeCount = 0, notificaciones = [],fetchNotifications, fetchMark ,handleMark = () => {}}) => (
+	<li className = 'nav-item dropdown no-arrow mx-1'>
+		<a className = 'nav-link dropdown-toggle' href ='#' id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<FontAwesomeIcon icon = { faBell }/>
+			{ badgeCount > 0 &&
+			<span className = 'badge badge-danger badge-counter'>
+				{ badgeCount }
+			</span>
+			}
+		</a>
+		<div className = 'dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in' aria-labelledby="alertsDropdown">
+			<div className = 'dropdown-header d-flex justify-content-between'>
+				<span>Notificaciones</span>
+				<div onClick = { handleMark }>
+					<FontAwesomeIcon icon = { faTrash } style = {{ fontSize: '13px' }} />
+				</div>
+			</div>
+			<div className = 'overflow-auto notifications-container'>
+				{(!fetchNotifications && !fetchNotifications) && notificaciones.length > 0 &&
+				<React.Fragment>
+				{ notificaciones.map((not) => {
+					if(not.read_at == null){
+						return(
+						<a className = 'dropdown-item d-flex align-items-center' href = '#' key = {not.id}>
+							<div className = 'dropdown-list-image mr-3'>
+								<div className="icon-circle bg-primary text-white">
+									<FontAwesomeIcon icon = { faBook } />
+								</div>
+							</div>
+							<div className = 'font-weight-bold'>
+								<div style = {{ fontSize: 12, }}>
+									{ not.data.body }
+								</div>
+								<div className="small text-gray-500">
+									<Moment fromNow>{not.created_at}</Moment>
+								</div>
+							</div>
+						</a>
+						)
+					}
+				})}
+				</React.Fragment>
+				}
+				{(!fetchNotifications && !fetchNotifications) && !notificaciones.length  &&
+				<div className = 'text-center mt-3'>
+					<h5>Sin mensajes recientes</h5>
+				</div>
+				}
+				{(fetchNotifications || fetchNotifications) &&
+				<div className = 'spinner-border text-primary' />
+				}
+			</div>
+			<a className="dropdown-item text-center small text-gray-500" href="#">
+				Ver todos los mensajes
 			</a>
 		</div>
 	</li>
@@ -78,14 +132,20 @@ class NavBarHeader extends React.PureComponent{
 					<FontAwesomeIcon icon = { faBars } />
 				</button>
 				<ul className = 'navbar-nav ml-auto'>
-					<DropdownItem
-						type = 'notification'
-						title = 'Notificaciones'
-						badgeCount = { this.props.notificaciones.length }
-						messages = { this.props.notificaciones }
+					<DropdownNotification
+						notificaciones ={ this.props.notificaciones }
+						badgeCount = { this.props.notificaciones.length == 0
+							? 0
+							: this.props.notificaciones.reduce((acc, cur) => cur.read_at == null ? ++acc : acc, 0)
+						}
+						handleMark = { this.props.handleMarkToReadNotifications }
+						fetchNotifications = { this.props.loadingNotifications }
+						fetchMark = { this.props.loadingMarkToNotifications }
 					/>
-					<DropdownItem type = 'chat' title = 'Chats' />
-
+					<DropdownChat
+						chatNotificaciones = { [] }
+						badgeCount = { 0 }
+					/>
 					<div className="topbar-divider d-none d-sm-block"></div>
 
 					<li className = 'nav-item dropdown no-arrow'>

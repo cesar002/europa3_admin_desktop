@@ -5,10 +5,14 @@ import {
 	FINISH_FETCH_USER_DATA_FAIL,
 	FINISH_FETCH_USER_DATA_SUCCESS,
 	SET_ACCESS_TOKEN,
-	START_FETCH_NOTIFICATIONS,
-	SET_NOTIFICATIONS,
-	FINISH_FETCH_NOTIFICATIONS_SUCCESS,
-	FINISH_FETCH_NOTIFICATIONS_FAIL,
+	START_FETCH_NOTIFICATIONS_SOLICITUDES,
+	SET_NOTIFICATIONS_SOLICITUDES,
+	FINISH_FETCH_NOTIFICATIONS_SOLICITUDES_SUCCESS,
+	FINISH_FETCH_NOTIFICATIONS_SOLICITUDES_FAIL,
+	ADD_NOTIFICATION_SOLICITUD,
+	START_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ,
+	FINISH_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ_SUCCESS,
+	FINISH_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ_FAIL
 } from '../actions/userActions';
 
 const initialState = {
@@ -20,24 +24,67 @@ const initialState = {
 		success: false,
 		fail: false,
 		notificaciones:{
+			solicitudes:{
+				start: false,
+				finish: false,
+				success: false,
+				fail: false,
+			},
+			chat: {
+				start: false,
+				finish: false,
+				success: false,
+				fail: false,
+			}
+		},
+		markAllRead:{
 			start: false,
 			finish: false,
 			success: false,
 			fail: false,
 		}
 	},
-	notificaciones: [],
+	notificaciones: {
+		solicitudes: [],
+		chat: [],
+	},
 	error: null,
 };
 
 export default (state = initialState, action) => {
 	switch (action.type) {
-		case START_FETCH_NOTIFICATIONS:
-			return {
+		case FINISH_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ_FAIL:
+			return{
 				...state,
 				status:{
 					...state.status,
-					notificaciones:{
+					markAllRead:{
+						...state.status.markAllRead,
+						start: false,
+						finish: true,
+						finish: true,
+					}
+				}
+			}
+		case FINISH_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ_SUCCESS:
+			return{
+				...state,
+				status:{
+					...state.status,
+					markAllRead:{
+						...state.status.markAllRead,
+						start: false,
+						finish: true,
+						success: true,
+					}
+				}
+			}
+		case START_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ:
+			return{
+				...state,
+				status:{
+					...state.status,
+					markAllRead:{
 						start: true,
 						finish: false,
 						success: false,
@@ -45,34 +92,81 @@ export default (state = initialState, action) => {
 					}
 				}
 			}
-		case SET_NOTIFICATIONS:
-			return {
-				...state,
-				notificaciones: action.payload.notifications,
-			}
-		case FINISH_FETCH_NOTIFICATIONS_SUCCESS:
+		case ADD_NOTIFICATION_SOLICITUD:
 			return{
+				...state,
+				notificaciones:{
+					...state.notificaciones,
+					solicitudes: [{
+						id: action.payload.notification.id,
+						type: action.payload.notification.type,
+						created_at: Date.now(),
+						updated_at: Date.now(),
+						read_at: null,
+						data:{
+							id: -1,
+							user_id: action.payload.notification.user_id,
+							edificio_id: action.payload.notification.edificio_id,
+							solicitud_id: action.payload.notification.solicitud_id,
+							status_solicitud: action.payload.notification.status_solicitud,
+							body: action.payload.notification.body,
+						}
+					}, ...state.notificaciones.solicitudes]
+				}
+			}
+		case START_FETCH_NOTIFICATIONS_SOLICITUDES:
+			return {
 				...state,
 				status:{
 					...state.status,
 					notificaciones:{
-						...state.status.notificaciones,
-						start: false,
-						finish: true,
-						success: true,
+						...state.notificaciones,
+						solicitudes:{
+							start: true,
+							finish: false,
+							success: false,
+							fail: false,
+						}
 					}
 				}
 			}
-		case FINISH_FETCH_NOTIFICATIONS_FAIL:
+		case SET_NOTIFICATIONS_SOLICITUDES:
+			return {
+				...state,
+				notificaciones: {
+					...state.notificaciones,
+					solicitudes: action.payload.notifications,
+				},
+			}
+		case FINISH_FETCH_NOTIFICATIONS_SOLICITUDES_SUCCESS:
 			return{
 				...state,
 				status:{
 					...state.status,
 					notificaciones:{
 						...state.status.notificaciones,
-						start: false,
-						finish: true,
-						fail: true,
+						solicitudes:{
+							...state.status.notificaciones.solicitudes,
+								start: false,
+								finish: true,
+								success: true,
+						}
+					}
+				}
+			}
+		case FINISH_FETCH_NOTIFICATIONS_SOLICITUDES_FAIL:
+			return{
+				...state,
+				status:{
+					...state.status,
+					notificaciones:{
+						...state.status.notificaciones,
+						solicitudes:{
+							...state.status.notificaciones.solicitudes,
+							start: false,
+							finish: true,
+							fail: true,
+						}
 					}
 				}
 			}

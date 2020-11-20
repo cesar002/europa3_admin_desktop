@@ -3,7 +3,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import Europa3Api from '../../api';
 import * as loginActions from '../actions/loginActions';
 import {
-	setAccessToken, startFetchUserData, startFetchNotifications
+	setAccessToken, startFetchUserData, startFetchNotificationsSolicitudes
 } from '../actions/userActions'
 import localStorageService from '../../services/UserCredencialsStorageService'
 
@@ -18,7 +18,7 @@ function* login(action){
 
 		yield put(loginActions.finishFetchLoginSuccess());
 		yield put(startFetchUserData());
-		yield put(startFetchNotifications());
+		yield put(startFetchNotificationsSolicitudes());
 	} catch (error) {
 		yield put(loginActions.finishFetchLoginFail());
 		yield put(loginActions.setErrorLogin(error.error));
@@ -39,7 +39,7 @@ function* autoLogin(){
 			refresh_token: data.refresh_token,
 		}));
 		yield put(startFetchUserData());
-		yield put(startFetchNotifications());
+		yield put(startFetchNotificationsSolicitudes());
 	} catch (error) {
 
 	}

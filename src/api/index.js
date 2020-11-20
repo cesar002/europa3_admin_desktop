@@ -35,6 +35,7 @@ import {
 	UPDATE_IMAGES_SALA_JUNTAS,
 	UPDATE_SALA_JUNTAS,
 	GET_USERS,
+	MARK_ALL_NOTIFICATIONS_AS_READ,
 } from './URLS'
 
 
@@ -718,6 +719,26 @@ class Europa3Api {
 	static async getNotifications(accessToken){
 		try {
 			const resp = await axios.get(GET_NOTIFICATIONS, {
+				headers:{
+					Authorization: `Bearer ${accessToken}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async markAllNotificationsAsRead(accessToken){
+		try {
+			const resp = await axios.patch(MARK_ALL_NOTIFICATIONS_AS_READ, {
 				headers:{
 					Authorization: `Bearer ${accessToken}`
 				}
