@@ -1,4 +1,4 @@
-import { call, put, takeLatest, select } from 'redux-saga/effects';
+import { call, put, takeLatest, select, takeEvery } from 'redux-saga/effects';
 import Europa3Api from '../../api';
 
 import * as userActions from '../actions/userActions'
@@ -6,12 +6,25 @@ import * as userActions from '../actions/userActions'
 const token = state => state.userData.accessToken.token;
 
 
-
-function* fetchMarkAllNotificationsAsRead(action){
+function* deleteNotification(action){
 	try {
 		const access_token = yield select(token);
 
-		const resp = yield call(Europa3Api.markAllNotificationsAsRead, access_token);
+		const resp = yield call(Europa3Api.deleteNotificationById, action.payload.idNotification, access_token);
+		if(resp.status !== 'success')
+			throw resp.error
+
+		yield put(userActions.deleteNotification(action.payload.idNotification));
+	} catch (error) {
+		yield console.error('userDataSaga.deleteNotification()', error)
+	}
+}
+
+function* deleteAllNotifications(action){
+	try {
+		const access_token = yield select(token);
+
+		const resp = yield call(Europa3Api.deleteAllNotifications, access_token);
 		if(resp.status !== 'success')
 			throw resp.error
 
@@ -54,7 +67,8 @@ function* getNotificationsSolicitudes(){
 }
 
 export default function* userDataSaga(){
+	yield takeEvery(userActions.START_FETCH_DELETE_NOTIFICATION, deleteNotification)
 	yield takeLatest(userActions.START_FETCH_USER_DATA, userData);
 	yield takeLatest(userActions.START_FETCH_NOTIFICATIONS_SOLICITUDES, getNotificationsSolicitudes)
-	yield takeLatest(userActions.START_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ, fetchMarkAllNotificationsAsRead)
+	yield takeLatest(userActions.START_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ, deleteAllNotifications)
 }

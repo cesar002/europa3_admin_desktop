@@ -12,7 +12,9 @@ import {
 	ADD_NOTIFICATION_SOLICITUD,
 	START_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ,
 	FINISH_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ_SUCCESS,
-	FINISH_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ_FAIL
+	FINISH_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ_FAIL,
+	START_FETCH_DELETE_NOTIFICATION,
+	DELETE_NOTIFICATION,
 } from '../actions/userActions';
 
 const initialState = {
@@ -110,6 +112,9 @@ export default (state = initialState, action) => {
 							solicitud_id: action.payload.notification.solicitud_id,
 							status_solicitud: action.payload.notification.status_solicitud,
 							body: action.payload.notification.body,
+						},
+						status: {
+							startFetch: false,
 						}
 					}, ...state.notificaciones.solicitudes]
 				}
@@ -130,12 +135,41 @@ export default (state = initialState, action) => {
 					}
 				}
 			}
+		case DELETE_NOTIFICATION:
+			return{
+				...state,
+				notificaciones:{
+					...state.notificaciones,
+					solicitudes: state.notificaciones.solicitudes.filter(not => not.id !== action.payload.idNotification)
+				}
+			}
+		case START_FETCH_DELETE_NOTIFICATION:
+			return {
+				...state,
+				notificaciones:{
+					...state.notificaciones,
+					solicitudes: state.notificaciones.solicitudes.map(not => not.id == action.payload.idNotification ?
+						{
+							...not,
+							status:{
+								...not.status,
+								startFetch: true
+							}
+						}
+						: not)
+				}
+			}
 		case SET_NOTIFICATIONS_SOLICITUDES:
 			return {
 				...state,
 				notificaciones: {
 					...state.notificaciones,
-					solicitudes: action.payload.notifications,
+					solicitudes: action.payload.notifications.map(not => ({
+						...not,
+						status:{
+							startFetch: false,
+						}
+					})),
 				},
 			}
 		case FINISH_FETCH_NOTIFICATIONS_SOLICITUDES_SUCCESS:

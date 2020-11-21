@@ -35,7 +35,9 @@ import {
 	UPDATE_IMAGES_SALA_JUNTAS,
 	UPDATE_SALA_JUNTAS,
 	GET_USERS,
-	MARK_ALL_NOTIFICATIONS_AS_READ,
+	DELETE_ALL_NOTIFICATIONS,
+	DELETE_NOTIFICATION_BY_ID,
+	GET_SOLICITUDES,
 } from './URLS'
 
 
@@ -736,9 +738,49 @@ class Europa3Api {
 		}
 	}
 
-	static async markAllNotificationsAsRead(accessToken){
+	static async deleteAllNotifications(accessToken){
 		try {
-			const resp = await axios.patch(MARK_ALL_NOTIFICATIONS_AS_READ, {
+			const resp = await axios.delete(DELETE_ALL_NOTIFICATIONS, {
+				headers:{
+					Authorization: `Bearer ${accessToken}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async deleteNotificationById(id, accessToken){
+		try {
+			const resp = await axios.delete(`${DELETE_NOTIFICATION_BY_ID}/${id}`, {
+				headers:{
+					Authorization: `Bearer ${accessToken}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async getSolicitudes(accessToken){
+		try {
+			const resp = await axios.get(GET_SOLICITUDES, {
 				headers:{
 					Authorization: `Bearer ${accessToken}`
 				}

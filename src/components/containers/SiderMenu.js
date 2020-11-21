@@ -11,8 +11,8 @@ class SiderMenu extends React.Component{
 
 	render(){
 		return <Sider
-						permisos = { this.props.permisos }
-						currentPath = { this.props.location.pathname }
+					permisos = { this.props.permisos }
+					currentPath = { this.props.location.pathname }
 				/>
 	}
 }

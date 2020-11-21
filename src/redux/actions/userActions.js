@@ -16,7 +16,19 @@ export const START_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ = 'START_FETCH_MARK_ALL_
 export const FINISH_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ_SUCCESS = 'FINISH_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ_SUCCESS';
 export const FINISH_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ_FAIL = 'FINISH_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ_FAIL';
 
+export const START_FETCH_DELETE_NOTIFICATION = 'START_FETCH_DELETE_NOTIFICATION';
+export const DELETE_NOTIFICATION = 'DELETE_NOTIFICATION';
 
+
+export const deleteNotification = idNotification => ({
+	type: DELETE_NOTIFICATION,
+	payload: { idNotification }
+})
+
+export const startFetchDeleteNotification = idNotification => ({
+	type: START_FETCH_DELETE_NOTIFICATION,
+	payload: { idNotification }
+})
 
 export const startFetchMarkAllNotificationsAsRead = () => ({
 	type: START_FETCH_MARK_ALL_NOTIFICATIONS_AS_READ

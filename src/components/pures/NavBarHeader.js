@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -71,14 +72,14 @@ const DropdownNotification = ({badgeCount = 0, notificaciones = [],fetchNotifica
 			}
 		</a>
 		<div className = 'dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in' aria-labelledby="alertsDropdown">
-			<div className = 'dropdown-header d-flex justify-content-between'>
+			<div className = 'dropdown-header d-flex justify-content-between form-inline'>
 				<span>Notificaciones</span>
-				<div onClick = { handleMark }>
+				<button className = 'btn btn-primary btn-sm' onClick = { handleMark }>
 					<FontAwesomeIcon icon = { faTrash } style = {{ fontSize: '13px' }} />
-				</div>
+				</button>
 			</div>
 			<div className = 'overflow-auto notifications-container'>
-				{(!fetchNotifications && !fetchNotifications) && notificaciones.length > 0 &&
+				{(!fetchNotifications && !fetchMark) && notificaciones.length > 0 &&
 				<React.Fragment>
 				{ notificaciones.map((not) => {
 					if(not.read_at == null){
@@ -103,18 +104,18 @@ const DropdownNotification = ({badgeCount = 0, notificaciones = [],fetchNotifica
 				})}
 				</React.Fragment>
 				}
-				{(!fetchNotifications && !fetchNotifications) && !notificaciones.length  &&
+				{(!fetchNotifications && !fetchMark) && !notificaciones.length  &&
 				<div className = 'text-center mt-3'>
 					<h5>Sin mensajes recientes</h5>
 				</div>
 				}
-				{(fetchNotifications || fetchNotifications) &&
+				{(fetchNotifications || fetchMark) &&
 				<div className = 'spinner-border text-primary' />
 				}
 			</div>
-			<a className="dropdown-item text-center small text-gray-500" href="#">
+			<Link className = 'dropdown-item text-center small text-gray-500' to = '/notificaciones'>
 				Ver todos los mensajes
-			</a>
+			</Link>
 		</div>
 	</li>
 )
