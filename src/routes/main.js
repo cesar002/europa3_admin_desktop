@@ -25,6 +25,7 @@ import SalaJuntasUpdate from '../pages/SalaJuntas/SalaJuntasUpdate';
 import Usuarios from '../pages/usuarios';
 import Notificaciones from '../pages/Notificaciones'
 import Solicitudes from '../pages/Solicitudes';
+import SolicitudesShowOficina from '../pages/Solicitudes/showSolicitudOficina'
 
 const MainRoute = () => (
 	<HashRouter>
@@ -48,6 +49,7 @@ const MainRoute = () => (
 			<Route path = '/idiomas-atencion' exact component = { IdiomasAtencion } />
 			<Route path = '/notificaciones' exact component = { Notificaciones } />
 			<Route path = '/solicitudes' exact component = { Solicitudes } />
+			<Route path = '/solicitudes/showOficina/:id' exact component = { SolicitudesShowOficina } />
 		</React.Fragment>
 	</HashRouter>
 )

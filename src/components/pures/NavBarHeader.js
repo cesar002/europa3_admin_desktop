@@ -104,7 +104,7 @@ const DropdownNotification = ({badgeCount = 0, notificaciones = [],fetchNotifica
 				})}
 				</React.Fragment>
 				}
-				{(!fetchNotifications && !fetchMark) && !notificaciones.length  &&
+				{(!fetchNotifications && !fetchMark) && notificaciones.length == 0  &&
 				<div className = 'text-center mt-3'>
 					<h5>Sin mensajes recientes</h5>
 				</div>
