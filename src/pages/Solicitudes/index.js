@@ -71,7 +71,7 @@ class Solicitudes extends React.Component{
 				key = { soli.folio }
 				email = { soli.user.email }
 				nombreCliente = { soli.user.info_personal !== null
-					? ``
+					? `${soli.user.info_personal.nombre} ${soli.user.info_personal.ape_p} ${soli.user.info_personal.ape_m}`
 					: 'Sin datos'
 				}
 				folio = { soli.folio }
@@ -153,9 +153,9 @@ class Solicitudes extends React.Component{
 							<tr>
 								<th className = 'text-center' scope = 'col'>Folio</th>
 								<th className = 'text-center' scope = 'col'>Oficina/Sala</th>
-								<th className = 'text-center' scope = 'col'>Fecha a reservar</th>
+								<th className = 'text-center' scope = 'col'>Nombre</th>
+								<th className = 'text-center' scope = 'col'>Fecha de solicitud</th>
 								<th className = 'text-center' scope = 'col'>Tiempo de renta</th>
-								<th className = 'text-center' scope = 'col'>Método de pago</th>
 								<th className = 'text-center' scope = 'col'>Estado</th>
 								<th className = 'text-center' scope = 'col'>Email usuario</th>
 								<th className = 'text-center' scope = 'col'>Nombre usuario</th>

@@ -38,6 +38,15 @@ export default (state = initialState, action) => {
 		case CLEAR_SOLICITUD_OFICINA:
 			return{
 				...state,
+				status:{
+					...state.status,
+					solicitudOficinaSelected:{
+						start: false,
+						finish: false,
+						success: false,
+						fail: false,
+					}
+				},
 				solicitudOficinaSelected: {},
 			}
 		case SET_SOLICITUD_OFICINA:

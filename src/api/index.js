@@ -38,6 +38,7 @@ import {
 	DELETE_ALL_NOTIFICATIONS,
 	DELETE_NOTIFICATION_BY_ID,
 	GET_SOLICITUDES,
+	GET_SOLICITUD_BY_ID,
 } from './URLS'
 
 
@@ -781,6 +782,26 @@ class Europa3Api {
 	static async getSolicitudes(accessToken){
 		try {
 			const resp = await axios.get(GET_SOLICITUDES, {
+				headers:{
+					Authorization: `Bearer ${accessToken}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async getSolicitudById(id, accessToken){
+		try {
+			const resp = await axios.get(`${GET_SOLICITUD_BY_ID}/${id}`, {
 				headers:{
 					Authorization: `Bearer ${accessToken}`
 				}

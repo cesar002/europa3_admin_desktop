@@ -43,3 +43,4 @@ export const GET_IMAGES_SALA_JUNTAS = '/sala-juntas';
 export const UPDATE_IMAGES_SALA_JUNTAS = '/sala-juntas-images';
 export const GET_USERS = '/users';
 export const GET_SOLICITUDES = '/solicitudes';
+export const GET_SOLICITUD_BY_ID = '/solicitud';
