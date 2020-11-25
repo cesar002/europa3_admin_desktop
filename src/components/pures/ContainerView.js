@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
@@ -14,9 +14,13 @@ const ContainerView = props => (
 		}
 		{props.toBack &&
 		<div className = 'd-flex justify-content-around'>
-			<Link className = 'text-reset' to = {props.toBack}>
+			<a className = 'text-reset' onClick = {()=>{
+				props.history.goBack();
+			}}
+				style = {{ cursor: 'pointer' }}
+			>
 				<FontAwesomeIcon icon = {faArrowLeft} className = 'mt-2' style = {{ fontSize: 25}} />
-			</Link>
+			</a>
 			<h1 className="h2 mb-0 text-gray-800 ml-4">{ props.headerTitle }</h1>
 			<div className = 'mt-2'>
 				{ props.elementHeader }
@@ -33,4 +37,4 @@ ContainerView.propTypes = {
 	toBack: PropTypes.string,
 }
 
-export default ContainerView
+export default withRouter(ContainerView);

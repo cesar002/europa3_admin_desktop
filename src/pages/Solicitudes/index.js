@@ -1,20 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import moment from 'moment';
 import ReactPaginate from 'react-paginate';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
 
 import * as solicitudesActions from '../../redux/actions/solicitudesAction';
 
+import SolicitudRow from '../../components/pures/SolicitudRow';
 import Container from '../../components/pures/ContainerMaster';
 import EmptyScreen from '../../components/pures/EmptyScreen';
 import Loading from '../../components/pures/LoadingScreen';
-
-const Label = ({texto}) => (
-	<span className = 'badge badge-info'>{texto}</span>
-)
 
 class Solicitudes extends React.Component{
 	constructor(props){
@@ -23,8 +16,8 @@ class Solicitudes extends React.Component{
 		this.renderSoliciudes = this.renderSoliciudes.bind(this);
 		this.renderLoading = this.renderLoading.bind(this);
 		this.renderEmpty = this.renderEmpty.bind(this);
-		this.renderStatusLabel = this.renderStatusLabel.bind(this);
-		this.renderSolicitudesOficinaRow = this.renderSolicitudesOficinaRow.bind(this);
+		this.convertStatusSolicitudToString = this.convertStatusSolicitudToString.bind(this);
+		this.renderSolicitudesRow = this.renderSolicitudesRow.bind(this);
 		this.renderPaginationNav = this.renderPaginationNav.bind(this);
 		this.selectedPagination = this.selectedPagination.bind(this);
 
@@ -50,53 +43,82 @@ class Solicitudes extends React.Component{
 		}
 	}
 
-	renderStatusLabel(solicitud){
+	convertStatusSolicitudToString(solicitud){
 		if(solicitud.iniciado){
-			return <Label texto = 'Iniciado' />
+			return  'Iniciado';
 		}
 		if(solicitud.subida_documentos){
-			return <Label texto = 'Documentos subidos' />
+			return  'Documentos subidos';
 		}
 		if(solicitud.autorizado){
-			return <Label texto = 'Autorizado' />
+			return  'Autorizado';
 		}
 		if(solicitud.finalizado){
-			return <Label texto = 'Finalizado' />
+			return  'Finalizado';
 		}
 		if(solicitud.revalidado){
-			return <Label texto = 'Revalidada' />
+			return  'Revalidada';
 		}
 	}
 
-	renderSolicitudesOficinaRow(){
-		return this.props.solicitudes.map((soli) => (
-			<tr key = {soli.folio}>
-				<th className = 'text-center'>{soli.folio}</th>
-				<th className = 'text-center'>{soli.solicitud_oficina.oficina.nombre}</th>
-				<th className = 'text-center'>
-					{ moment(soli.solicitud_oficina.fecha_reservacion).format('DD/MM/YYYY') }
-				</th>
-				<th className = 'text-center'>{soli.solicitud_oficina.meses_renta}</th>
-				<th className = 'text-center'>{soli.solicitud_oficina.metodo_pago.nombre}</th>
-				<th className = 'text-center'>{ this.renderStatusLabel(soli) }</th>
-				<th className = 'text-center'>{soli.user.email}</th>
-				<th className = 'text-center'>{soli.user.info_personal !== null
+	renderSolicitudesRow(){
+		const { currentIndexPagination } = this.state;
+
+
+
+		return this.props.solicitudesPaginated[currentIndexPagination].map((soli) => (
+			<SolicitudRow
+				key = { soli.folio }
+				email = { soli.user.email }
+				nombreCliente = { soli.user.info_personal !== null
 					? ``
 					: 'Sin datos'
-				}</th>
-				<th className = 'text-center'>
-					<div className = 'btn-group'>
-						<Link className = 'btn btn-primary btn-sm' to = {`/solicitudes/showOficina/${soli.id}`}>
-							<FontAwesomeIcon icon = { faEye } />
-						</Link>
-					</div>
-				</th>
-			</tr>
+				}
+				folio = { soli.folio }
+				id = { soli.id }
+				fechaReservacion = {
+					soli.solicitud_oficina !== null ?
+						soli.solicitud_oficina.fecha_reservacion :
+					soli.solicitud_sala_junta !== null ?
+						soli.solicitud_sala_junta.fecha_reservacion :
+					Date.now()
+				}
+				tiempoRenta = {
+					soli.solicitud_oficina !== null ?
+						soli.solicitud_oficina.meses_renta :
+					soli.solicitud_sala_junta !== null ?
+						soli.solicitud_sala_junta.fecha_reservacion :
+					Date.now()
+				}
+				nombre = {
+					soli.solicitud_oficina !== null ?
+						soli.solicitud_oficina.oficina.nombre :
+					soli.solicitud_sala_junta !== null ?
+						soli.solicitud_sala_junta.salaJunta.nombre :
+					'N/A'
+				}
+				tipoId = {
+					soli.solicitud_oficina !== null ?
+						soli.solicitud_oficina.oficina.tipo_oficina.id :
+					soli.solicitud_sala_junta !== null ?
+						soli.solicitud_sala_junta.salaJunta.tipo_oficina.id :
+					0
+				}
+				tipo = {
+					soli.solicitud_oficina !== null ?
+						soli.solicitud_oficina.oficina.tipo_oficina.tipo :
+					soli.solicitud_sala_junta !== null ?
+						soli.solicitud_sala_junta.salaJunta.tipo_oficina.tipo :
+					0
+				}
+				status = { this.convertStatusSolicitudToString(soli) }
+			/>
 		))
 	}
 
 	selectedPagination(e){
-		console.log(e.selected)
+		const i = e.selected
+		this.setState({ currentIndexPagination: i })
 	}
 
 	renderPaginationNav(){
@@ -120,26 +142,6 @@ class Solicitudes extends React.Component{
 				onPageChange = { this.selectedPagination }
 			/>
 		)
-		// return(
-		// 	<nav aria-label='Page navigation'>
-		// 		<ul className = 'pagination justify-content-center'>
-		// 			{/* <li className = 'page-item'><a className = 'page-link'>Anterior</a></li>
-		// 			{[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map((e,i)=>
-		// 				<li className = 'page-item'><a className = 'page-link'>{e}</a></li>
-		// 			)}
-		// 			<li className = 'page-item'><a className = 'page-link'>...</a></li>
-		// 			<li className = 'page-item'><a className = 'page-link'>Siguiente</a></li> */}
-		// 			<li className = 'page-item'><a className = 'page-link'>Anterior</a></li>
-		// 				{ this.state.currentIndexPagination  }
-		// 				{this.props.solicitudesPaginated.map((e,i) => (
-		// 					<li className = {`page-item ${i == this.state.currentIndexPagination ? 'active' : ''}`}>
-		// 						<a className = 'page-link'>{ i + 1 }</a>
-		// 					</li>
-		// 				))}
-		// 			<li className = 'page-item'><a className = 'page-link'>Siguiente</a></li>
-		// 		</ul>
-		// 	</nav>
-		// )
 	}
 
 	renderSoliciudes(){
@@ -152,7 +154,7 @@ class Solicitudes extends React.Component{
 								<th className = 'text-center' scope = 'col'>Folio</th>
 								<th className = 'text-center' scope = 'col'>Oficina/Sala</th>
 								<th className = 'text-center' scope = 'col'>Fecha a reservar</th>
-								<th className = 'text-center' scope = 'col'>Meses de renta</th>
+								<th className = 'text-center' scope = 'col'>Tiempo de renta</th>
 								<th className = 'text-center' scope = 'col'>Método de pago</th>
 								<th className = 'text-center' scope = 'col'>Estado</th>
 								<th className = 'text-center' scope = 'col'>Email usuario</th>
@@ -161,7 +163,7 @@ class Solicitudes extends React.Component{
 							</tr>
 						</thead>
 						<tbody>
-							{ this.renderSolicitudesOficinaRow() }
+							{ this.renderSolicitudesRow() }
 						</tbody>
 					</table>
 					{ this.renderPaginationNav() }

@@ -44,12 +44,36 @@ class ShowSolicitudOficina extends React.Component{
 						onClick = { () => this.setTabIndex(0) }
 						style = {{ cursor: 'pointer' }}
 					>
-						Información
+						Información de la solicitud
 					</a>
 				</li>
 				<li className = 'nav-item'>
 					<a className = {`nav-link ${this.state.tabIndex == 1 ? 'active' : ''}`}
 						onClick = { () => this.setTabIndex(1) }
+						style = {{ cursor: 'pointer' }}
+					>
+						Información personal
+					</a>
+				</li>
+				<li className = 'nav-item'>
+					<a className = {`nav-link ${this.state.tabIndex == 2 ? 'active' : ''}`}
+						onClick = { () => this.setTabIndex(2) }
+						style = {{ cursor: 'pointer' }}
+					>
+						Información fiscal
+					</a>
+				</li>
+				<li className = 'nav-item'>
+					<a className = {`nav-link ${this.state.tabIndex == 3 ? 'active' : ''}`}
+						onClick = { () => this.setTabIndex(3) }
+						style = {{ cursor: 'pointer' }}
+					>
+						Información moral
+					</a>
+				</li>
+				<li className = 'nav-item'>
+					<a className = {`nav-link ${this.state.tabIndex == 4 ? 'active' : ''}`}
+						onClick = { () => this.setTabIndex(4) }
 						style = {{ cursor: 'pointer' }}
 					>
 						Documentos
