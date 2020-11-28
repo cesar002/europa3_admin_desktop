@@ -39,6 +39,11 @@ import {
 	DELETE_NOTIFICATION_BY_ID,
 	GET_SOLICITUDES,
 	GET_SOLICITUD_BY_ID,
+	VALIDAR_DOCUMENTO,
+	INVALIDAR_DOCUMENTO,
+	DOWNLOAD_DOCUMENTO,
+	AUTORIZAR_SOLICITUD,
+	NO_AUTORIZAR_SOLICITUD,
 } from './URLS'
 
 
@@ -802,6 +807,102 @@ class Europa3Api {
 	static async getSolicitudById(id, accessToken){
 		try {
 			const resp = await axios.get(`${GET_SOLICITUD_BY_ID}/${id}`, {
+				headers:{
+					Authorization: `Bearer ${accessToken}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async validarDocumento(id, accessToken){
+		try {
+			const resp = await axios.patch(`${VALIDAR_DOCUMENTO}/${id}/validate`, {}, {
+				headers:{
+					Authorization: `Bearer ${accessToken}`
+				}
+			});
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async invalidarDocumento(id, accessToken){
+		try {
+			const resp = await axios.patch(`${INVALIDAR_DOCUMENTO}/${id}/invalidate`, {}, {
+				headers:{
+					Authorization: `Bearer ${accessToken}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async donwloadDocument(id, accessToken){
+		try {
+			const resp = await axios.get(`${DOWNLOAD_DOCUMENTO}/${id}/download`, {
+				responseType: 'blob',
+				headers:{
+					Authorization: `Bearer ${accessToken}`
+				}
+			})
+
+			return resp.data
+		} catch (error) {
+			console.error('downloadDocument()', error)
+			return null;
+		}
+	}
+
+	static async autorizarSolicitud(id, accessToken){
+		try {
+			const resp = await axios.post(`${AUTORIZAR_SOLICITUD}/${id}/authorize`, {}, {
+				headers:{
+					Authorization: `Bearer ${accessToken}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async noAutorizarSolicitud(id, accessToken){
+		try {
+			const resp = await axios.post(`${NO_AUTORIZAR_SOLICITUD}/${id}/no-authorize`, {}, {
 				headers:{
 					Authorization: `Bearer ${accessToken}`
 				}

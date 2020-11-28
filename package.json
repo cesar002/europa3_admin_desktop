@@ -51,6 +51,7 @@
     "electron-is-dev": "^1.2.0",
     "formik": "^2.1.4",
     "jquery": "^3.5.1",
+    "js-file-download": "^0.4.12",
     "laravel-echo": "^1.9.0",
     "lodash": "^4.17.20",
     "moment": "^2.27.0",
