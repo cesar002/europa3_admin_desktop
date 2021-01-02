@@ -54,9 +54,9 @@ const DropdownChat = ({badgeCount = 0, chatNotificaciones = []}) => (
 				</div>
 				}
 			</div>
-			<a className="dropdown-item text-center small text-gray-500" href="#">
+			<button type = 'button' className = 'dropdown-item text-center small text-gray-500' data-toggle = 'modal' data-target = '#chat-solicitudes'>
 				Ver todos los mensajes
-			</a>
+			</button>
 		</div>
 	</li>
 )

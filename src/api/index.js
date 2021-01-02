@@ -44,6 +44,8 @@ import {
 	DOWNLOAD_DOCUMENTO,
 	AUTORIZAR_SOLICITUD,
 	NO_AUTORIZAR_SOLICITUD,
+	GET_CHATS,
+	SEND_MESSAGE_CHAT,
 } from './URLS'
 
 
@@ -806,7 +808,7 @@ class Europa3Api {
 
 	static async getSolicitudById(id, accessToken){
 		try {
-			const resp = await axios.get(`${GET_SOLICITUD_BY_ID}/${id}`, {
+			const resp = await axios.get(`${GET_SOLICITUD_BY_ID}/${id}/admin`, {
 				headers:{
 					Authorization: `Bearer ${accessToken}`
 				}
@@ -905,6 +907,49 @@ class Europa3Api {
 			const resp = await axios.post(`${NO_AUTORIZAR_SOLICITUD}/${id}/no-authorize`, {}, {
 				headers:{
 					Authorization: `Bearer ${accessToken}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async getChats(){
+		try {
+			const credentials = LocalStorage.getCredentials();
+			const resp = await axios.get(GET_CHATS, {
+				headers: {
+					Authorization: `Bearer ${credentials.access_token}`,
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async sendMessageChat({mensaje, edificio_id, solicitud_id}){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.post(SEND_MESSAGE_CHAT, { mensaje, edificio_id, solicitud_id }, {
+				headers: {
+					Authorization: `Bearer ${credentials.access_token}`,
 				}
 			})
 

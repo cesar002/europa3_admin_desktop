@@ -32,7 +32,6 @@ class ShowSolicitud extends React.Component{
 		this.downloadDocument = this.downloadDocument.bind(this);
 		this.autorizarSolicitud = this.autorizarSolicitud.bind(this);
 		this.noAutorizarSolicitud = this.noAutorizarSolicitud.bind(this);
-		// this.noAuthorizeSolicitud = this.noAuthorizeSolicitud.bind(this);
 
 		this.state = {
 			tabIndex : 0,
@@ -159,20 +158,6 @@ class ShowSolicitud extends React.Component{
 		})
 	}
 
-	// async authorizeSolicitud(id){
-	// 	const resp = await Europa3Api.autorizarSolicitud(id, this.props.accessToken);
-	// 	if(resp.status !== 'success'){
-	// 		return;
-	// 	}
-	// }
-
-	// async noAuthorizeSolicitud(id){
-	// 	const resp = await Europa3Api.noAutorizarSolicitud(id, this.props.accessToken);
-	// 	if(resp.status !== 'success'){
-	// 		return;
-	// 	}
-	// }
-
 	renderTab(){
 		return(
 			<ul className = 'nav nav-tabs mt-4'>
@@ -216,6 +201,16 @@ class ShowSolicitud extends React.Component{
 						Documentos
 					</a>
 				</li>
+				{ this.props.solicitud.fechas_pago.length > 0 &&
+				<li className = 'nav-item'>
+					<a className = {`nav-link ${this.state.tabIndex == 5? 'active' : ''}`}
+						onClick = { () => this.setTabIndex(5) }
+						style = {{ cursor: 'pointer' }}
+					>
+						Pagos
+					</a>
+				</li>
+				}
 			</ul>
 		)
 	}

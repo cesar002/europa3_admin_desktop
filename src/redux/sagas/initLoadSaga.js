@@ -13,8 +13,8 @@ import * as salaJuntasActions from '../actions/salaJuntasActions';
 import * as usersActions from '../actions/usersAction';
 
 function* initAll(){
-	yield put( initLoadAction.startFetchSystemData() );
 	yield put( initLoadAction.startAutoLogin() );
+	yield put( initLoadAction.startFetchSystemData() );
 }
 
 function* fetchSystemData(){

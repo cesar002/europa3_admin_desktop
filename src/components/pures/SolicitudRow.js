@@ -9,17 +9,22 @@ import Label from './Badge';
 
 const SolicitudRow = props => {
 
-
-	const getUrlShow = () => {
-		switch (props.tipoId) {
+	const getTypeLabel = id => {
+		switch (id) {
 			case 1:
-				return `/solicitudes/showOficina/${props.id}`
+				return 'secondary'
 			case 2:
-				return `/solicitudes/showSala/${props.id}`
+				return 'success'
 			case 3:
-				return `/solicitudes/showVirtual/${props.id}`
+				return 'warning'
+			case 4:
+				return 'danger'
+			case 5:
+				return 'info'
+			case 6:
+				return 'primary'
 			default:
-				return '/solicitudes'
+				return 'secondary'
 		}
 	}
 
@@ -41,7 +46,7 @@ const SolicitudRow = props => {
 			{ props.tiempoRenta }
 		</th>
 		<th className='text-center'>
-			<Label texto = { props.status } type = 'info' />
+			<Label texto = { props.estado.nombre } type = { getTypeLabel() } />
 		</th>
 		<th className='text-center'>
 			{ props.email }
@@ -51,7 +56,7 @@ const SolicitudRow = props => {
 		</th>
 		<th className = 'text-center'>
 			<div className = 'btn-group'>
-				<Link className = 'btn btn-primary btn-sm' to = { getUrlShow() }>
+				<Link className = 'btn btn-primary btn-sm' to = { `/solicitudes/show/${props.id}` }>
 					<FontAwesomeIcon icon = { faEye } />
 				</Link>
 			</div>
@@ -66,8 +71,8 @@ SolicitudRow.propTypes = {
 	tipoId: PropTypes.number.isRequired,
 	nombre: PropTypes.string.isRequired,
 	fechaReservacion: PropTypes.any.isRequired,
-	tiempoRenta: PropTypes.number.isRequired,
-	status: PropTypes.string.isRequired,
+	tiempoRenta: PropTypes.string.isRequired,
+	estado: PropTypes.object.isRequired,
 	email: PropTypes.string.isRequired,
 	nombreCliente: PropTypes.string.isRequired,
 }

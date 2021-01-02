@@ -1,5 +1,6 @@
 @import './login.css';
 @import './sb-admin-2.css';
+@import './chat.css';
 
 .notifications-container{
 	max-height: 25rem;

@@ -59,6 +59,7 @@ function* fetchSolicitudById(action){
 		if(resp.status !== 'success')
 			throw resp.data
 
+		console.log(resp.data);
 		yield put(solicitudesAction.setSolicitudOficina(resp.data));
 		yield put(solicitudesAction.finishFetchSolicitudOficinaByIdSuccess());
 	} catch (error) {

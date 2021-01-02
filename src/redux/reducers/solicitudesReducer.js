@@ -72,7 +72,10 @@ export default (state = initialState, action) => {
 				...state,
 				solicitudOficinaSelected: {
 					...state.solicitudOficinaSelected,
-					autorizado: false,
+					estado: {
+						id: 3,
+						nombre: 'No Autorizado',
+					},
 				}
 			}
 		case FINISH_FETCH_SOLICITUD_NO_AUTORIZAR_FAIL:
@@ -119,7 +122,10 @@ export default (state = initialState, action) => {
 				...state,
 				solicitudOficinaSelected: {
 					...state.solicitudOficinaSelected,
-					autorizado: true,
+					estado: {
+						id: 2,
+						nombre: 'Autorizado',
+					},
 				}
 			}
 		case FINISH_FETCH_SOLICITUD_AUTORIZAR_FAIL:

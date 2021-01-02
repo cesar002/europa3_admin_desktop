@@ -26,20 +26,23 @@ class UserCredencialsStorageService{
 		return null
 	}
 
+	/**
+	 * @return string
+	 */
 	static getAccessToken(){
-		const data = this.getCredentials();
+		const data = UserCredencialsStorageService.getCredentials();
 
 		return data == null ? data.access_token : '';
 	}
 
 	static getRefreshToken(){
-		const data = this.getCredentials();
+		const data = UserCredencialsStorageService.getCredentials();
 
 		return data == null ? data.refresh_token : '';
 	}
 
 	static tokenIsExpired(){
-		const data = this.getCredentials();
+		const data = UserCredencialsStorageService.getCredentials();
 
 		return (Date.now()) < data.expire_token
 	}

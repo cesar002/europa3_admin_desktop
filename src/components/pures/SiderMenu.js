@@ -125,6 +125,7 @@ class SiderMenu extends React.PureComponent{
 						title = 'Sala de juntas'
 						icon = { faCouch }
 					/>
+
 					<Divider />
 				</React.Fragment>
 				}

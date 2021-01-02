@@ -16,7 +16,6 @@ class Solicitudes extends React.Component{
 		this.renderSoliciudes = this.renderSoliciudes.bind(this);
 		this.renderLoading = this.renderLoading.bind(this);
 		this.renderEmpty = this.renderEmpty.bind(this);
-		this.convertStatusSolicitudToString = this.convertStatusSolicitudToString.bind(this);
 		this.renderSolicitudesRow = this.renderSolicitudesRow.bind(this);
 		this.renderPaginationNav = this.renderPaginationNav.bind(this);
 		this.selectedPagination = this.selectedPagination.bind(this);
@@ -43,24 +42,6 @@ class Solicitudes extends React.Component{
 		}
 	}
 
-	convertStatusSolicitudToString(solicitud){
-		if(solicitud.iniciado){
-			return  'Iniciado';
-		}
-		if(solicitud.subida_documentos){
-			return  'Documentos subidos';
-		}
-		if(solicitud.autorizado){
-			return  'Autorizado';
-		}
-		if(solicitud.finalizado){
-			return  'Finalizado';
-		}
-		if(solicitud.revalidado){
-			return  'Revalidada';
-		}
-	}
-
 	renderSolicitudesRow(){
 		const { currentIndexPagination } = this.state;
 
@@ -76,42 +57,12 @@ class Solicitudes extends React.Component{
 				}
 				folio = { soli.folio }
 				id = { soli.id }
-				fechaReservacion = {
-					soli.solicitud_oficina !== null ?
-						soli.solicitud_oficina.fecha_reservacion :
-					soli.solicitud_sala_junta !== null ?
-						soli.solicitud_sala_junta.fecha_reservacion :
-					Date.now()
-				}
-				tiempoRenta = {
-					soli.solicitud_oficina !== null ?
-						soli.solicitud_oficina.meses_renta :
-					soli.solicitud_sala_junta !== null ?
-						soli.solicitud_sala_junta.fecha_reservacion :
-					Date.now()
-				}
-				nombre = {
-					soli.solicitud_oficina !== null ?
-						soli.solicitud_oficina.oficina.nombre :
-					soli.solicitud_sala_junta !== null ?
-						soli.solicitud_sala_junta.salaJunta.nombre :
-					'N/A'
-				}
-				tipoId = {
-					soli.solicitud_oficina !== null ?
-						soli.solicitud_oficina.oficina.tipo_oficina.id :
-					soli.solicitud_sala_junta !== null ?
-						soli.solicitud_sala_junta.salaJunta.tipo_oficina.id :
-					0
-				}
-				tipo = {
-					soli.solicitud_oficina !== null ?
-						soli.solicitud_oficina.oficina.tipo_oficina.tipo :
-					soli.solicitud_sala_junta !== null ?
-						soli.solicitud_sala_junta.salaJunta.tipo_oficina.tipo :
-					0
-				}
-				status = { this.convertStatusSolicitudToString(soli) }
+				fechaReservacion = { soli.fecha_reservacion }
+				tiempoRenta = { soli.meses_renta }
+				nombre = { soli.solicitudable.nombre }
+				tipoId = { soli.tipo_oficina.id }
+				tipo = { soli.tipo_oficina.tipo }
+				estado = { soli.estado }
 			/>
 		))
 	}

@@ -12,6 +12,7 @@ import idiomasAtencionReducer from './reducers/idiomasAtencionReducer';
 import salaJuntasReducer from './reducers/salaJuntasReducer';
 import usersReducer from './reducers/usersReducer';
 import solicitudesReducer from './reducers/solicitudesReducer';
+import chatReducer from './reducers/chatReducer';
 
 const state = combineReducers({
 	userData: userReducer,
@@ -26,6 +27,7 @@ const state = combineReducers({
 	salaJuntasData: salaJuntasReducer,
 	usersData: usersReducer,
 	solicitudesData: solicitudesReducer,
+	chatsData: chatReducer,
 })
 
 export default state;

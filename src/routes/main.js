@@ -4,7 +4,7 @@ import {
 	Route,
 } from "react-router-dom";
 
-import withSocket from '../components/hocs/withSockets';
+import withSocket from '../components/hocs/withPusherSockets';
 
 import PreAuth from '../pages/PreAuth';
 import Login from '../pages/Login';
@@ -49,7 +49,7 @@ const MainRoute = () => (
 			<Route path = '/idiomas-atencion' exact component = { IdiomasAtencion } />
 			<Route path = '/notificaciones' exact component = { Notificaciones } />
 			<Route path = '/solicitudes' exact component = { Solicitudes } />
-			<Route path = '/solicitudes/showOficina/:id' exact component = { ShowSolicitud } />
+			<Route path = '/solicitudes/show/:id' exact component = { ShowSolicitud } />
 		</React.Fragment>
 	</HashRouter>
 )

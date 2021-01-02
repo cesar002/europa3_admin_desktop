@@ -13,6 +13,7 @@ import initLoadSaga from './initLoadSaga';
 import salaJuntasSaga from './salaJuntasSaga';
 import usersSaga from './usersSaga';
 import solicitudesSaga from './solicitudesSaga';
+import chatSaga from './chatSaga';
 
 export default function* mainSaga(){
 	yield all([
@@ -29,5 +30,6 @@ export default function* mainSaga(){
 		salaJuntasSaga(),
 		usersSaga(),
 		solicitudesSaga(),
+		chatSaga(),
 	]);
 }
