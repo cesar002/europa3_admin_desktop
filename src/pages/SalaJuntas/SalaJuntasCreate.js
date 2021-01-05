@@ -3,7 +3,7 @@ import swal from 'sweetalert2';
 import { Formik, FieldArray } from 'formik';
 import { connect } from 'react-redux'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faTrashAlt, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
 import Container from '../../components/pures/ContainerMaster';
 import Thumbnail from '../../components/pures/ThumbnailImageLocalPreview';
@@ -19,28 +19,31 @@ class SalaJuntaCreate extends React.Component{
 		this.validateForm = this.validateForm.bind(this);
 		this.filterMobiliarioByEdificio = this.filterMobiliarioByEdificio.bind(this);
 		this.addServicio = this.addServicio.bind(this);
-		this.renderMobiliario = this.renderMobiliario.bind(this);
 		this.addMobiliario = this.addMobiliario.bind(this);
 		this.addSalaJuntasImages = this.addSalaJuntasImages.bind(this);
 		this.removeSalaJuntasImage = this.removeSalaJuntasImage.bind(this);
 		this.registerSalaJuntas = this.registerSalaJuntas.bind(this);
+		this.incCantidadMobiliario = this.incCantidadMobiliario.bind(this);
+
 
 		this.state = {
 			mobiliario: [],
-			mobiliarioSala: [],
 			currentServicioId: 0,
 			currentMobiliarioId: 0,
-			mobiliarioOficinaError: null,
 			images: [],
 			imagesError: null,
 		}
 	}
 
-	filterMobiliarioByEdificio(e){
+	async filterMobiliarioByEdificio(e){
 		const id = Number(e.target.value);
+		const resp = await Europa3Api.getMobiliarioByEdificio(id);
+
+		if(resp.status !== 'success')
+			return;
+
 		this.setState({
-			mobiliario: this.props.mobiliario.filter(m => m.edificio.id == id),
-			mobiliarioSala: [],
+			mobiliario: resp.data,
 		})
 	}
 
@@ -55,24 +58,18 @@ class SalaJuntaCreate extends React.Component{
 		arrayHelpers.push({ ...servicio });
 	}
 
-	addMobiliario(){
-		const { currentMobiliarioId, mobiliarioSala } = this.state
+	addMobiliario(mobiliarios = [], arrayHelpers){
+		const { currentMobiliarioId } = this.state
 
-		if(mobiliarioSala.some(m => m.id == currentMobiliarioId) || currentMobiliarioId == 0){
+		if(mobiliarios.some(m => m.id == currentMobiliarioId || currentMobiliarioId == 0))
 			return;
-		}
 
 		const mobiliario = this.state.mobiliario.find(m => m.id == currentMobiliarioId);
 
-		this.setState({
-			mobiliarioSala: [...this.state.mobiliarioSala, {...mobiliario, cantidad: 1}]
-		})
-	}
+		if(mobiliario.usado >= mobiliario.cantidad)
+			return;
 
-	updateCantidadMobiliario(id, cantidad){
-		this.setState({
-			mobiliarioSala: this.state.mobiliarioSala.map(m => m.id == id ? {...m, cantidad} : m)
-		})
+		arrayHelpers.push({ id: mobiliario.id, nombre: mobiliario.nombre, cantidad: 1 , image: mobiliario.image})
 	}
 
 	addSalaJuntasImages(e){
@@ -94,66 +91,26 @@ class SalaJuntaCreate extends React.Component{
 		})
 	}
 
-	renderMobiliario(){
-		return(
-			<React.Fragment>
-				<div className = 'form-row'>
-					<div className = 'form-inline mb-3'>
-						<label htmlFor = 'mobiliario'>Mobiliario:</label>
-						<select id = 'mobiliario' className = {`form-control mx-3 ${this.props.mobiliarioOficinaError ? 'is-invalid' : ''}`}
-							style = {{ minWidth: '10rem' }}
-							value = {this.state.currentMobiliarioId}
-							onChange = { e => this.setState({ currentMobiliarioId: Number(e.target.value) }) }
-						>
-							<option value = {0}>Seleccione mobiliario</option>
-							{this.state.mobiliario.map(m => (
-							<option value = {m.id} key = {m.id}>{m.nombre}</option>
-							))}
-						</select>
-						{this.props.mobiliarioOficinaError && <span className = 'invalid-feedback'>{this.props.mobiliarioOficinaError}</span>}
-						<button type = 'button' className = 'btn btn-primary btn-sm' onClick = { this.addMobiliario }>
-							Agregar
-						</button>
-					</div>
-				</div>
-				{ this.state.mobiliarioSala.length > 0  &&
-				<div className = 'row d-flex justify-content-center'>
-					<div className = 'col'>
-						<table className = 'table'>
-							<thead>
-								<tr>
-									<th scope = 'col'>Mueble</th>
-									<th scope = 'col'>Imagen</th>
-									<th scope = 'col'>Cantidad</th>
-									<th scope = 'col'></th>
-								</tr>
-							</thead>
-							<tbody>
-								{this.state.mobiliarioSala.map(m => (
-									<tr key = {m.id}>
-										<th>{m.nombre}</th>
-										<th><img alt = {m.nombre} src = {m.image} style = {{ width: '40px', height: '40px' }} /></th>
-										<th className = 'input-group-sm'>
-											<input type = 'number'
-												className = 'form-control'
-												value = {m.cantidad}
-												onChange = { e => this.updateCantidadMobiliario(m.id, Number(e.target.value))}
-											/>
-										</th>
-										<th>
-											<button className = 'btn btn-danger btn-sm' type = 'button'>
-												<FontAwesomeIcon icon = { faTrashAlt } />
-											</button>
-										</th>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
-				</div>
-				}
-			</React.Fragment>
-		)
+	incCantidadMobiliario(mobiliario){
+		let newCantidad = mobiliario.cantidad + 1;
+
+		const _mobiliario = this.state.mobiliario.find(m => m.id == mobiliario.id);
+		let sum = newCantidad + _mobiliario.usado;
+
+		if(sum > _mobiliario.cantidad){
+			return mobiliario;
+		}
+
+		return {...mobiliario, cantidad: newCantidad}
+	}
+
+	decCantidadMobiliario(mobiliario){
+		let newCantidad = mobiliario.cantidad - 1;
+		if(newCantidad <= 0){
+			return mobiliario;
+		}
+
+		return {...mobiliario, cantidad: newCantidad}
 	}
 
 	validateForm(values){
@@ -201,6 +158,10 @@ class SalaJuntaCreate extends React.Component{
 			errors.servicios = 'Debe de haber al menos un servicio'
 		}
 
+		if(values.mobiliario.length == 0){
+			errors.mobiliario = 'Debe haber al menos un mobiliario registrado'
+		}
+
 		if(values.descripcion == ''){
 			errors.descripcion = 'Campo obligatorio'
 		}
@@ -217,28 +178,18 @@ class SalaJuntaCreate extends React.Component{
 			return;
 		}
 
-		if(this.state.mobiliarioSala.length == 0){
-			this.setState({
-				mobiliarioOficinaError: 'Debe haber almenos un mobiliario agregado'
-			}, () => setSubmitting(false))
-
-			return;
-		}
-
 		const data = new FormData();
 		Object.keys(values).forEach(k => {
 			if(k == 'servicios'){
 				values[k].forEach(s => {
 					data.append('servicios[]', s.id)
 				})
+			}else if(k == 'mobiliario'){
+				values[k].forEach(m => {
+					data.append('mobiliario[]', JSON.stringify({ mobiliario_id :  m.id, cantidad: m.cantidad}));
+				})
 			}else{
 				data.append(k, values[k]);
-			}
-		})
-
-		this.state.mobiliarioSala.forEach(m => {
-			for (let i = 0; i < m.cantidad; i++) {
-				data.append('mobiliario[]', m.id)
 			}
 		})
 
@@ -255,15 +206,13 @@ class SalaJuntaCreate extends React.Component{
 			});
 			this.setState({
 				mobiliario: [],
-				mobiliarioSala: [],
 				currentServicioId: 0,
 				currentMobiliarioId: 0,
-				mobiliarioOficinaError: null,
 				images: [],
 				imagesError: null,
 			}, () => {
 				this.props.fetchSalaJuntas();
-				resetForm();
+				// resetForm();
 			})
 		})
 		.catch(err => {
@@ -289,7 +238,6 @@ class SalaJuntaCreate extends React.Component{
 							initialValues = {{
 								edificio_id: 0,
 								size_id: 0,
-								tipo_tiempo_id: 2,
 								tipo_oficina_id: 2,
 								nombre: '',
 								descripcion: '',
@@ -298,6 +246,7 @@ class SalaJuntaCreate extends React.Component{
 								capacidad_maxima: '',
 								precio: '',
 								servicios: [],
+								mobiliario: [],
 							}}
 							validate = { values => this.validateForm(values) }
 							onSubmit = { (values, { setSubmitting, resetForm }) => this.registerSalaJuntas(values, setSubmitting, resetForm) }
@@ -352,22 +301,6 @@ class SalaJuntaCreate extends React.Component{
 										</select>
 										{ errors.size_id && <div className = 'invalid-feedback'>{errors.size_id}</div> }
 									</div>
-								</div>
-								<div className = 'form-group'>
-									<label htmlFor = 'tiempo'>Tipo de tiempo de renta</label>
-									<select id = 'tiempo'
-										className = {`form-control ${errors.tipo_tiempo_id && touched.tipo_tiempo_id ? 'is-invalid' : ''}`}
-										value = { values.tipo_tiempo_id }
-										name = 'tipo_tiempo_id'
-										onChange = { handleChange }
-										onBlur = { handleBlur }
-									>
-										<option value = {0}>Seleccione una opción</option>
-										{this.props.tipoTiempos.map(m => (
-										<option key = {m.id} value = {m.id}>{m.tiempo}</option>
-										))}
-									</select>
-									{errors.tipo_tiempo_id && <div className = 'invalid-feedback'>{errors.tipo_tiempo_id}</div>}
 								</div>
 								<div className = 'form-group'>
 									<label htmlFor = 'sala-juntas'>Nombre de la sala de juntas</label>
@@ -523,7 +456,82 @@ class SalaJuntaCreate extends React.Component{
 										</React.Fragment>
 									)}
 								/>
-								{ this.renderMobiliario() }
+								<FieldArray
+									name = 'mobiliario'
+									render = {arrayHelpers => (
+										<React.Fragment>
+											<div className = 'form-row'>
+												<div className = 'form-inline mb-3 mr-3'>
+													<label htmlFor = 'servicios'>Mobiliario</label>
+													<select id = 'servicios'
+														className = {`form-control ml-3 ${errors.mobiliario && touched.mobiliario ? 'is-invalid' : ''}`}
+														value = { this.state.currentMobiliarioId }
+														onChange = { e => this.setState({currentMobiliarioId: Number(e.target.value)}) }
+													>
+														<option value = {0}>Seleccione un mobiliario</option>
+														{this.state.mobiliario.map(m => (
+														<option key = {m.id} value = {m.id}>{m.nombre}</option>
+														))}
+													</select>
+													{errors.mobiliario && <div className = 'invalid-feedback'>{errors.mobiliario}</div>}
+													<button type = 'button' className = 'btn btn-primary btn-sm ml-3'
+														onClick = { () => this.addMobiliario(values.mobiliario, arrayHelpers) }
+													>
+														Agregar
+													</button>
+												</div>
+											</div>
+											{values.mobiliario.length > 0 &&
+											<div className = 'row d-flex justify-content-center'>
+												<div className = 'col'>
+													<table className = 'table'>
+														<thead>
+															<tr>
+																<th scope = 'col'>Mueble</th>
+																<th scope = 'col'>Imagen</th>
+																<th scope = 'col'>Cantidad</th>
+																<th scope = 'col'></th>
+															</tr>
+														</thead>
+														<tbody>
+															{values.mobiliario.map((mobiliario, index) => (
+															<tr key = {mobiliario.id}>
+																<th>{mobiliario.nombre}</th>
+																<th><img alt = {mobiliario.nombre} src = {mobiliario.image} style = {{ width: '40px', height: '40px' }} /></th>
+																<th>
+																	<span className = 'mx-3'>
+																		{mobiliario.cantidad}
+																	</span>
+																	<div className = 'btn-group' role = 'group' aria-label='incremento mobiliario'>
+																		<button type = 'button' className = 'btn btn-success btn-sm'
+																			onClick = {e => arrayHelpers.replace(index, this.incCantidadMobiliario(mobiliario))}
+																		>
+																			<FontAwesomeIcon icon = { faPlus } />
+																		</button>
+																		<button type = 'button' className = 'btn btn-danger btn-sm'
+																			onClick = {e => arrayHelpers.replace(index, this.decCantidadMobiliario(mobiliario))}
+																		>
+																			<FontAwesomeIcon icon = { faMinus } />
+																		</button>
+																	</div>
+																</th>
+																<th>
+																	<button type = 'button' className = 'btn btn-danger btn-sm'
+																		onClick = {()=>arrayHelpers.remove(index)}
+																	>
+																		<FontAwesomeIcon icon = { faTrashAlt } />
+																	</button>
+																</th>
+															</tr>
+															))}
+														</tbody>
+													</table>
+												</div>
+											</div>
+											}
+										</React.Fragment>
+									)}
+								/>
 								<div className = 'form-group'>
 									<button className = 'btn btn-primary btn-lg btn-block' disabled = { isSubmitting }>
 										{ !isSubmitting && 'Registro de la sala de juntas' }

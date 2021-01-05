@@ -22,18 +22,18 @@ export default ( WrapperComponent ) => {
 		useEffect(() => { initChannels() });
 
 		const initChannels = () => {
-			if(props._userData.id){
-				connectSocket();
+			// if(props._userData.id){
+			// 	connectSocket();
 
-				laravelEcho.channel(`notificacion.edificio.${props._userData.edificio.id}`).notification(noti => {
-					props.addSolicitudNotification(noti)
-				})
+			// 	laravelEcho.channel(`notificacion.edificio.${props._userData.edificio.id}`).notification(noti => {
+			// 		props.addSolicitudNotification(noti)
+			// 	})
 
-				joinChats();
+			// 	joinChats();
 
-			}else{
-				disconnectSocket();
-			}
+			// }else{
+			// 	disconnectSocket();
+			// }
 		}
 
 		const joinChats = () => {
