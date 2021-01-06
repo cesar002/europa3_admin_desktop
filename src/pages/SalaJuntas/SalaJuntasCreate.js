@@ -39,9 +39,6 @@ class SalaJuntaCreate extends React.Component{
 		const id = Number(e.target.value);
 		const resp = await Europa3Api.getMobiliarioByEdificio(id);
 
-		if(resp.status !== 'success')
-			return;
-
 		this.setState({
 			mobiliario: resp.data,
 		})

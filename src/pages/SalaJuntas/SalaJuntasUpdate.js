@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Formik, FieldArray } from 'formik';
 import swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPenAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPenAlt, faTrashAlt, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 import Container from '../../components/pures/ContainerMaster';
 import ThumbnailPreview from '../../components/pures/ThumbnailImagePreview';
@@ -22,15 +22,15 @@ class SalaJuntasUpdate extends React.Component{
 		this.filterMobiliarioByEdificio = this.filterMobiliarioByEdificio.bind(this);
 		this.addServicio = this.addServicio.bind(this);
 		this.addMobiliario = this.addMobiliario.bind(this);
-		this.renderMobiliario = this.renderMobiliario.bind(this);
 		this.toggleEdit = this.toggleEdit.bind(this);
-		this.renderMobiliario = this.renderMobiliario.bind(this);
 		this.renderImageUpdate = this.renderImageUpdate.bind(this);
 		this.addNewImages = this.addNewImages.bind(this);
 		this.removeImageOficina = this.removeImageOficina.bind(this);
 		this.removeNewImage = this.removeNewImage.bind(this);
 		this.updateImages = this.updateImages.bind(this);
 		this.updateInfo = this.updateInfo.bind(this);
+		this.decCantidadMobiliario = this.decCantidadMobiliario.bind(this);
+		this.incCantidadMobiliario = this.incCantidadMobiliario.bind(this);
 
 		this.state = {
 			isEdit: false,
@@ -38,20 +38,19 @@ class SalaJuntasUpdate extends React.Component{
 			currentServicioId: 0,
 			currentMobiliarioId: 0,
 			mobiliario: [],
-			mobiliarioSala: [],
 			newImages: null,
 			deletedImages: [],
 			updatingImages: false,
 		}
 	}
 
-	componentDidMount(){
+	async componentDidMount(){
 		const edId = this.props.salaJuntas.edificio.id;
-		const mob = this.props.mobiliario.filter(m => m.id == edId);
+
+		const resp = await Europa3Api.getMobiliarioByEdificio(edId);
 
 		this.setState({
-			mobiliario: mob,
-			mobiliarioSala: this.props.salaJuntas.mobiliario,
+			mobiliario: resp.data
 		})
 	}
 
@@ -61,73 +60,6 @@ class SalaJuntasUpdate extends React.Component{
 		})
 	}
 
-	renderMobiliario(){
-		return(
-			<React.Fragment>
-				<div className = 'form-row'>
-					<div className = 'form-inline mb-3'>
-						<label htmlFor = 'mobiliario'>Mobiliario:</label>
-						<select id = 'mobiliario' className = {`form-control mx-3 ${this.props.mobiliarioOficinaError ? 'is-invalid' : ''}`}
-							style = {{ minWidth: '10rem' }}
-							value = {this.state.currentMobiliarioId}
-							onChange = { e => this.setState({ currentMobiliarioId: Number(e.target.value) }) }
-							disabled = { !this.state.isEdit }
-						>
-							<option value = {0}>Seleccione mobiliario</option>
-							{this.state.mobiliario.map(m => (
-							<option value = {m.id} key = {m.id}>{m.nombre}</option>
-							))}
-						</select>
-						{this.props.mobiliarioOficinaError && <span className = 'invalid-feedback'>{this.props.mobiliarioOficinaError}</span>}
-						<button type = 'button' className = 'btn btn-primary btn-sm' onClick = { this.addMobiliario }
-							disabled = { !this.state.isEdit }
-						>
-							Agregar
-						</button>
-					</div>
-				</div>
-				{ this.state.mobiliarioSala.length > 0  &&
-				<div className = 'row d-flex justify-content-center'>
-					<div className = 'col'>
-						<table className = 'table'>
-							<thead>
-								<tr>
-									<th scope = 'col'>Mueble</th>
-									<th scope = 'col'>Imagen</th>
-									<th scope = 'col'>Cantidad</th>
-									<th scope = 'col'></th>
-								</tr>
-							</thead>
-							<tbody>
-								{this.state.mobiliarioSala.map(m => (
-									<tr key = {m.id}>
-										<th>{m.nombre}</th>
-										<th><img alt = {m.nombre} src = {m.image} style = {{ width: '40px', height: '40px' }} /></th>
-										<th className = 'input-group-sm'>
-											<input type = 'number'
-												className = 'form-control'
-												value = {m.cantidad}
-												onChange = { e => this.updateCantidadMobiliario(m.id, Number(e.target.value))}
-												disabled = { !this.state.isEdit }
-											/>
-										</th>
-										<th>
-											<button className = 'btn btn-danger btn-sm' type = 'button'
-												disabled = { !this.state.isEdit }
-											>
-												<FontAwesomeIcon icon = { faTrashAlt } />
-											</button>
-										</th>
-									</tr>
-								))}
-							</tbody>
-						</table>
-					</div>
-				</div>
-				}
-			</React.Fragment>
-		)
-	}
 
 	goToTab(i){
 		this.setState({
@@ -135,11 +67,13 @@ class SalaJuntasUpdate extends React.Component{
 		})
 	}
 
-	filterMobiliarioByEdificio(e){
+	async filterMobiliarioByEdificio(e){
 		const id = Number(e.target.value);
+
+		const resp = await Europa3Api.getMobiliarioByEdificio(id);
+
 		this.setState({
-			mobiliario: this.props.mobiliario.filter(m => m.edificio.id == id),
-			mobiliarioSala: [],
+			mobiliario: resp.data,
 		})
 	}
 
@@ -188,6 +122,10 @@ class SalaJuntasUpdate extends React.Component{
 			errors.servicios = 'Debe de haber al menos un servicio'
 		}
 
+		if(values.mobiliario.length == 0){
+			errors.mobiliario = 'Debe de haber al menos un mobiliario asignado';
+		}
+
 		if(values.descripcion == ''){
 			errors.descripcion = 'Campo obligatorio'
 		}
@@ -195,18 +133,19 @@ class SalaJuntasUpdate extends React.Component{
 		return errors;
 	}
 
-	addMobiliario(){
-		const { currentMobiliarioId, mobiliarioSala } = this.state
+	addMobiliario(mobiliarios = [], arrayHelpers){
+		const { currentMobiliarioId } = this.state
 
-		if(mobiliarioSala.some(m => m.id == currentMobiliarioId) || currentMobiliarioId == 0){
+		if(mobiliarios.some(m => m.id == currentMobiliarioId) || currentMobiliarioId == 0){
 			return;
 		}
 
 		const mobiliario = this.state.mobiliario.find(m => m.id == currentMobiliarioId);
 
-		this.setState({
-			mobiliarioSala: [...this.state.mobiliarioSala, {...mobiliario, cantidad: 1}]
-		})
+		if(mobiliario.usado >= mobiliario.cantidad)
+			return;
+
+		arrayHelpers.push({ id: mobiliario.id, nombre: mobiliario.nombre, cantidad: 1 , image: mobiliario.image})
 	}
 
 	addServicio(servicios = [], arrayHelpers){
@@ -377,17 +316,10 @@ class SalaJuntasUpdate extends React.Component{
 
 	updateInfo(values, setSubmitting){
 		const serviciosIds = values.servicios.map(s => s.id);
-		const mobiliarioIds = [];
-		this.state.mobiliarioSala.forEach(m => {
-			for (let i = 0; i < m.cantidad; i++) {
-				mobiliarioIds.push(m.id)
-			}
-		})
 
 		const data = {
 			...values,
 			servicios: serviciosIds,
-			mobiliario: mobiliarioIds,
 		}
 
 		Europa3Api.updateSalaJuntas(this.props.salaJuntas.id, data)
@@ -414,6 +346,27 @@ class SalaJuntasUpdate extends React.Component{
 		.finally(() => setSubmitting(false))
 	}
 
+	incCantidadMobiliario(mobiliario){
+		let newCantidad = mobiliario.cantidad + 1;
+
+		const _mobiliario = this.state.mobiliario.find(m => m.id == mobiliario.id);
+
+		if(newCantidad > _mobiliario.cantidad){
+			return mobiliario;
+		}
+
+		return {...mobiliario, cantidad: newCantidad}
+	}
+
+	decCantidadMobiliario(mobiliario){
+		let newCantidad = mobiliario.cantidad - 1;
+		if(newCantidad <= 0){
+			return mobiliario;
+		}
+
+		return {...mobiliario, cantidad: newCantidad}
+	}
+
 	renderFormUpdate(){
 		if(this.state.tabIndex == 0){
 			return(
@@ -429,6 +382,7 @@ class SalaJuntasUpdate extends React.Component{
 						capacidad_maxima: this.props.salaJuntas.capacidad.maxima,
 						precio: this.props.salaJuntas.precio,
 						servicios: this.props.salaJuntas.servicios,
+						mobiliario: this.props.salaJuntas.mobiliario
 					}}
 					validate = { values => this.validateForm(values) }
 					onSubmit = { (values, { setSubmitting }) => this.updateInfo(values, setSubmitting) }
@@ -639,7 +593,87 @@ class SalaJuntasUpdate extends React.Component{
 								</React.Fragment>
 							)}
 						/>
-						{ this.renderMobiliario() }
+						<FieldArray
+							name = 'mobiliario'
+							render = {arrayHelpers => (
+								<React.Fragment>
+									<div className = 'form-row'>
+										<div className = 'form-inline mb-3'>
+											<label htmlFor = 'mobiliario'>Mobiliario:</label>
+											<select id = 'mobiliario' className = {`form-control mx-3 ${errors.mobiliario && touched.mobiliario ? 'is-invalid' : ''}`}
+												style = {{ minWidth: '10rem' }}
+												value = {this.state.currentMobiliarioId}
+												onChange = { e => this.setState({ currentMobiliarioId: Number(e.target.value) }) }
+												disabled = { !this.state.isEdit }
+											>
+												<option value = {0}>Seleccione mobiliario</option>
+												{this.state.mobiliario.map(m => (
+												<option value = {m.id} key = {m.id}>{m.nombre}</option>
+												))}
+											</select>
+											{errors.mobiliario && <span className = 'invalid-feedback'>{errors.mobiliario}</span>}
+											<button type = 'button' className = 'btn btn-primary btn-sm'
+												onClick = { () => this.addMobiliario(values.mobiliario, arrayHelpers) }
+												disabled = { !this.state.isEdit }
+											>
+												Agregar
+											</button>
+										</div>
+									</div>
+									{ values.mobiliario.length > 0 &&
+									<div className = 'row d-flex justify-content-center'>
+																				<div className = 'col'>
+											<table className = 'table'>
+												<thead>
+													<tr>
+														<th scope = 'col'>Mueble</th>
+														<th scope = 'col'>Imagen</th>
+														<th scope = 'col'>Cantidad</th>
+														<th scope = 'col'></th>
+													</tr>
+												</thead>
+												<tbody>
+													{ values.mobiliario.map((m, index) => (
+														<tr key = { m.id }>
+															<th>{m.nombre}</th>
+															<th><img alt = {m.nombre} src = {m.image} style = {{ width: '40px', height: '40px' }} /></th>
+															<th>
+																<span className = 'mx-3'>
+																	{m.cantidad}
+																</span>
+																<div className = 'btn-group' role = 'group' aria-label='incremento mobiliario'>
+																		<button type = 'button' className = 'btn btn-success btn-sm'
+																			disabled = { !this.state.isEdit }
+																			onClick = {e => arrayHelpers.replace(index, this.incCantidadMobiliario(m))}
+																		>
+																			<FontAwesomeIcon icon = { faPlus } />
+																		</button>
+																		<button type = 'button' className = 'btn btn-danger btn-sm'
+																			disabled = { !this.state.isEdit }
+																			onClick = {e => arrayHelpers.replace(index, this.decCantidadMobiliario(m))}
+																		>
+																			<FontAwesomeIcon icon = { faMinus } />
+																		</button>
+																</div>
+															</th>
+															<th>
+																<button className = 'btn btn-danger btn-sm' type = 'button'
+																	disabled = { !this.state.isEdit }
+																	onClick = { () => arrayHelpers.remove(index) }
+																>
+																	<FontAwesomeIcon icon = { faTrashAlt } />
+																</button>
+															</th>
+														</tr>
+													)) }
+												</tbody>
+											</table>
+										</div>
+									</div>
+									}
+								</React.Fragment>
+							)}
+						/>
 						{ this.state.isEdit &&
 						<div className = 'form-group mt-4'>
 							<button className = 'btn btn-primary btn-lg btn-block' disabled = { isSubmitting }>
