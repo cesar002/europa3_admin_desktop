@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import swal from 'sweetalert2';
-import { Formik } from 'formik';
+import { Formik, FieldArray } from 'formik';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
+import { faTrashAlt, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
 import { startFetchOficinas } from '../../redux/actions/oficinasActions'
-import * as mobiliarioActions from '../../redux/actions/mobiliarioActions'
+import { startFetchMobiliario } from '../../redux/actions/mobiliarioActions';
 
 import Container from '../../components/pures/ContainerMaster'
 import ThumbnailPreview from '../../components/pures/ThumbnailImageLocalPreview'
@@ -24,27 +24,20 @@ class OficinaCreate extends React.Component{
 		this.setFiles = this.setFiles.bind(this);
 		this.renderImageThumbnails = this.renderImageThumbnails.bind(this);
 		this.removeImage = this.removeImage.bind(this);
-		this.renderMobiliarioSelection = this.renderMobiliarioSelection.bind(this);
 		this.fetchMobiliario = this.fetchMobiliario.bind(this);
-		this.changeEdificioSelect = this.changeEdificioSelect.bind(this);
 		this.addMobiliario = this.addMobiliario.bind(this);
-		this.updateCantidad = this.updateCantidad.bind(this)
-		this.deleteMobiliario = this.deleteMobiliario.bind(this);
-		this.renderServiciosSelection = this.renderServiciosSelection.bind(this);
 		this.addServicio = this.addServicio.bind(this);
-		this.deleteServicio = this.deleteServicio.bind(this);
-
+		this.incMobiliario = this.incMobiliario.bind(this);
+		this.decMobiliario = this.decMobiliario.bind(this);
 
 		this.state = {
-			currentEdificioId: 0,
 			edificioIdError: null,
 			tabIndex: 0,
 			files: null,
 			currentMobiliarioId: 0,
-			errorMobiliario: null,
 			currentServicioId: 0,
 			serviciosSelected: [],
-			errorServicio: null,
+			mobiliario: [],
 		}
 	}
 
@@ -60,20 +53,15 @@ class OficinaCreate extends React.Component{
 				}
 			}
 		}
-
-		this.fetchMobiliario(prevState);
 	}
 
-	fetchMobiliario(prevState){
-		if(prevState.currentEdificioId !== this.state.currentEdificioId){
-			if(this.state.currentEdificioId !== 0){
-				this.props.fetchMobiliario(this.state.currentEdificioId)
-			}else{
-				this.setState({
-					mobiliario: [],
-				})
-			}
-		}
+	async fetchMobiliario(e){
+		const id = Number(e.target.value);
+		const resp = await Europa3Api.getMobiliarioByEdificio(id);
+
+		this.setState({
+			mobiliario: resp.data
+		});
 	}
 
 	removeImage(index){
@@ -90,15 +78,6 @@ class OficinaCreate extends React.Component{
 		})
 	}
 
-	changeEdificioSelect(e){
-		const value = e.target.value;
-		const error = value == 0 ? 'Campo obligatorio' : null;
-		this.setState({
-			currentEdificioId: value,
-			edificioIdError: error,
-		})
-	}
-
 	setFiles(e){
 		const files = Array.from(e.target.files)
 
@@ -107,165 +86,30 @@ class OficinaCreate extends React.Component{
 		})
 	}
 
-	addMobiliario(){
-		if(this.state.currentMobiliarioId == 0){
-			return
-		}
+	addMobiliario(mobiliarios = [], arrayHelpers){
+		const { currentMobiliarioId } = this.state
 
-		if(this.props.mobiliarioOficina.some(m => m.id == this.state.currentMobiliarioId)){
-			return
-		}
+		if(mobiliarios.some(m => m.id == currentMobiliarioId || currentMobiliarioId == 0))
+			return;
 
-		this.setState({
-			mobiliarioOficinaError: null,
-		}, () => this.props.addMobiliario(this.state.currentMobiliarioId))
+		const mobiliario = this.state.mobiliario.find(m => m.id == currentMobiliarioId)
+
+		if(mobiliario.usado >= mobiliario.cantidad)
+			return;
+
+		arrayHelpers.push({ id: mobiliario.id, nombre: mobiliario.nombre, cantidad: 1 , image: mobiliario.image})
 	}
 
-	addServicio(){
-		if(this.state.currentServicioId == 0){
+	addServicio(servicios = [], arrayHelpers){
+		const { currentServicioId } = this.state
+
+		if(servicios.some(s => s.id == currentServicioId) || currentServicioId == 0){
 			return;
 		}
 
-		if(this.state.serviciosSelected.some(s => s.id == this.state.currentServicioId)){
-			return;
-		}
+		const servicio = this.props.servicios.find(s => s.id == currentServicioId);
 
-		let servicio = this.props.servicios.find(s => s.id == this.state.currentServicioId);
-
-		this.setState({
-			errorServicio: null,
-			serviciosSelected: [...this.state.serviciosSelected, servicio]
-		})
-	}
-
-	updateCantidad(id, cantidad){
-		this.props.updateCantidad(id, cantidad)
-	}
-
-	deleteMobiliario(id){
-		this.props.deleteMobiliario(id)
-	}
-
-	deleteServicio(id){
-		this.setState({
-			serviciosSelected: this.state.serviciosSelected.filter(s => s.id != id),
-		})
-	}
-
-	renderServiciosSelection(){
-		return(
-			<React.Fragment>
-				<div className = 'form-row'>
-					<div className = 'form-inline mb-3'>
-						<label htmlFor = 'servicio'>Servicios:</label>
-						<select id = 'servicio' className = {`form-control mx-3 ${this.state.errorServicio ? 'is-invalid' : ''}`}
-							style = {{ minWidth: '10rem' }}
-							value = { this.state.currentServicioId }
-							onChange = { e => this.setState({ currentServicioId: Number(e.target.value) }) }
-						>
-							<option value = {0}>Seleccione el servicio</option>
-							{this.props.servicios.map(s => (
-							<option key = {s.id} value = {s.id}>{s.servicio}</option>
-							))}
-						</select>
-						{this.state.errorServicio && <span className = 'invalid-feedback'>{this.state.errorServicio}</span>}
-						<button type = 'button' className = 'btn btn-primary btn-sm'
-							onClick = { this.addServicio }
-						>
-							Agregar
-						</button>
-					</div>
-				</div>
-				{ this.state.serviciosSelected.length > 0  &&
-				<div className = 'row d-flex justify-content-center'>
-					<table className = 'table table-responsive'>
-						<thead>
-							<tr>
-								<th scope = 'col'>Servicio</th>
-								<th scope = 'col'></th>
-								<th scope = 'col'></th>
-							</tr>
-						</thead>
-						<tbody>
-							{this.state.serviciosSelected.map(s => (
-							<tr key = {s.id}>
-								<th colSpan = '2'>{s.servicio}</th>
-								<th className = 'd-flex justify-content-between'>
-									<div className = 'btn btn-danger btn-sm'
-										onClick = {() => this.deleteServicio(s.id)}
-									>
-										<FontAwesomeIcon icon = { faTrashAlt } />
-									</div>
-								</th>
-							</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
-				}
-			</React.Fragment>
-		)
-	}
-
-	renderMobiliarioSelection(){
-		return(
-			<React.Fragment>
-				<div className = 'form-row'>
-					<div className = 'form-inline mb-3'>
-						<label htmlFor = 'mobiliario'>Mobiliario:</label>
-						<select id = 'mobiliario' className = {`form-control mx-3 ${this.props.mobiliarioOficinaError ? 'is-invalid' : ''}`}
-							style = {{ minWidth: '10rem' }}
-							value = {this.state.currentMobiliarioId}
-							onChange = { e => this.setState({ currentMobiliarioId: Number(e.target.value) }) }
-						>
-							<option value = {0}>Seleccione mobiliario</option>
-							{this.props.mobiliario.map(m => (
-							<option value = {m.id} key = {m.id}>{m.nombre}</option>
-							))}
-						</select>
-						{this.props.mobiliarioOficinaError && <span className = 'invalid-feedback'>{this.props.mobiliarioOficinaError}</span>}
-						<button type = 'button' className = 'btn btn-primary btn-sm' onClick = { this.addMobiliario }>
-							Agregar
-						</button>
-					</div>
-				</div>
-				{ this.props.mobiliarioOficina.length > 0  &&
-				<div className = 'row d-flex justify-content-center'>
-					<table className = 'table table-responsive'>
-						<thead>
-							<tr>
-								<th scope = 'col'>Mueble</th>
-								<th scope = 'col'>Imagen</th>
-								<th scope = 'col'>Cantidad</th>
-								<th scope = 'col'></th>
-							</tr>
-						</thead>
-						<tbody>
-							{this.props.mobiliarioOficina.map(mob => (
-							<tr key = {mob.id}>
-								<th>{mob.nombre}</th>
-								<th><img alt = {mob.nombre} src = {mob.image} style = {{ width: '40px', height: '40px' }} /></th>
-								<th className = 'input-group-sm'>
-									<input type = 'number' value = { mob.cantidad }
-										className = 'form-control'
-										onChange = { e => this.updateCantidad(mob.id, e.target.value) }
-									/>
-								</th>
-								<th className = 'd-flex justify-content-between'>
-									<div className = 'btn btn-danger btn-sm'
-										onClick = { () => this.deleteMobiliario(mob.id) }
-									>
-										<FontAwesomeIcon icon = { faTrashAlt } />
-									</div>
-								</th>
-							</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
-				}
-			</React.Fragment>
-		)
+		arrayHelpers.push({ ...servicio });
 	}
 
 	renderImageThumbnails(){
@@ -297,45 +141,23 @@ class OficinaCreate extends React.Component{
 			return;
 		}
 
-		if(this.state.currentEdificioId == 0){
-			this.setState({
-				edificioIdError: 'Campo obligatorio'
-			})
-
-			setSubmit(false);
-			return;
-		}
-		if(this.props.mobiliarioOficina.length == 0){
-			this.setState({
-				mobiliarioOficinaError: 'Campo obligatorio',
-			})
-
-			setSubmit(false);
-			return;
-		}
-		if(this.state.serviciosSelected.length == 0){
-			this.setState({
-				errorServicio: 'Campo obligatorio'
-			})
-
-			setSubmit(false);
-			return;
-		}
-
 		const { files } = this.state
 		const data = new FormData();
-		data.append('edificio_id', this.state.currentEdificioId)
-		Object.keys(values).map(key => {
-			data.append(key, values[key]);
-		})
-		this.props.mobiliarioOficina.forEach(m => {
-			for (let index = 0; index < m.cantidad; index++) {
-				data.append('mobiliario[]', m.id)
+
+		Object.keys(values).map(k => {
+			if(k == 'servicios'){
+				values[k].forEach(s => {
+					data.append('servicios[]', s.id)
+				})
+			}else if(k == 'mobiliario'){
+				values[k].forEach(m => {
+					data.append('mobiliario[]', JSON.stringify({ id :  m.id, cantidad: m.cantidad}));
+				})
+			}else{
+				data.append(k, values[k]);
 			}
 		})
-		this.state.serviciosSelected.forEach(s => {
-			data.append('servicios[]', s.id)
-		})
+
 		if(files){
 			files.forEach(file => {
 				data.append('images[]', file)
@@ -344,7 +166,6 @@ class OficinaCreate extends React.Component{
 
 		Europa3Api.registerOficina(data)
 		.then(resp => {
-				this.props.fetchOficinas();
 				swal.fire({
 					icon: 'success',
 					title: 'Correcto',
@@ -353,11 +174,10 @@ class OficinaCreate extends React.Component{
 				this.setState({
 					files: null,
 					currentServicioId: 0,
-					serviciosSelected: [],
-					errorServicio: null,
 				}, () => {
+					this.props.fetchOficinas();
+					this.props.fetchMobiliario();
 					resetForm();
-					this.props.clearMobiliarioOficina();
 					this.inputFiles.value = ''
 				})
 			})
@@ -371,24 +191,48 @@ class OficinaCreate extends React.Component{
 			.finally(()=> setSubmit(false))
 	}
 
+	incMobiliario(mobiliario){
+		let newCantidad = mobiliario.cantidad + 1;
+
+		const _mobiliario = this.state.mobiliario.find(m => m.id == mobiliario.id);
+		let sum = newCantidad + _mobiliario.usado;
+
+		if(sum > _mobiliario.cantidad){
+			return mobiliario;
+		}
+
+		return {...mobiliario, cantidad: newCantidad}
+	}
+
+	decMobiliario(mobiliario){
+		let newCantidad = mobiliario.cantidad - 1;
+		if(newCantidad <= 0){
+			return mobiliario;
+		}
+
+		return {...mobiliario, cantidad: newCantidad}
+	}
+
 	renderOficinaFisica(){
 		return(
 			<Formik
 				initialValues = {{
+					edificio_id: 0,
 					size_id: 0,
-					tipo_tiempo_id: 1,
 					nombre: '',
 					descripcion: '',
 					dimension: '',
 					capacidad_recomendada: '',
 					capacidad_maxima: '',
 					precio: '',
+					mobiliario: [],
+					servicios: [],
 				}}
 				validate = {values => {
 					const errors = {};
 
-					if(values.tipo_tiempo_id == 0){
-						errors.tipo_tiempo_id = 'Campo obligatorio';
+					if(values.edificio_id == 0){
+						errors.edificio_id = 'Campo obligatorio';
 					}
 
 					if(!values.nombre){
@@ -432,6 +276,14 @@ class OficinaCreate extends React.Component{
 						errors.precio = 'Formato invalido'
 					}
 
+					if(values.mobiliario.length == 0){
+						error.mobiliario = 'Debe haber al menos un mobiliario agregado'
+					}
+
+					if(values.servicios.length == 0){
+						error.servicios = 'Debe haber al menos un servicio registrado'
+					}
+
 					return errors;
 				}}
 				onSubmit = { (values, { setSubmitting, resetForm }) => this.registerOficina(values, setSubmitting, resetForm) }
@@ -449,10 +301,13 @@ class OficinaCreate extends React.Component{
 						<div className = 'form-row'>
 							<div className = 'form-group col-12 col-md-6'>
 								<label htmlFor = 'edificio'>Edificio:</label>
-								<select id = 'edificio' className = {`form-control ${this.state.edificioIdError ? 'is-invalid' : ''}`}
-									value = { this.state.currentEdificioId}
+								<select id = 'edificio' className = {`form-control ${errors.edificio_id ? 'is-invalid' : ''}`}
+									value = { values.edificio_id }
 									name = 'edificio_id'
-									onChange = { this.changeEdificioSelect }
+									onChange = { e => {
+										this.fetchMobiliario(e);
+										handleChange(e)
+									}}
 									style = {{minWidth: '17rem' }}
 								>
 									<option value = {0}>
@@ -464,9 +319,9 @@ class OficinaCreate extends React.Component{
 									</option>
 									))}
 								</select>
-								{this.state.edificioIdError &&
+								{errors.edificio_id &&
 								<div className = 'invalid-feedback'>
-									{this.state.edificioIdError}
+									{errors.edificio_id}
 								</div>
 								}
 							</div>
@@ -491,22 +346,6 @@ class OficinaCreate extends React.Component{
 								</div>
 								}
 							</div>
-						</div>
-						<div className = 'form-group'>
-							<label htmlFor = 'tiempo'>Tipo de tiempo de renta</label>
-							<select id = 'tiempo'
-								className = {`form-control ${errors.tipo_tiempo_id && touched.tipo_tiempo_id ? 'is-invalid' : ''}`}
-								value = { values.tipo_tiempo_id }
-								name = 'tipo_tiempo_id'
-								onChange = { handleChange }
-								onBlur = { handleBlur }
-							>
-								<option value = {0}>Seleccione una opción</option>
-								{this.props.tipoTiempos.map(m => (
-								<option key = {m.id} value = {m.id}>{m.tiempo}</option>
-								))}
-							</select>
-							{errors.tipo_tiempo_id && <div className = 'invalid-feedback'>{errors.tipo_tiempo_id}</div>}
 						</div>
 						<div className = 'form-group'>
 							<label htmlFor = 'nombre'>Nombre de la oficina:</label>
@@ -624,8 +463,138 @@ class OficinaCreate extends React.Component{
 							</div>
 						</div>
 						<div className = 'pb-3'>
-							{ this.renderServiciosSelection() }
-							{ this.renderMobiliarioSelection() }
+							<FieldArray
+								name = 'servicios'
+								render = { arrayHelpers => (
+									<React.Fragment>
+										<div className = 'form-row'>
+											<div className = 'form-inline mb-3'>
+												<label htmlFor = 'servicio'>Servicios:</label>
+												<select id = 'servicio' className = {`form-control mx-3 ${errors.servicios && touched.servicios ? 'is-invalid' : ''}`}
+													style = {{ minWidth: '10rem' }}
+													value = { this.state.currentServicioId }
+													onChange = { e => this.setState({ currentServicioId: Number(e.target.value) }) }
+												>
+													<option value = {0}>Seleccione el servicio</option>
+													{this.props.servicios.map(s => (
+													<option key = {s.id} value = {s.id}>{s.servicio}</option>
+													))}
+												</select>
+												{errors.servicios && <span className = 'invalid-feedback'>{errors.servicios}</span>}
+												<button type = 'button' className = 'btn btn-primary btn-sm'
+													onClick = {() => this.addServicio(values.servicios, arrayHelpers) }
+												>
+													Agregar
+												</button>
+											</div>
+										</div>
+										{ values.servicios.length > 0  &&
+										<div className = 'row d-flex justify-content-center'>
+											<div className = 'col'>
+												<table className = 'table'>
+													<thead>
+														<tr>
+															<th scope = 'col'>Servicio</th>
+															<th scope = 'col'></th>
+															<th scope = 'col'></th>
+														</tr>
+													</thead>
+													<tbody>
+														{values.servicios.map((s, i) => (
+														<tr key = {s.id}>
+															<th colSpan = '2'>{s.servicio}</th>
+															<th className = 'd-flex justify-content-between'>
+																<div className = 'btn btn-danger btn-sm'
+																	onClick = {() => arrayHelpers.remove(i) }
+																>
+																	<FontAwesomeIcon icon = { faTrashAlt } />
+																</div>
+															</th>
+														</tr>
+														))}
+													</tbody>
+												</table>
+											</div>
+										</div>
+										}
+									</React.Fragment>
+								)}
+							/>
+							<FieldArray
+								name = 'mobiliario'
+								render = { arrayHelpers => (
+									<React.Fragment>
+										<div className = 'form-row'>
+											<div className = 'form-inline mb-3'>
+												<label htmlFor = 'mobiliario'>Mobiliario:</label>
+												<select id = 'mobiliario' className = {`form-control mx-3 ${errors.mobiliario && touched.mobiliario ? 'is-invalid' : ''}`}
+													style = {{ minWidth: '10rem' }}
+													value = {this.state.currentMobiliarioId}
+													onChange = { e => this.setState({ currentMobiliarioId: Number(e.target.value) }) }
+												>
+													<option value = {0}>Seleccione mobiliario</option>
+													{this.state.mobiliario.map(m => (
+													<option value = {m.id} key = {m.id}>{m.nombre}</option>
+													))}
+												</select>
+												{errors.mobiliario && <span className = 'invalid-feedback'>{errors.mobiliario}</span>}
+												<button type = 'button' className = 'btn btn-primary btn-sm'
+													onClick = { () => this.addMobiliario(values.mobiliario, arrayHelpers) }>
+													Agregar
+												</button>
+											</div>
+										</div>
+										{ values.mobiliario.length > 0  &&
+										<div className = 'row d-flex justify-content-center'>
+											<div className = 'col'>
+												<table className = 'table'>
+													<thead>
+														<tr>
+															<th scope = 'col'>Mueble</th>
+															<th scope = 'col'>Imagen</th>
+															<th scope = 'col'>Cantidad</th>
+															<th scope = 'col'></th>
+														</tr>
+													</thead>
+													<tbody>
+														{values.mobiliario.map((mob, i) => (
+														<tr key = {mob.id}>
+															<th>{mob.nombre}</th>
+															<th><img alt = {mob.nombre} src = {mob.image} style = {{ width: '40px', height: '40px' }} /></th>
+															<th>
+																<span className = 'mx-3'>
+																	{mob.cantidad}
+																</span>
+																<div className = 'btn-group' role = 'group' aria-label='incremento mobiliario'>
+																	<button type = 'button' className = 'btn btn-success btn-sm'
+																		onClick = {()=>arrayHelpers.replace(i, this.incMobiliario(mob))}
+																	>
+																		<FontAwesomeIcon icon = { faPlus } />
+																	</button>
+																	<button type = 'button' className = 'btn btn-danger btn-sm'
+																		onClick = {()=>arrayHelpers.replace(i, this.decMobiliario(mob))}
+																	>
+																		<FontAwesomeIcon icon = { faMinus } />
+																	</button>
+																</div>
+															</th>
+															<th className = 'd-flex justify-content-between'>
+																<div className = 'btn btn-danger btn-sm'
+																	onClick = { () => arrayHelpers.remove(i) }
+																>
+																	<FontAwesomeIcon icon = { faTrashAlt } />
+																</div>
+															</th>
+														</tr>
+														))}
+													</tbody>
+												</table>
+											</div>
+										</div>
+										}
+									</React.Fragment>
+								)}
+							/>
 						</div>
 						<div className = 'form-group'>
 							<button className  = 'btn btn-primary btn-lg btn-block' disabled = {isSubmitting}>
@@ -686,29 +655,15 @@ const mapStateToProps = state => ({
 	edificios: state.edificiosData.edificios,
 	oficinasSizes: state.configData.oficinasSizes,
 	mobiliario: state.mobiliarioData.mobiliarioCreate.mobiliario,
-	mobiliarioOficina: state.mobiliarioData.mobiliarioCreate.mobiliarioOficina,
 	servicios: state.serviciosData.servicios,
-	tipoTiempos: state.configData.catTiemposRenta,
 })
 
 const mapDispatchToProps = dispatch => ({
 	fetchOficinas(){
 		dispatch(startFetchOficinas());
 	},
-	fetchMobiliario(edificioId){
-		dispatch(mobiliarioActions.startFetchMobiliarioByEdificioId(edificioId))
-	},
-	addMobiliario(id){
-		dispatch(mobiliarioActions.addMobiliarioToMobiliarioOficina(id))
-	},
-	updateCantidad(id, cantidad){
-		dispatch(mobiliarioActions.updateCantidadMobiliarioToMobiliarioOficina(id, cantidad))
-	},
-	deleteMobiliario(id){
-		dispatch(mobiliarioActions.deleteMobiliarioInMobiliarioOficina(id))
-	},
-	clearMobiliarioOficina(){
-		dispatch(mobiliarioActions.clearMobiliarioOficina())
+	fetchMobiliario(){
+		dispatch(startFetchMobiliario());
 	},
 })
 

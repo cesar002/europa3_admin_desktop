@@ -11,6 +11,7 @@ import Thumbnail from '../../components/pures/ThumbnailImageLocalPreview';
 import Europa3Api from '../../api';
 
 import * as salaJuntasActions from '../../redux/actions/salaJuntasActions'
+import { startFetchMobiliario } from '../../redux/actions/mobiliarioActions';
 
 class SalaJuntaCreate extends React.Component{
 	constructor(props){
@@ -208,8 +209,9 @@ class SalaJuntaCreate extends React.Component{
 				images: [],
 				imagesError: null,
 			}, () => {
+				this.props.fetchMobiliario();
 				this.props.fetchSalaJuntas();
-				// resetForm();
+				resetForm();
 			})
 		})
 		.catch(err => {
@@ -558,7 +560,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 	fetchSalaJuntas(){
 		dispatch(salaJuntasActions.startFetchSalaJuntas())
-	}
+	},
+	fetchMobiliario(){
+		dispatch( startFetchMobiliario() );
+	},
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(SalaJuntaCreate);
