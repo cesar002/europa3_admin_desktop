@@ -46,6 +46,11 @@ import {
 	NO_AUTORIZAR_SOLICITUD,
 	GET_CHATS,
 	SEND_MESSAGE_CHAT,
+	GET_OFICINAS_VIRTUALES,
+	GET_OFICINA_VIRTUAL_BY_ID,
+	REGISTER_OFICINAS_VIRTUALES,
+	UPDATE_OFICINA_VIRTUAL,
+	DELETE_OFICINA_VIRTUAL,
 } from './URLS'
 
 
@@ -950,6 +955,104 @@ class Europa3Api {
 			const resp = await axios.post(SEND_MESSAGE_CHAT, { mensaje, edificio_id, solicitud_id }, {
 				headers: {
 					Authorization: `Bearer ${credentials.access_token}`,
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async getOficinasVirtuales(){
+		try {
+			const resp = await axios.get(GET_OFICINAS_VIRTUALES);
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async getOficinaVirtualById(id){
+		try {
+			const resp = await axios.get(`${GET_OFICINA_VIRTUAL_BY_ID}/${id}`);
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async registerOficinaVirtual(data){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.post(REGISTER_OFICINAS_VIRTUALES, data, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async updateOficinaVirtual(id, data){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.put(`${UPDATE_OFICINA_VIRTUAL}/${id}`, data, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`,
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data : error.response.data,
+			}
+		}
+	}
+
+	static async deleteOficinaVirtual(id){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.delete(`${DELETE_OFICINA_VIRTUAL}/${id}`, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`
 				}
 			})
 

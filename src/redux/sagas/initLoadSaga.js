@@ -11,6 +11,7 @@ import * as serviciosActions from '../actions/serviciosActions';
 import * as idiomasAtencionActions from '../actions/idiomasAtencionActions';
 import * as salaJuntasActions from '../actions/salaJuntasActions';
 import * as usersActions from '../actions/usersAction';
+import * as oficinasVirtualesActions from '../actions/oficinasVirtualesActions';
 
 function* initAll(){
 	yield put( initLoadAction.startAutoLogin() );
@@ -18,6 +19,7 @@ function* initAll(){
 }
 
 function* fetchSystemData(){
+	yield put( oficinasVirtualesActions.startFetchOficinasVirtuales() );
 	yield put( configActions.startFetchOficinasSizes() );
 	yield put( configActions.startFetchCatTiemposRenta() );
 	yield	put( locationsActions.startFetchEstados() );
