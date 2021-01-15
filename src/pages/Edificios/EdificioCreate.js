@@ -37,40 +37,46 @@ class EdificioCreate extends React.Component{
 		}, ()=> this.props.fetchMunicipios(id))
 	}
 
-	registerEdificio(data, resetForm, setSubmit){
-		if(!moment(data.hora_cierre, 'HH:mm').isAfter(moment(data.hora_apertura, 'HH:mm'))){
-			this.setState({
-				timeError: 'La hora de cierre debe ser mayor a la hora de apertura',
-			})
-
-			setSubmit(false)
-			return;
-		}
-
-		this.setState({
-			timeError: null
-		});
-		Europa3Api.registerEdificio(data).then(res => {
-			this.setState({
-				currentEstadoId: 0
-			}, ()=>{
-				this.props.fetchEdificios();
-				swal.fire({
-					icon: 'success',
-					title: 'Correcto',
-					text: 'Edificio registrado con éxito',
+	async registerEdificio(data, resetForm, setSubmit){
+		try {
+			if(!moment(data.hora_cierre, 'HH:mm').isAfter(moment(data.hora_apertura, 'HH:mm'))){
+				this.setState({
+					timeError: 'La hora de cierre debe ser mayor a la hora de apertura',
 				})
-				resetForm();
+
+				setSubmit(false)
+				return;
+			}
+
+			this.setState({
+				timeError: null
+			});
+
+			const resp = await Europa3Api.registerEdificio(data);
+
+			if(resp.status !== 'success'){
+				throw resp.data;
+			}
+
+			this.setState({ currentEstadoId: 0 })
+
+			this.props.fetchEdificios();
+			swal.fire({
+				icon: 'success',
+				title: 'Correcto',
+				text: resp.data.message,
 			})
-		})
-		.catch(err => {
+
+			resetForm();
+		} catch (error) {
 			swal.fire({
 				icon: 'error',
 				title: 'Ocurrió un error',
 				text: 'Hubo un problema al registrar el edificio, intentelo nuevamente',
 			})
-		})
-		.finally(() => setSubmit(false) )
+		}finally{
+			setSubmit(false)
+		}
 	}
 
 	addIdioma(idiomas = [], arrayHelpers){
