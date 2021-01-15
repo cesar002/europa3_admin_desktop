@@ -26,6 +26,9 @@ import Usuarios from '../pages/usuarios';
 import Notificaciones from '../pages/Notificaciones'
 import Solicitudes from '../pages/Solicitudes';
 import ShowSolicitud from '../pages/Solicitudes/show'
+import OficinasVirtuales from '../pages/OficinasVirtuales';
+import OficinasVirtualesCreate from '../pages/OficinasVirtuales/create';
+import OficinaVirtualUpdate from '../pages/OficinasVirtuales/update';
 
 const MainRoute = () => (
 	<HashRouter>
@@ -50,6 +53,9 @@ const MainRoute = () => (
 			<Route path = '/notificaciones' exact component = { Notificaciones } />
 			<Route path = '/solicitudes' exact component = { Solicitudes } />
 			<Route path = '/solicitudes/show/:id' exact component = { ShowSolicitud } />
+			<Route path = '/oficinas-virtuales' exact component = { OficinasVirtuales }/>
+			<Route path = '/oficinas-virtuales/create' exact component = { OficinasVirtualesCreate } />
+			<Route path = '/oficina-virtual/update' exact component = { OficinaVirtualUpdate } />
 		</React.Fragment>
 	</HashRouter>
 )

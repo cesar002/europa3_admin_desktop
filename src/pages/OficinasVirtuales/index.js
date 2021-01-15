@@ -1,9 +1,10 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
+import accouting from 'accounting-js'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faDoorOpen, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faDoorOpen, faTrash, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 import Container from '../../components/pures/ContainerMaster';
 import Loading from '../../components/pures/LoadingSpinner';
@@ -14,6 +15,15 @@ import * as oficinasVirtualesActions from '../../redux/actions/oficinasVirtuales
 class OficinasVirtuales extends React.Component{
 	constructor(props){
 		super(props);
+
+		this.selectOficinaVirtual = this.selectOficinaVirtual.bind(this)
+
+	}
+
+	selectOficinaVirtual(id){
+		this.props.selectOficina(id);
+
+		this.props.history.push('/oficina-virtual/update');
 	}
 
 	render(){
@@ -25,9 +35,9 @@ class OficinasVirtuales extends React.Component{
 					<div className = 'row mt-2'>
 						<div className = 'form-inline'>
 							<div className = 'form-group'>
-								<Link className = 'btn btn-primary btn-sm' to = '/oficinas/create'>
+								<Link className = 'btn btn-primary btn-sm' to = '/oficinas-virtuales/create'>
 									<FontAwesomeIcon icon = { faPlusCircle } className = 'mr-2' />
-									Registrar oficina
+									Registrar oficina virtual
 								</Link>
 							</div>
 						</div>
@@ -62,16 +72,18 @@ class OficinasVirtuales extends React.Component{
 										<th>{ov.edificio.nombre}</th>
 										<th>{ov.nombre}</th>
 										<th>{ov.descripcion}</th>
-										<th>{ov.precio}</th>
-										<th>{ov.en_uso}</th>
+										<th>{accouting.formatMoney(ov.precio)}</th>
+										<th>{ov.en_uso ? 'si' : 'no'}</th>
 										<th>
 											<div className = 'btn-group' role = 'group' aria-label='button-group'>
-												<a className = 'btn btn-primary btn-sm' data-toggle = 'tooltip' data-placement = 'top' title = 'Ver oficina'>
-													<FontAwesomeIcon icon = { faEye } />
-												</a>
-												<a className = 'btn btn-info btn-sm' data-toggle = 'tooltip' data-placement = 'top' title = 'Habilitar o deshabilitar disponibilidad'>
-													<FontAwesomeIcon icon = { faDoorOpen } />
-												</a>
+												<button type = 'button' className = 'btn btn-primary btn-sm' data-toggle = 'tooltip' data-placement = 'top' title = 'Ver oficina'
+													onClick = {()=>this.selectOficinaVirtual(ov.id)}
+												>
+													<FontAwesomeIcon icon = { faEye } className = 'text-white' />
+												</button>
+												<Link className = 'btn btn-info btn-sm' data-toggle = 'tooltip' data-placement = 'top' title = 'Habilitar o deshabilitar disponibilidad'>
+													<FontAwesomeIcon icon = { faDoorOpen } className = 'text-white' />
+												</Link>
 												<button type = 'button' className = 'btn btn-danger btn-sm' data-toggle = 'tooltip' data-placement = 'top' title = 'Eliminar oficina'>
 													<FontAwesomeIcon icon = { faTrash } />
 												</button>
@@ -97,7 +109,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-
+	selectOficina(id){
+		dispatch(oficinasVirtualesActions.selectOficinaVirtual(id))
+	}
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(OficinasVirtuales);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(OficinasVirtuales));

@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
 	faBuilding, faChair, faChevronRight, faBroom, faHome,
 	faUser, faPager, faCogs, faBell, faEnvelopeOpenText, faBriefcase,
-	faComment, faUserShield, faCouch
+	faComment, faUserShield, faLaptopHouse, faCouch
 } from '@fortawesome/free-solid-svg-icons'
 
 const Divider = () => (
@@ -119,6 +119,11 @@ class SiderMenu extends React.PureComponent{
 						title = 'Oficinas'
 						icon = { faBriefcase }
 						active = { this.props.currentPath.includes('/oficinas') }
+					/>
+					<SimpleNavItem to = '/oficinas-virtuales'
+						title = 'Oficinas virtuales'
+						icon = { faLaptopHouse }
+						active = { this.props.currentPath.includes('/oficinas-virtuales') }
 					/>
 					<SimpleNavItem to = '/sala-juntas'
 						active = { this.props.currentPath.includes('/sala-juntas') }

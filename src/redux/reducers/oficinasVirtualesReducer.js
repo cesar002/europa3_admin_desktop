@@ -3,6 +3,8 @@ import {
 	FINISH_FETCH_OFICINAS_VIRTUALES_SUCCESS,
 	FINISH_FETCH_OFICINAS_VIRTUALES_FAIL,
 	SET_OFICINAS_VIRTUALES,
+	CLEAR_OFICINA_VIRTUAL_SELECTED,
+	SELECT_OFICINA_VIRTUAL,
 } from '../actions/oficinasVirtualesActions'
 
 const initialState = {
@@ -15,10 +17,21 @@ const initialState = {
 		}
 	},
 	oficinasVirtuales: [],
+	oficinaSelected: {},
 }
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case SELECT_OFICINA_VIRTUAL:
+			return{
+				...state,
+				oficinaSelected: state.oficinasVirtuales.find(o => o.id == action.payload.id),
+			}
+		case CLEAR_OFICINA_VIRTUAL_SELECTED:
+			return{
+				...state,
+				oficinaSelected: {},
+			}
 		case START_FETCH_OFICINAS_VIRTUALES:
 			return {
 				...state,
