@@ -1,9 +1,11 @@
 import React from 'react';
-import { Formik } from 'formik';
+import { Formik, FieldArray } from 'formik';
 import * as Yup from "yup";
 import { connect } from 'react-redux';
 import swal from 'sweetalert2';
 import moment from 'moment'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash } from '@fortawesome/free-solid-svg-icons'
 
 import { startFetchMunicipios } from '../../redux/actions/locationActions'
 import { startFetchRegisterEdificio, startFetchEdificios } from '../../redux/actions/edificioAction'
@@ -18,6 +20,7 @@ class EdificioCreate extends React.Component{
 		super(props);
 
 		this.state = {
+			currentIdiomaId: 0,
 			currentEstadoId: 0,
 			showSwal: false,
 			timeError: null,
@@ -25,6 +28,7 @@ class EdificioCreate extends React.Component{
 
 		this.fetchMunicipios = this.fetchMunicipios.bind(this);
 		this.registerEdificio = this.registerEdificio.bind(this);
+		this.addIdioma = this.addIdioma.bind(this);
 	}
 
 	fetchMunicipios(id){
@@ -69,6 +73,21 @@ class EdificioCreate extends React.Component{
 		.finally(() => setSubmit(false) )
 	}
 
+	addIdioma(idiomas = [], arrayHelpers){
+
+		const { currentIdiomaId } = this.state
+
+		if(idiomas.some(idi => idi.id == currentIdiomaId) || currentIdiomaId == 0){
+			return;
+		}
+
+		const idioma = this.props.idiomasAtencion.find(m => m.id == currentIdiomaId)
+
+		arrayHelpers.push({ ...idioma })
+	}
+
+
+
 	render(){
 		return(
 			<Container title = 'Registrar edificio' toBack = '/edificios'>
@@ -84,6 +103,7 @@ class EdificioCreate extends React.Component{
 								telefono_recepcion: '',
 								hora_apertura: '',
 								hora_cierre: '',
+								idiomas_atencion: [],
 							}}
 							validationSchema = {Yup.object().shape({
 								nombre: Yup.string().required('Nombre del edificio requerido'),
@@ -93,6 +113,7 @@ class EdificioCreate extends React.Component{
 								telefono_recepcion: Yup.number().typeError('Formato incorrecto').required('Número de teléfono requerido').positive('Número de telefono incorrecto').integer('Número de telefono incorrecto'),
 								hora_apertura: Yup.string().required('Hora de apertura requerido'),
 								hora_cierre: Yup.string().required('Hora de cierre requerido'),
+								idiomas_atencion: Yup.array().required('Debe agregar un idioma')
 							})}
 							onSubmit={(values, { setSubmitting, resetForm }) => {
 								this.registerEdificio(values, resetForm, setSubmitting)
@@ -265,6 +286,63 @@ class EdificioCreate extends React.Component{
 									</div>
 									}
 								</div>
+								<FieldArray
+									name = 'idiomas_atencion'
+									render = { arrayHelpers => (
+									<React.Fragment>
+										<div className = 'form-row'>
+											<div className = 'form-inline mb-3'>
+												<label htmlFor = 'idiomas'>Idiomas de atención:</label>
+													<select id = 'idiomas' className = {`form-control mx-3 ${errors.idiomas_atencion && touched.idiomas_atencion ? 'is-invalid' : ''}`}
+														style = {{ minWidth: '10rem' }}
+														value = { this.state.currentIdiomaId }
+														onChange = { e => this.setState({ currentIdiomaId: Number(e.target.value) }) }
+													>
+														<option value = {0}>Seleccione el idioma</option>
+														{this.props.idiomasAtencion.map(d => (
+														<option key = {d.id} value = {d.id}>{d.idioma}</option>
+														))}
+													</select>
+													{errors.idiomas_atencion && <span className = 'invalid-feedback'>{errors.idiomas_atencion}</span>}
+													<button type = 'button' className = 'btn btn-primary btn-sm'
+														onClick = {() => this.addIdioma(values.idiomas_atencion, arrayHelpers) }
+													>
+														Agregar
+													</button>
+											</div>
+										</div>
+										{ values.idiomas_atencion.length > 0 &&
+										<div className = 'row d-flex justify-content-center'>
+											<div className = 'col'>
+												<table className = 'table'>
+													<thead>
+														<tr>
+															<th scope = 'col'>Idioma</th>
+															<th scope = 'col'></th>
+														</tr>
+													</thead>
+													<tbody>
+														{ values.idiomas_atencion.map((d, i) =>
+														<tr key = { d.id }>
+															<th>{d.idioma}</th>
+															<th>
+																<button className = "btn btn-danger btn-sm"
+																	onClick = {() => arrayHelpers.remove(i)}
+																>
+																	<FontAwesomeIcon icon = { faTrash } />
+																</button>
+															</th>
+														</tr>
+														) }
+													</tbody>
+												</table>
+											</div>
+										</div>
+
+										}
+									</React.Fragment>
+									)}
+								/>
 								<div className = 'form-group'>
 									<button className = 'btn btn-primary btn-lg btn-block'
 										type="submit" disabled={ isSubmitting }
@@ -292,6 +370,7 @@ const mapStateToProps = state => ({
 	municipios: state.locationsData.municipios,
 	municipiosStatus: state.locationsData.status.statusMunicipios,
 	registerStatus: state.edificiosData.status.statusRegister,
+	idiomasAtencion: state.idiomasAtencionData.idiomasAtencion,
 })
 
 const mapDispatchToProps = dispatch => ({
