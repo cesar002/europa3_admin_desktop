@@ -14,6 +14,7 @@ import usersReducer from './reducers/usersReducer';
 import solicitudesReducer from './reducers/solicitudesReducer';
 import oficinasVirtualesReducer from './reducers/oficinasVirtualesReducer';
 import chatReducer from './reducers/chatReducer';
+import adicionalesReducer from './reducers/adicionalesReducer';
 
 const state = combineReducers({
 	userData: userReducer,
@@ -30,6 +31,7 @@ const state = combineReducers({
 	solicitudesData: solicitudesReducer,
 	oficinasVirtualesData: oficinasVirtualesReducer,
 	chatsData: chatReducer,
+	adicionalesData: adicionalesReducer,
 })
 
 export default state;

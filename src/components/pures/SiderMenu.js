@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
 	faBuilding, faChair, faChevronRight, faBroom, faHome,
 	faUser, faPager, faCogs, faBell, faEnvelopeOpenText, faBriefcase,
-	faComment, faUserShield, faLaptopHouse, faCouch
+	faComment, faUserShield, faLaptopHouse, faCouch, faMugHot
 } from '@fortawesome/free-solid-svg-icons'
 
 const Divider = () => (
@@ -150,6 +150,12 @@ class SiderMenu extends React.PureComponent{
 				{(this.props.permisos.filter(p => (p.id == 1 || p.id == 7))).length > 0 &&
 				<React.Fragment>
 					<Heading title = 'Servicios' />
+					<SimpleNavItem
+						title = 'Adicionales'
+						icon = { faMugHot }
+						to = '/adicionales'
+						active = { this.props.currentPath.includes('/adicionales') }
+					/>
 					<SimpleNavItem
 						title = 'Servicios'
 						icon = { faBroom } to = '/servicios'

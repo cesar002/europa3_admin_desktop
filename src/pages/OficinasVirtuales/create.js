@@ -50,7 +50,8 @@ class OficinaVirtualCreate extends React.Component{
 				title = 'Registrar oficina virtual'
 				toBack = '/oficinas-virtuales'
 			>
-				<div className = 'row mt-4 px-5'>
+				<div className = 'row mt-3'>
+					<div className = 'col-sm-3'/>
 					<div className = 'col col-sm-6'>
 						<CreateOficinaForm
 							submit = { this.registerOficina }
@@ -64,6 +65,7 @@ class OficinaVirtualCreate extends React.Component{
 							}}
 						/>
 					</div>
+					<div className = 'col-sm-3'/>
 				</div>
 			</Container>
 		)

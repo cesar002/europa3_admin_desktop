@@ -12,6 +12,7 @@ import * as idiomasAtencionActions from '../actions/idiomasAtencionActions';
 import * as salaJuntasActions from '../actions/salaJuntasActions';
 import * as usersActions from '../actions/usersAction';
 import * as oficinasVirtualesActions from '../actions/oficinasVirtualesActions';
+import * as adicionalesActions from '../actions/adicionalesActions';
 
 function* initAll(){
 	yield put( initLoadAction.startAutoLogin() );
@@ -19,6 +20,8 @@ function* initAll(){
 }
 
 function* fetchSystemData(){
+	yield put( adicionalesActions.startFetchCatUnidadesAdicionales() )
+	yield put( adicionalesActions.startFetchAdicionales() );
 	yield put( oficinasVirtualesActions.startFetchOficinasVirtuales() );
 	yield put( configActions.startFetchOficinasSizes() );
 	yield put( configActions.startFetchCatTiemposRenta() );

@@ -51,6 +51,11 @@ import {
 	REGISTER_OFICINAS_VIRTUALES,
 	UPDATE_OFICINA_VIRTUAL,
 	DELETE_OFICINA_VIRTUAL,
+	GET_ADICIONALES,
+	REGISTER_ADICIONAL,
+	UPDATE_ADICIONAL,
+	DELETE_ADICIONAL,
+	GET_CAT_UNIDADES,
 } from './URLS'
 
 
@@ -1064,6 +1069,104 @@ class Europa3Api {
 			return{
 				status: 'error',
 				data : error.response.data,
+			}
+		}
+	}
+
+	static async getAdicionales(){
+		try {
+			const resp = await axios.get(GET_ADICIONALES);
+
+			return {
+				status: 'success',
+				data: resp.data
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response.data,
+			}
+		}
+	}
+
+	static async registerAdicional(data){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.post(REGISTER_ADICIONAL, data, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data
+			}
+		} catch (error) {
+			return {
+				status: 'error',
+				data: error.response.data,
+			}
+		}
+	}
+
+	static async updateAdicional(data, id){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.put(`${UPDATE_ADICIONAL}/${id}`, data, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`,
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data
+			}
+		} catch (error) {
+			return {
+				status: 'error',
+				data: error.response.data,
+			}
+		}
+	}
+
+	static async deleteAdicional(id){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.delete(`${DELETE_ADICIONAL}/${id}`, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return {
+				status: 'error',
+				data: error.response.data,
+			}
+		}
+	}
+
+	static async getCatUnidades(){
+		try {
+			const resp = await axios.get(GET_CAT_UNIDADES);
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response.data,
 			}
 		}
 	}

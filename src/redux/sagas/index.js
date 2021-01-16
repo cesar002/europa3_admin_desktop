@@ -15,6 +15,7 @@ import usersSaga from './usersSaga';
 import solicitudesSaga from './solicitudesSaga';
 import oficinaVirtualesSaga from './oficinasVirtualesSaga';
 import chatSaga from './chatSaga';
+import adicionalesSaga from './adicionalesSaga';
 
 export default function* mainSaga(){
 	yield all([
@@ -33,5 +34,6 @@ export default function* mainSaga(){
 		solicitudesSaga(),
 		oficinaVirtualesSaga(),
 		chatSaga(),
+		adicionalesSaga(),
 	]);
 }
