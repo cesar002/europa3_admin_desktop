@@ -57,7 +57,7 @@ const InformacionSolicitud = props => {
 				<div className = 'col'>
 					<h4>Tiempo de renta: </h4>
 					<span className = 'font-weight-bold'>
-						{ props.solicitud.tipo_oficina == 1 &&
+						{ props.solicitud.tipo_oficina !== 2 &&
 						`${ props.solicitud.meses_renta } Meses`
 						}
 						{ props.solicitud.tipo_oficina == 2 &&
