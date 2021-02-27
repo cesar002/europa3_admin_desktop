@@ -32,6 +32,7 @@ import OficinaVirtualUpdate from '../pages/OficinasVirtuales/update';
 import Adicionales from '../pages/Adicionales';
 import AdicionalesCreate from '../pages/Adicionales/create';
 import AdicionalesUpdate from '../pages/Adicionales/update';
+import MobiliarioUpdate from '../pages/Mobiliario/MobiliarioUpdate';
 
 const MainRoute = () => (
 	<HashRouter>
@@ -48,6 +49,7 @@ const MainRoute = () => (
 			<Route path = '/oficinas/update' exact component = { OficinasUpdate } />
 			<Route path = '/mobiliario' exact component = { Mobiliario } />
 			<Route path = '/mobiliario/create' exact component = { MobiliarioCreate } />
+			<Route path = '/mobiliario/update/:id' exact component = { MobiliarioUpdate } />
 			<Route path = '/sala-juntas' exact component = { SalaJuntas } />
 			<Route path = '/sala-juntas/create' exact component = { SalaJuntasCreate } />
 			<Route path = '/sala-juntas/update' exact component = { SalaJuntasUpdate } />

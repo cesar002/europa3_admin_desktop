@@ -17,9 +17,7 @@ class OficinaCreate extends React.Component{
 	constructor(props){
 		super(props);
 
-		this.goToTab = this.goToTab.bind(this);
 		this.renderOficinaFisica = this.renderOficinaFisica.bind(this);
-		this.renderOficinaVirtual = this.renderOficinaVirtual.bind(this);
 		this.registerOficina = this.registerOficina.bind(this);
 		this.setFiles = this.setFiles.bind(this);
 		this.renderImageThumbnails = this.renderImageThumbnails.bind(this);
@@ -32,7 +30,6 @@ class OficinaCreate extends React.Component{
 
 		this.state = {
 			edificioIdError: null,
-			tabIndex: 0,
 			files: null,
 			currentMobiliarioId: 0,
 			currentServicioId: 0,
@@ -69,12 +66,6 @@ class OficinaCreate extends React.Component{
 
 		this.setState({
 			files: newImages
-		})
-	}
-
-	goToTab(index){
-		this.setState({
-			tabIndex: index
 		})
 	}
 
@@ -612,10 +603,6 @@ class OficinaCreate extends React.Component{
 		)
 	}
 
-	renderOficinaVirtual(){
-		return <div></div>
-	}
-
 
    render(){
       return(
@@ -623,26 +610,9 @@ class OficinaCreate extends React.Component{
 					title = 'Registrar oficina'
 					toBack = '/oficinas'
             >
-					<ul className = 'nav nav-tabs pt-4'>
-						<li className = 'nav-item'>
-							<a className = {`nav-link ${this.state.tabIndex == 0 ? 'active' : ''}`} onClick = {( )=> this.goToTab(0) } style = {{ cursor: 'pointer' }} >
-								Oficina fisica
-							</a>
-						</li>
-						<li className = 'nav-item'>
-							<a className = {`nav-link ${this.state.tabIndex == 1 ? 'active' : ''}`} onClick = {( )=> this.goToTab(1) } style = {{ cursor: 'pointer' }}>
-								Oficina virtual
-							</a>
-						</li>
-					</ul>
 					<section className = 'mt-4 d-flex justify-content-center'>
 						<div className = 'row mt-3'>
-						{this.state.tabIndex == 0 &&
-						this.renderOficinaFisica()
-						}
-						{this.state.tabIndex == 1 &&
-						this.renderOficinaVirtual()
-						}
+							{ this.renderOficinaFisica() }
 						</div>
 					</section>
             </Container>

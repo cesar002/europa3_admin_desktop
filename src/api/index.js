@@ -56,6 +56,8 @@ import {
 	UPDATE_ADICIONAL,
 	DELETE_ADICIONAL,
 	GET_CAT_UNIDADES,
+	GET_MOBILIARIO_BY_ID,
+	UPDATE_MOBILIARIO,
 } from './URLS'
 
 
@@ -1162,6 +1164,42 @@ class Europa3Api {
 			return {
 				status: 'success',
 				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response.data,
+			}
+		}
+	}
+
+	static async getMobiliarioById(id){
+		try {
+			const resp = await axios.get(`${GET_MOBILIARIO_BY_ID}/${id}`);
+
+			return {
+				status: 'success',
+				data: resp.data
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response.data,
+			}
+		}
+	}
+
+	static async updateMobiliario(id, data){
+		try {
+			const resp = await axios.post(`${UPDATE_MOBILIARIO}/${id}`, data, {
+				headers:{
+					'Content-type' : 'multipart/form-data',
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data
 			}
 		} catch (error) {
 			return{

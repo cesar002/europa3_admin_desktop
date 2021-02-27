@@ -62,9 +62,9 @@ class Mobiliario extends React.Component{
 								<td>{mob.observaciones}</td>
 								<td className = 'text-center'>{mob.cantidad}</td>
 								<td className = 'd-flex justify-content-between'>
-									<div className = 'btn btn-primary btn-sm'>
+									<Link className = 'btn btn-primary btn-sm' to = {`/mobiliario/update/${mob.id}`}>
 										<FontAwesomeIcon icon = { faPenAlt } />
-									</div>
+									</Link>
 								</td>
 							</tr>
 						)) }

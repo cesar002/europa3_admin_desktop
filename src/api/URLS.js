@@ -1,7 +1,7 @@
 import isDev from 'electron-is-dev'
 
-const PROD_BASE_URL = ''
-const DEV_BASE_URL = 'http://europa3.test/api/v1';
+const PROD_BASE_URL = 'https://europa3.com.mx/api/v1'
+const DEV_BASE_URL = 'http://europa3.test/api/v1' //'https://europa3.com.mx/api/v1' //'http://europa3.test/api/v1';
 
 export const SOCKET_URL = 'europa3.test:6001';
 
@@ -28,6 +28,8 @@ export const REGISTER_MOBILIARIO = '/mobiliario';
 export const MOBILIARIO_ALL = '/mobiliario';
 export const GET_TIPO_MOBILIARIO = '/tipo-mobiliario';
 export const GET_MOBILIARIO_BY_EDIFICIO = '/mobiliario/edificio';
+export const GET_MOBILIARIO_BY_ID = '/mobiliario';
+export const UPDATE_MOBILIARIO = '/mobiliario';
 export const GET_SERVICIOS = '/servicios';
 export const CREATE_SERVICIO = '/servicio';
 export const UPDATE_SERVICIO= '/servicio';
