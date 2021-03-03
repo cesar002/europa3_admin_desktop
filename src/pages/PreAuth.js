@@ -15,6 +15,7 @@ class PreAuth extends React.Component{
 	}
 
 	componentDidMount(){
+		console.log('autologin')
 		this.autoLogin();
 	}
 

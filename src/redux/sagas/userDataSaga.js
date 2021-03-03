@@ -1,8 +1,9 @@
 import { call, put, takeLatest, select, takeEvery } from 'redux-saga/effects';
 import Europa3Api from '../../api';
 
-import * as userActions from '../actions/userActions'
+import * as userActions from '../actions/userActions';
 import * as chatActions from '../actions/chatActions';
+import * as gestionUsuariosActions from '../actions/gestionUsuariosActions'
 
 const token = state => state.userData.accessToken.token;
 
@@ -47,6 +48,7 @@ function* userData(action){
 		yield put(userActions.setUserData(resp.data));
 		yield put(userActions.finishFetchUserDataSuccess());
 		yield put(chatActions.startFetchSolicitudesChat());
+		yield put(gestionUsuariosActions.startFetchUsuariosAdmin());
 	} catch (error) {
 		yield put(userActions.setUserDataError(error));
 		yield put(userActions.finishFetchUserDataFail());

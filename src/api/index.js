@@ -2,7 +2,9 @@ import axios from './customAxios'
 import LocalStorage from '../services/UserCredencialsStorageService'
 
 import {
+	REGISTER_USER_ADMIN,
 	LOGIN,
+	LOGOUT,
 	INFO_PERSONAL,
 	GET_NOTIFICATIONS,
 	EDIFICIO,
@@ -58,11 +60,57 @@ import {
 	GET_CAT_UNIDADES,
 	GET_MOBILIARIO_BY_ID,
 	UPDATE_MOBILIARIO,
+	GET_USUARIOS_ADMIN,
 } from './URLS'
 
 
 
 class Europa3Api {
+
+	static async registerUserAdmin(data){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.post(REGISTER_USER_ADMIN, data, {
+				headers: {
+					'Content-type' : 'multipart/form-data',
+					Authorization: `Bearer ${credentials.access_token}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
+			}
+		}
+	}
+
+	static async logout(){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.post(LOGOUT, {}, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data,
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
+			}
+		}
+	}
 
 	/**
 	 * Realiza la petición al servidor para relizar el login del usuario
@@ -88,7 +136,7 @@ class Europa3Api {
 		} catch (error) {
 			return {
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			};
 		}
 	}
@@ -116,7 +164,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -137,7 +185,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -160,7 +208,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -183,7 +231,7 @@ class Europa3Api {
 
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -207,7 +255,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -231,7 +279,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -256,7 +304,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -277,7 +325,7 @@ class Europa3Api {
 		} catch (error) {
 			return {
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -297,7 +345,7 @@ class Europa3Api {
 
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -316,7 +364,7 @@ class Europa3Api {
 		} catch (error) {
 			return {
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -344,7 +392,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor'
 				})
 			}
 		})
@@ -352,7 +400,14 @@ class Europa3Api {
 
 	static async registerMobiliario(data){
 		try {
-			const resp = await axios.post(REGISTER_MOBILIARIO, data);
+
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.post(REGISTER_MOBILIARIO, data, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`
+				}
+			});
 
 			return {
 				status: 'success',
@@ -361,7 +416,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -377,7 +432,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -393,7 +448,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor'
 			}
 		}
 	}
@@ -413,7 +468,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -431,7 +486,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				})
 			}
 		})
@@ -453,7 +508,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor'
 				})
 			}
 		})
@@ -476,7 +531,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor'
 				});
 			}
 		})
@@ -497,7 +552,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				});
 			}
 		})
@@ -517,7 +572,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				})
 			}
 		})
@@ -537,7 +592,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				});
 			}
 		})
@@ -555,7 +610,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				});
 			}
 		})
@@ -578,7 +633,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				});
 			}
 		})
@@ -596,7 +651,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor'
 				})
 			}
 		})
@@ -614,7 +669,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				});
 			}
 		})
@@ -632,7 +687,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				});
 			}
 		})
@@ -654,7 +709,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				});
 			}
 		})
@@ -672,7 +727,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				})
 			}
 		})
@@ -690,7 +745,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				})
 			}
 		})
@@ -712,7 +767,7 @@ class Europa3Api {
 			} catch (error) {
 				return reject({
 					status: 'error',
-					data: error.response.data,
+					data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 				})
 			}
 		})
@@ -733,7 +788,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -753,7 +808,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -773,7 +828,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -793,7 +848,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -813,7 +868,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -833,7 +888,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -853,7 +908,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -873,7 +928,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -909,7 +964,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -929,7 +984,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -950,7 +1005,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -972,7 +1027,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -988,7 +1043,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -1004,7 +1059,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -1026,7 +1081,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -1048,7 +1103,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -1070,7 +1125,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data : error.response.data,
+				data : error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -1086,7 +1141,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -1108,7 +1163,7 @@ class Europa3Api {
 		} catch (error) {
 			return {
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -1130,7 +1185,7 @@ class Europa3Api {
 		} catch (error) {
 			return {
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -1152,7 +1207,7 @@ class Europa3Api {
 		} catch (error) {
 			return {
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -1168,7 +1223,7 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
@@ -1184,16 +1239,19 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}
 
 	static async updateMobiliario(id, data){
 		try {
+			const credentials = LocalStorage.getCredentials();
+
 			const resp = await axios.post(`${UPDATE_MOBILIARIO}/${id}`, data, {
 				headers:{
 					'Content-type' : 'multipart/form-data',
+					Authorization: `Bearer ${credentials.access_token}`
 				}
 			})
 
@@ -1204,7 +1262,29 @@ class Europa3Api {
 		} catch (error) {
 			return{
 				status: 'error',
-				data: error.response.data,
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
+			}
+		}
+	}
+
+	static async getUsuariosAdmin(){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.get(GET_USUARIOS_ADMIN, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
 			}
 		}
 	}

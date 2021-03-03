@@ -4,7 +4,7 @@ import {
 	Route,
 } from "react-router-dom";
 
-import withSocket from '../components/hocs/withPusherSockets';
+// import withSocket from '../components/hocs/withPusherSockets';
 
 import PreAuth from '../pages/PreAuth';
 import Login from '../pages/Login';
@@ -33,6 +33,7 @@ import Adicionales from '../pages/Adicionales';
 import AdicionalesCreate from '../pages/Adicionales/create';
 import AdicionalesUpdate from '../pages/Adicionales/update';
 import MobiliarioUpdate from '../pages/Mobiliario/MobiliarioUpdate';
+import UsuariosSistema from '../pages/UsuariosSistema';
 
 const MainRoute = () => (
 	<HashRouter>
@@ -64,8 +65,9 @@ const MainRoute = () => (
 			<Route path = '/adicionales' exact component = { Adicionales } />
 			<Route path = '/adicional/create' exact component = { AdicionalesCreate } />
 			<Route path = '/adicional/update' exact component = {AdicionalesUpdate} />
+			<Route path = '/usuarios-sistema' exact component = { UsuariosSistema } />
 		</React.Fragment>
 	</HashRouter>
 )
 
-export default withSocket(MainRoute);
+export default MainRoute //withSocket(MainRoute);

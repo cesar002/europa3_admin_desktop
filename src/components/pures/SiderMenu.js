@@ -87,7 +87,7 @@ class SiderMenu extends React.PureComponent{
 				/>
 				<Divider />
 
-				{(this.props.permisos.filter(p => (p.id == 1 || p.id == 2 || p.id ==3))).length > 0 &&
+				{/* {(this.props.permisos.filter(p => (p.id == 1 || p.id == 2 || p.id ==3))).length > 0 && */}
 				<React.Fragment>
 					<Heading title = 'Usuarios y solicitudes' />
 					<SimpleNavItem
@@ -104,9 +104,9 @@ class SiderMenu extends React.PureComponent{
 					/>
 					<Divider />
 				</React.Fragment>
-				}
+				{/* // } */}
 
-				{(this.props.permisos.filter(p => (p.id == 1 || p.id == 4 || p.id == 5))).length > 0 &&
+				{/* {(this.props.permisos.filter(p => (p.id == 1 || p.id == 4 || p.id == 5))).length > 0 && */}
 				<React.Fragment>
 					<Heading title = 'Edificios y oficinas'  />
 					<SimpleNavItem
@@ -133,9 +133,9 @@ class SiderMenu extends React.PureComponent{
 
 					<Divider />
 				</React.Fragment>
-				}
+				{/* } */}
 
-				{(this.props.permisos.filter(p => (p.id == 1 || p.id == 6))).length > 0 &&
+				{/* {(this.props.permisos.filter(p => (p.id == 1 || p.id == 6))).length > 0 && */}
 				<React.Fragment>
 					<SimpleNavItem
 						active = { this.props.currentPath.includes('/mobiliario') }
@@ -145,9 +145,9 @@ class SiderMenu extends React.PureComponent{
 					/>
 					<Divider />
 				</React.Fragment>
-				}
+				{/* } */}
 
-				{(this.props.permisos.filter(p => (p.id == 1 || p.id == 7))).length > 0 &&
+				{/* {(this.props.permisos.filter(p => (p.id == 1 || p.id == 7))).length > 0 && */}
 				<React.Fragment>
 					<Heading title = 'Servicios' />
 					<SimpleNavItem
@@ -176,9 +176,9 @@ class SiderMenu extends React.PureComponent{
 					/> */}
 					<Divider />
 				</React.Fragment>
-				}
+				{/* } */}
 
-				{(this.props.permisos.filter(p => (p.id == 1 || p.id == 10))).length > 0 &&
+				{/* {(this.props.permisos.filter(p => (p.id == 1 || p.id == 10))).length > 0 && */}
 				<React.Fragment>
 					<Heading title = 'Envío de notificaciones' />
 					<DropdownNavItem id = 'push-notification' title = 'Notificaciones push' icon = { faBell }
@@ -199,15 +199,17 @@ class SiderMenu extends React.PureComponent{
 					/>
 					<Divider />
 				</React.Fragment>
-				}
+				{/* } */}
 
-				{(this.props.permisos.filter(p => p.id == 1)).length > 0 &&
+				{/* {(this.props.permisos.filter(p => p.id == 1)).length > 0 && */}
 				<React.Fragment>
 					<Heading title = 'Admin' />
-					<SimpleNavItem title = 'Usuarios sistema' icon = { faUserShield } />
+					<SimpleNavItem title = 'Usuarios sistema' icon = { faUserShield }
+						to = '/usuarios-sistema'
+					/>
 					<SimpleNavItem title = 'Configuración' icon = { faCogs } />
 				</React.Fragment>
-				}
+				{/* } */}
 			</ul>
 		);
 	}

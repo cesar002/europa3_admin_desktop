@@ -36,7 +36,10 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 768,
+	 minWidth: 560,
+	 minHeight: 630,
     show: false,
+	 title: 'Europa3 - Administrador',
     webPreferences: {
       nodeIntegration: true,
       devTools: dev

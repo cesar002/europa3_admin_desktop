@@ -16,6 +16,10 @@ class UserCredencialsStorageService{
 		localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
 	}
 
+	static deleteCredentials(){
+		localStorage.clear();
+	}
+
 	static getCredentials(){
 		const data = localStorage.getItem(LOCAL_STORAGE_KEY);
 

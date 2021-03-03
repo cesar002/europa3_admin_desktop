@@ -16,6 +16,7 @@ import solicitudesSaga from './solicitudesSaga';
 import oficinaVirtualesSaga from './oficinasVirtualesSaga';
 import chatSaga from './chatSaga';
 import adicionalesSaga from './adicionalesSaga';
+import gestionUsuariosSaga from './gestionUsuariosSaga';
 
 export default function* mainSaga(){
 	yield all([
@@ -35,5 +36,6 @@ export default function* mainSaga(){
 		oficinaVirtualesSaga(),
 		chatSaga(),
 		adicionalesSaga(),
+		gestionUsuariosSaga(),
 	]);
 }

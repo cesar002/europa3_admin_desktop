@@ -1,13 +1,15 @@
 import isDev from 'electron-is-dev'
 
 const PROD_BASE_URL = 'https://europa3.com.mx/api/v1'
-const DEV_BASE_URL = 'http://europa3.test/api/v1' //'https://europa3.com.mx/api/v1' //'http://europa3.test/api/v1';
+const DEV_BASE_URL = 'http://europa3.test.192.168.100.11.xip.io:8000/api/v1' //'https://europa3.com.mx/api/v1' //'http://europa3.test/api/v1';
 
 export const SOCKET_URL = 'europa3.test:6001';
 
 export const BASE_URL = isDev ? DEV_BASE_URL : PROD_BASE_URL;
 
+export const REGISTER_USER_ADMIN = '/register/admin';
 export const LOGIN = '/auth/admin';
+export const LOGOUT = '/auth/admin/logout';
 export const INFO_PERSONAL = '/auth/admin/me';
 export const GET_NOTIFICATIONS = '/auth/admin/me/notifications';
 export const DELETE_ALL_NOTIFICATIONS = '/auth/admin/me/notifications';
@@ -63,3 +65,4 @@ export const REGISTER_ADICIONAL = '/adicional';
 export const UPDATE_ADICIONAL = '/adicional';
 export const DELETE_ADICIONAL = '/adicional';
 export const GET_CAT_UNIDADES = '/cat-unidades';
+export const GET_USUARIOS_ADMIN = '/gestion-usuarios';
