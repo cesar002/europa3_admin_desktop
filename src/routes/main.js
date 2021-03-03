@@ -4,7 +4,7 @@ import {
 	Route,
 } from "react-router-dom";
 
-// import withSocket from '../components/hocs/withPusherSockets';
+import withSocket from '../components/hocs/withSockets';
 
 import PreAuth from '../pages/PreAuth';
 import Login from '../pages/Login';
@@ -70,4 +70,4 @@ const MainRoute = () => (
 	</HashRouter>
 )
 
-export default MainRoute //withSocket(MainRoute);
+export default withSocket(MainRoute);

@@ -87,13 +87,20 @@ export default (state = initialState, action) => {
 				chatSelectedId: null,
 			}
 		case RECEIVING_MESSAGE_CHAT:
-				return {
-					...state,
-					chats: state.chats.map(c => c.id !== action.payload.message.solicitud_id ? c :
-							{...c,
-								chats: [...c.chats, action.payload.message]
-							}),
-				}
+			let chat = state.chats.find(c => c.id == action.payload.message.solicitud_id)
+			let exist = chat.chats.find(c => c._id == action.payload.message._id)
+
+			if(exist){
+				return state;
+			}
+
+			return {
+				...state,
+				chats: state.chats.map(c => c.id !== action.payload.message.solicitud_id ? c :
+						{...c,
+							chats: [...c.chats, action.payload.message]
+						}),
+			}
 		case SELECT_CHAT:
 			return {
 				...state,
