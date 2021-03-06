@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import swal from 'sweetalert2';
 import fileDownload from 'js-file-download';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheck, faTimes, faEnvelopeOpenText } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faTimes, faEnvelopeOpenText, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 
 import * as solicitudesActions from '../../redux/actions/solicitudesAction';
 
@@ -15,6 +15,7 @@ import InfoPersonalSolicitud from '../../components/pures/InformacionPersonalSol
 import InfoFiscalSolicitud from '../../components/pures/InformacionFiscalSolicitud';
 import InfoMoralSolicitud from '../../components/pures/InformacionMoralSolicitud';
 import DocumentosSolicitud from '../../components/pures/DocumentosSolicitud';
+import InformacionPagos from '../../components/pures/InformacionPagos';
 
 import Europa3Api from '../../api';
 
@@ -221,28 +222,35 @@ class ShowSolicitud extends React.Component{
 				{ this.renderTab() }
 				<div className = 'card mt-5'>
 					<div className = 'card-body'>
-						<div className = 'd-flex justify-content-around'>
+						<div className = 'd-flex'>
 							{(this.props.autorizarStatus.start || this.props.noAutorizarStatus.start) &&
 							<div className = 'spinner-border text-primary' />
 							}
 							{(!this.props.autorizarStatus.start && !this.props.noAutorizarStatus.start) &&
 							<React.Fragment>
-								<button className = 'btn btn-primary btn-sm'
-									onClick = { this.autorizarSolicitud }
-								>
-									<FontAwesomeIcon icon = { faCheck } className = 'mr-2' />
-									Autorizar solicitud
-								</button>
-								<button className = 'btn btn-primary btn-sm'
-									onClick = { this.noAutorizarSolicitud }
-								>
-									<FontAwesomeIcon icon = { faTimes } className = 'mr-2' />
-									No autorizar solicitud
-								</button>
+								{ this.props.solicitud.estado_id == 1  &&
+								<React.Fragment>
+									<button className = 'btn btn-primary btn-sm'
+										onClick = { this.autorizarSolicitud }
+									>
+										<FontAwesomeIcon icon = { faCheck } className = 'mx-2' />
+										Autorizar solicitud
+									</button>
+
+									<button className = 'btn btn-primary btn-sm'
+										onClick = { this.noAutorizarSolicitud }
+									>
+										<FontAwesomeIcon icon = { faTimes } className = 'mx-2' />
+										No autorizar solicitud
+									</button>
+								</React.Fragment>
+								}
+								{ this.props.solicitud.estado_id == 7 &&
 								<button className = 'btn btn-primary btn-sm'>
-									<FontAwesomeIcon icon = { faEnvelopeOpenText } className = 'mr-2' />
-									Mandar mensaje al solicitante
+									<FontAwesomeIcon icon = { faLockOpen } className = 'mx-2' />
+									Finalizar solicitud
 								</button>
+								}
 							</React.Fragment>
 							}
 						</div>
@@ -268,6 +276,11 @@ class ShowSolicitud extends React.Component{
 							validateHandle = { this.validateDocument }
 							invalidateHandle = { this.invalidateDocument }
 							downloadHandle = { this.downloadDocument }
+						/>
+						}
+						{ this.state.tabIndex == 5 &&
+						<InformacionPagos
+							pagos = { this.props.solicitud.fechas_pago }
 						/>
 						}
 					</div>
