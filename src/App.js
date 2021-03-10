@@ -9,10 +9,13 @@ import ChatRecepcion from './components/containers/ChatRecepcionModal';
 export default class App extends React.Component{
 	render(){
 		return(
-			<Provider store = { store }>
-				<Router />
-				<ChatRecepcion />
-			</Provider>
+			<div>
+				<p>wea</p>
+			</div>
+			// <Provider store = { store }>
+			// 	<Router />
+			// 	<ChatRecepcion />
+			// </Provider>
 		)
 	}
 }

@@ -3,7 +3,7 @@
 'use strict'
 
 // Import parts of electron to use
-const { default: installExtension, REDUX_DEVTOOLS } = require('electron-devtools-installer');
+// const { default: installExtension, REDUX_DEVTOOLS } = require('electron-devtools-installer');
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const url = require('url')
@@ -73,11 +73,11 @@ function createWindow() {
 
     // Open the DevTools automatically if developing
     if (dev) {
-      const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
+      // const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
 
-      installExtension(REACT_DEVELOPER_TOOLS)
-        .catch(err => console.log('Error loading React DevTools: ', err))
-      mainWindow.webContents.openDevTools()
+      // installExtension(REACT_DEVELOPER_TOOLS)
+      //   .catch(err => console.log('Error loading React DevTools: ', err))
+      // mainWindow.webContents.openDevTools()
     }
   })
 
@@ -112,11 +112,11 @@ app.on('activate', () => {
   }
 })
 
-if(dev){
-	app.whenReady().then(()=>{
-		installExtension(REDUX_DEVTOOLS)
-			.then(name => console.log(`Extension agregada: ${name}`))
-			.catch(err => console.log(`Ocurrio un error con ${err}`))
-	})
+// if(dev){
+// 	app.whenReady().then(()=>{
+// 		installExtension(REDUX_DEVTOOLS)
+// 			.then(name => console.log(`Extension agregada: ${name}`))
+// 			.catch(err => console.log(`Ocurrio un error con ${err}`))
+// 	})
 
-}
+// }
