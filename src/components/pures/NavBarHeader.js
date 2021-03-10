@@ -82,7 +82,7 @@ const DropdownNotification = ({badgeCount = 0, notificaciones = [],fetchNotifica
 				{(!fetchNotifications && !fetchMark) && notificaciones.length > 0 &&
 				<React.Fragment>
 				{ notificaciones.map((not) => {
-					if(not.read_at == null){
+					if(!not.leido){
 						return(
 						<a className = 'dropdown-item d-flex align-items-center' href = '#' key = {not.id}>
 							<div className = 'dropdown-list-image mr-3'>
@@ -91,8 +91,11 @@ const DropdownNotification = ({badgeCount = 0, notificaciones = [],fetchNotifica
 								</div>
 							</div>
 							<div className = 'font-weight-bold'>
+								<div>
+									{ not.titulo }
+								</div>
 								<div style = {{ fontSize: 12, }}>
-									{ not.data.body }
+									{ not.descripcion }
 								</div>
 								<div className="small text-gray-500">
 									<Moment fromNow>{not.created_at}</Moment>
@@ -162,10 +165,10 @@ class NavBarHeader extends React.PureComponent{
 								<img className="img-profile rounded-circle" src={this.props.urlAvatar? this.props.urlAvatar : 'https://source.unsplash.com/QAB-WJcbgJk/60x60'} />
 							</a>
 							<div className = 'dropdown-menu dropdown-menu-right shadow animated--grow-in' aria-labelledby = 'userDropdown'>
-								<a className ='dropdown-item' href = '#'>
+								{/* <a className ='dropdown-item' href = '#'>
 									<i className = 'fas fa-cogs fa-sm fa-fw mr-2 text-gray-400' />
 									Configuración
-								</a>
+								</a> */}
 								<div className="dropdown-divider" />
 								<button className="dropdown-item" onClick = { this.props.handleLogout }>
 									<i className = 'fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400' />

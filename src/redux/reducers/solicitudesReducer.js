@@ -31,6 +31,12 @@ import {
 	FINISH_FETCH_SOLICITUD_NO_AUTORIZAR_SUCCESS,
 	FINISH_FETCH_SOLICITUD_NO_AUTORIZAR_FAIL,
 	MARK_SOLICITUD_TO_NO_AUTORIZADO,
+
+	START_FETCH_SOLICITUDES_VISITA,
+	FINISH_FETCH_SOLICITUDES_VISITA_SUCCESS,
+	FINISH_FETCH_SOLICITUDES_VISITA_FAIL,
+	ADD_SOLICITUD_VISITA_FROM_NOTIFICATION,
+	SET_SOLICITUDES_VISITA,
 } from '../actions/solicitudesAction';
 
 const initialState = {
@@ -58,15 +64,71 @@ const initialState = {
 			finish: false,
 			success: false,
 			fail: false,
-		}
+		},
+		solicitudesVisita:{
+			start: false,
+			finish: false,
+			success: false,
+			fail: false,
+		},
 	},
 	solicitudes: [],
+	solicitudesVisita: [],
 	solicitudesPaginated: [],
 	solicitudOficinaSelected: {},
 }
 
 export default (state = initialState, action) => {
 	switch (action.type) {
+		case ADD_SOLICITUD_VISITA_FROM_NOTIFICATION:
+			return {
+				...state,
+				solicitudesVisita: [action.payload.solicitud, ...state.solicitudesVisita]
+			}
+		case SET_SOLICITUDES_VISITA:
+			return {
+				...state,
+				solicitudesVisita: action.payload.visitas,
+			}
+		case FINISH_FETCH_SOLICITUDES_VISITA_FAIL:
+			return {
+				...state,
+				status: {
+					...state.status,
+					solicitudesVisita: {
+						...state.status.solicitudesVisita,
+						start: false,
+						finish: true,
+						fail: true,
+					}
+				}
+			}
+		case FINISH_FETCH_SOLICITUDES_VISITA_SUCCESS:
+			return {
+				...state,
+				status: {
+					...state.status,
+					solicitudesVisita: {
+						...state.status.solicitudesVisita,
+						start: false,
+						finish: true,
+						success: true,
+					}
+				}
+			}
+		case START_FETCH_SOLICITUDES_VISITA:
+			return {
+				...state,
+				status:{
+					...state.status,
+					solicitudesVisita:{
+						start: true,
+						finish: false,
+						success: false,
+						fail: false,
+					}
+				}
+			}
 		case MARK_SOLICITUD_TO_NO_AUTORIZADO:
 			return {
 				...state,

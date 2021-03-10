@@ -22,6 +22,10 @@ class UsuariosSistema extends Component {
 
 	}
 
+	componentDidMount(){
+		this.props.fetchUsers();
+	}
+
 	async registrarUsuario(_data, setSubmitting, resetForm){
 		try {
 			const data = new FormData();

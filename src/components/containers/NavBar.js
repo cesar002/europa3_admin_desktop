@@ -36,8 +36,8 @@ class NavBar extends React.Component{
 	render(){
 		return (
 			<Nav
-				userName = { this.props.userData.username }
-				urlAvatar = { this.props.userData.infoPersonal.avatar }
+				userName = { this.props.userData.username ? 'Usuario' : '' }
+				urlAvatar = { this.props.userData.infoPersonal ? this.props.userData.infoPersonal.avatar : 'https://ui-avatars.com/api/?name=usuario' }
 				notificaciones = { this.props.notificaciones }
 				loadingNotifications = { this.props.startFetchNotifications }
 				loadingMarkToNotifications = { this.props.startFetchMarkToReadNotifications }

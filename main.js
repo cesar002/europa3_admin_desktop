@@ -40,7 +40,7 @@ function createWindow() {
 	 minHeight: 630,
     show: false,
 	 title: 'Europa3 - Administrador',
-	 icon: __dirname + '/src/assets/img/icon.png',
+	 icon: __dirname + '/src/assets/img/logo.png',
     webPreferences: {
       nodeIntegration: true,
       devTools: dev

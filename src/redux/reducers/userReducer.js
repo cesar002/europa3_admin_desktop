@@ -99,24 +99,7 @@ export default (state = initialState, action) => {
 				...state,
 				notificaciones:{
 					...state.notificaciones,
-					solicitudes: [{
-						id: action.payload.notification.id,
-						type: action.payload.notification.type,
-						created_at: Date.now(),
-						updated_at: Date.now(),
-						read_at: null,
-						data:{
-							id: -1,
-							user_id: action.payload.notification.user_id,
-							edificio_id: action.payload.notification.edificio_id,
-							solicitud_id: action.payload.notification.solicitud_id,
-							status_solicitud: action.payload.notification.status_solicitud,
-							body: action.payload.notification.body,
-						},
-						status: {
-							startFetch: false,
-						}
-					}, ...state.notificaciones.solicitudes]
+					solicitudes: [{ ...action.payload.notification,  startFetch: false}, ...state.notificaciones.solicitudes]
 				}
 			}
 		case START_FETCH_NOTIFICATIONS_SOLICITUDES:

@@ -9,32 +9,41 @@ import * as chatActions from '../../redux/actions/chatActions'
 
 export default ( WrapperComponent ) => {
 
-	const laravelEcho = new Echo({
-		broadcaster: "socket.io",
-		host: SOCKET_URL,
-		client: io,
-	});
+	// const laravelEcho = new Echo({
+	// 	broadcaster: "socket.io",
+	// 	host: SOCKET_URL,
+	// 	client: io,
+	// });
 
 	const NewComponent = props => {
 
 		useEffect(() => { initChannels() });
 
 		const initChannels = () => {
-			if(props._userData.id){
-				laravelEcho.channel('notificacion.edificio.1').notification(noti => {
-					console.log(noti)
-					props.addSolicitudNotification(noti)
-				})
+			// if(props._userData.id){
 
-				props.chats.forEach(chat => {
-					laravelEcho.channel(`chat.recepcion.${chat.id}`).listen('.chat-message-sending', e => {
-						if(e.message.message.sender_by == 2){
-							props.addMessageChat(e.message.message)
-						}
-					})
-				});
-			}
+			// 	solicitudVisitaChannel();
+
+			// 	laravelEcho.channel('notificacion.edificio.1').notification(noti => {
+			// 		console.log(noti)
+			// 		props.addSolicitudNotification(noti)
+			// 	})
+
+			// 	props.chats.forEach(chat => {
+			// 		laravelEcho.channel(`chat.recepcion.${chat.id}`).listen('.chat-message-sending', e => {
+			// 			if(e.message.message.sender_by == 2){
+			// 				props.addMessageChat(e.message.message)
+			// 			}
+			// 		})
+			// 	});
+			// }
 		}
+
+		// const solicitudVisitaChannel = () => {
+		// 	laravelEcho.channel('solicitudes-visitas-channel').listen('.solicitud-visita-created', solic => {
+		// 		console.log(solic)
+		// 	})
+		// }
 
 		return (
 			<React.Fragment>

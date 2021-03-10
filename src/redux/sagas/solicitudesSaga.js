@@ -67,9 +67,24 @@ function* fetchSolicitudById(action){
 	}
 }
 
+function* fetchSolicitudesVisitas(){
+	try {
+		const resp = yield call(Europa3Api.getSolicitudesVisitas)
+
+		if(resp.status !== 'success')
+			throw resp.data
+
+		yield put(solicitudesAction.setSolicitudesVisita(resp.data))
+		yield put(solicitudesAction.finishFetchSolicitudesVisitaSuccess())
+	} catch (error) {
+		yield put(solicitudesAction.finishFetchSolicitudesVisitaFail());
+	}
+}
+
 export default function* solicitudesSaga(){
 	yield takeLatest(solicitudesAction.START_FETCH_SOLICITUDES, fetchSolicitudes);
 	yield takeLatest(solicitudesAction.START_FETCH_SOLICITUD_OFICINA_BY_ID, fetchSolicitudById);
 	yield takeLatest(solicitudesAction.START_FETCH_SOLICITUD_AUTORIZAR, autorizarSolicitud);
 	yield takeLatest(solicitudesAction.START_FETCH_SOLICITUD_NO_AUTORIZAR, noAutorizarSolicitud)
+	yield takeLatest(solicitudesAction.START_FETCH_SOLICITUDES_VISITA, fetchSolicitudesVisitas)
 }

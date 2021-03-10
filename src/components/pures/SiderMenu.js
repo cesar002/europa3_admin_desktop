@@ -5,7 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
 	faBuilding, faChair, faChevronRight, faBroom, faHome,
 	faUser, faPager, faCogs, faBell, faEnvelopeOpenText, faBriefcase,
-	faComment, faUserShield, faLaptopHouse, faCouch, faMugHot
+	faComment, faUserShield, faLaptopHouse, faCouch, faMugHot, faComments,
+	faWalking
 } from '@fortawesome/free-solid-svg-icons'
 
 const Divider = () => (
@@ -87,129 +88,113 @@ class SiderMenu extends React.PureComponent{
 				/>
 				<Divider />
 
-				{/* {(this.props.permisos.filter(p => (p.id == 1 || p.id == 2 || p.id ==3))).length > 0 && */}
-				<React.Fragment>
-					<Heading title = 'Usuarios y solicitudes' />
-					<SimpleNavItem
-						title = 'Usuarios'
-						icon = { faUser }
-						to = '/usuarios'
-						active = { this.props.currentPath.includes('/usuarios') }
-					/>
-					<SimpleNavItem
-						title = 'Solicitudes'
-						icon = { faPager }
-						to = '/solicitudes'
-						active = { this.props.currentPath.includes('/solicitudes') }
-					/>
-					<Divider />
-				</React.Fragment>
-				{/* // } */}
+				<Heading title = 'Usuarios y solicitudes' />
+				<SimpleNavItem
+					title = 'Usuarios'
+					icon = { faUser }
+					to = '/usuarios'
+					active = { this.props.currentPath.includes('/usuarios') }
+				/>
+				<SimpleNavItem
+					title = 'Solicitudes'
+					icon = { faPager }
+					to = '/solicitudes'
+					active = { this.props.currentPath.includes('/solicitudes') }
+				/>
+				<SimpleNavItem
+					title = 'Solicitudes de visita'
+					icon = { faWalking }
+					to = '/visitas'
+					active = { this.props.currentPath.includes('/visitas')  }
+				/>
+				<li className = 'nav-item'>
+					<button className='btn btn-sm ml-1 text-white' data-toggle = 'modal' data-target = '#chat-solicitudes'>
+						<FontAwesomeIcon icon = { faComments } className = 'mr-2'/>
+						Chat recepción
+					</button>
+				</li>
+				<Divider />
 
-				{/* {(this.props.permisos.filter(p => (p.id == 1 || p.id == 4 || p.id == 5))).length > 0 && */}
-				<React.Fragment>
-					<Heading title = 'Edificios y oficinas'  />
-					<SimpleNavItem
-						to = '/edificios'
-						active = { this.props.currentPath.includes('/edificios') }
-						title = 'Edificios'
-						icon = { faBuilding }
-					/>
-					<SimpleNavItem to = '/oficinas'
-						title = 'Oficinas'
-						icon = { faBriefcase }
-						active = { this.props.currentPath.includes('/oficinas') }
-					/>
-					<SimpleNavItem to = '/oficinas-virtuales'
-						title = 'Oficinas virtuales'
-						icon = { faLaptopHouse }
-						active = { this.props.currentPath.includes('/oficinas-virtuales') }
-					/>
-					<SimpleNavItem to = '/sala-juntas'
-						active = { this.props.currentPath.includes('/sala-juntas') }
-						title = 'Sala de juntas'
-						icon = { faCouch }
-					/>
+				<Heading title = 'Edificios y oficinas'  />
+				<SimpleNavItem
+					to = '/edificios'
+					active = { this.props.currentPath.includes('/edificios') }
+					title = 'Edificios'
+					icon = { faBuilding }
+				/>
+				<SimpleNavItem to = '/oficinas'
+					title = 'Oficinas'
+					icon = { faBriefcase }
+					active = { this.props.currentPath.includes('/oficinas') }
+				/>
+				<SimpleNavItem to = '/oficinas-virtuales'
+					title = 'Oficinas virtuales'
+					icon = { faLaptopHouse }
+					active = { this.props.currentPath.includes('/oficinas-virtuales') }
+				/>
+				<SimpleNavItem to = '/sala-juntas'
+					active = { this.props.currentPath.includes('/sala-juntas') }
+					title = 'Sala de juntas'
+					icon = { faCouch }
+				/>
 
-					<Divider />
-				</React.Fragment>
-				{/* } */}
-
-				{/* {(this.props.permisos.filter(p => (p.id == 1 || p.id == 6))).length > 0 && */}
-				<React.Fragment>
-					<SimpleNavItem
-						active = { this.props.currentPath.includes('/mobiliario') }
-						title = 'Mobiliario'
-						icon = { faChair }
-						to = '/mobiliario'
-					/>
-					<Divider />
-				</React.Fragment>
-				{/* } */}
-
-				{/* {(this.props.permisos.filter(p => (p.id == 1 || p.id == 7))).length > 0 && */}
-				<React.Fragment>
-					<Heading title = 'Servicios' />
-					<SimpleNavItem
-						title = 'Adicionales'
-						icon = { faMugHot }
-						to = '/adicionales'
-						active = { this.props.currentPath.includes('/adicionales') }
-					/>
-					<SimpleNavItem
-						title = 'Servicios'
-						icon = { faBroom } to = '/servicios'
-						active = {this.props.currentPath.includes('/servicios')} />
-					<SimpleNavItem
-						title = 'Idiomas de atención'
-						icon = { faComment }
-						to = '/idiomas-atencion'
-						active = {this.props.currentPath.includes('/idiomas-atencion')}
-					/>
-					{/* <DropdownNavItem id = 'consumibles' title = 'Consumibles' icon = { faVial }
-						items = {[
-							{ items:[
-								{ title: 'Insumos', to: '' },
-								{ title: 'Paquetes', to: '' },
-							] }
-						]}
-					/> */}
-					<Divider />
-				</React.Fragment>
-				{/* } */}
-
-				{/* {(this.props.permisos.filter(p => (p.id == 1 || p.id == 10))).length > 0 && */}
-				<React.Fragment>
-					<Heading title = 'Envío de notificaciones' />
-					<DropdownNavItem id = 'push-notification' title = 'Notificaciones push' icon = { faBell }
-						items = {[
-							{ items: [
-								{ title: 'Notificacion a usuario', to: '' },
-								{ title: 'Notificacion global', to: ''}
-							]},
-						]}
-					/>
-					<DropdownNavItem  id = 'email-notification' title = 'Notificación por email' icon = { faEnvelopeOpenText }
-						items = {[
-							{ items: [
-								{ title: 'Email a usuario', to: '' },
-								{ title: 'Email global', to: '' }
-							] }
-						]}
-					/>
-					<Divider />
-				</React.Fragment>
-				{/* } */}
-
-				{/* {(this.props.permisos.filter(p => p.id == 1)).length > 0 && */}
-				<React.Fragment>
-					<Heading title = 'Admin' />
-					<SimpleNavItem title = 'Usuarios sistema' icon = { faUserShield }
-						to = '/usuarios-sistema'
-					/>
-					<SimpleNavItem title = 'Configuración' icon = { faCogs } />
-				</React.Fragment>
-				{/* } */}
+				<Divider />
+				<SimpleNavItem
+					active = { this.props.currentPath.includes('/mobiliario') }
+					title = 'Mobiliario'
+					icon = { faChair }
+					to = '/mobiliario'
+				/>
+				<Divider />
+				<Heading title = 'Servicios' />
+				<SimpleNavItem
+					title = 'Adicionales'
+					icon = { faMugHot }
+					to = '/adicionales'
+					active = { this.props.currentPath.includes('/adicionales') }
+				/>
+				<SimpleNavItem
+					title = 'Servicios'
+					icon = { faBroom } to = '/servicios'
+					active = {this.props.currentPath.includes('/servicios')} />
+				<SimpleNavItem
+					title = 'Idiomas de atención'
+					icon = { faComment }
+					to = '/idiomas-atencion'
+					active = {this.props.currentPath.includes('/idiomas-atencion')}
+				/>
+				{/* <DropdownNavItem id = 'consumibles' title = 'Consumibles' icon = { faVial }
+					items = {[
+						{ items:[
+							{ title: 'Insumos', to: '' },
+							{ title: 'Paquetes', to: '' },
+						] }
+					]}
+				/> */}
+				{/* <Divider />
+				<Heading title = 'Envío de notificaciones' />
+				<DropdownNavItem id = 'push-notification' title = 'Notificaciones push' icon = { faBell }
+					items = {[
+						{ items: [
+							{ title: 'Notificacion a usuario', to: '' },
+							{ title: 'Notificacion global', to: ''}
+						]},
+					]}
+				/>
+				<DropdownNavItem  id = 'email-notification' title = 'Notificación por email' icon = { faEnvelopeOpenText }
+					items = {[
+						{ items: [
+							{ title: 'Email a usuario', to: '' },
+							{ title: 'Email global', to: '' }
+						] }
+					]}
+				/> */}
+				<Divider />
+				<Heading title = 'Admin' />
+				<SimpleNavItem title = 'Usuarios sistema' icon = { faUserShield }
+					to = '/usuarios-sistema'
+				/>
+				{/* <SimpleNavItem title = 'Configuración' icon = { faCogs } /> */}
 			</ul>
 		);
 	}
@@ -217,7 +202,6 @@ class SiderMenu extends React.PureComponent{
 }
 
 SiderMenu.propTypes = {
-	permisos: PropTypes.array.isRequired,
 	currentPath: PropTypes.string.isRequired,
 }
 

@@ -66,3 +66,7 @@ export const UPDATE_ADICIONAL = '/adicional';
 export const DELETE_ADICIONAL = '/adicional';
 export const GET_CAT_UNIDADES = '/cat-unidades';
 export const GET_USUARIOS_ADMIN = '/gestion-usuarios';
+export const FINALIZAR_SOLICITUD = '/solicitud';
+export const GET_SOLICITUDES_VISITAS = '/solicitudes-visita';
+export const DELETE_SOLICITUD_VISITA = '/solicitud-visita'
+export const MARCAR_SOLICITUD_VISITA = '/solicitud-visita';

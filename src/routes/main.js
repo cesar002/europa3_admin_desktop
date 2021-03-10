@@ -34,6 +34,8 @@ import AdicionalesCreate from '../pages/Adicionales/create';
 import AdicionalesUpdate from '../pages/Adicionales/update';
 import MobiliarioUpdate from '../pages/Mobiliario/MobiliarioUpdate';
 import UsuariosSistema from '../pages/UsuariosSistema';
+import SolicitudesVisita from '../pages/SolicitudesVisita';
+
 
 const MainRoute = () => (
 	<HashRouter>
@@ -66,6 +68,7 @@ const MainRoute = () => (
 			<Route path = '/adicional/create' exact component = { AdicionalesCreate } />
 			<Route path = '/adicional/update' exact component = {AdicionalesUpdate} />
 			<Route path = '/usuarios-sistema' exact component = { UsuariosSistema } />
+			<Route path = '/visitas' exact component = { SolicitudesVisita } />
 		</React.Fragment>
 	</HashRouter>
 )

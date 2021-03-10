@@ -16,6 +16,7 @@ import InfoFiscalSolicitud from '../../components/pures/InformacionFiscalSolicit
 import InfoMoralSolicitud from '../../components/pures/InformacionMoralSolicitud';
 import DocumentosSolicitud from '../../components/pures/DocumentosSolicitud';
 import InformacionPagos from '../../components/pures/InformacionPagos';
+import Spinner from '../../components/pures/Spinner'
 
 import Europa3Api from '../../api';
 
@@ -33,9 +34,11 @@ class ShowSolicitud extends React.Component{
 		this.downloadDocument = this.downloadDocument.bind(this);
 		this.autorizarSolicitud = this.autorizarSolicitud.bind(this);
 		this.noAutorizarSolicitud = this.noAutorizarSolicitud.bind(this);
+		this.finalizarSolicitud = this.finalizarSolicitud.bind(this);
 
 		this.state = {
 			tabIndex : 0,
+			loadFinalizacion: false
 		}
 	}
 
@@ -130,6 +133,42 @@ class ShowSolicitud extends React.Component{
 				icon: 'error'
 			})
 		}
+	}
+
+	finalizarSolicitud(){
+		swal.fire({
+			title: 'Confirmación',
+			html: '¿Desea <strong>finalizar</strong> esta solicitud?',
+			showDenyButton: true,
+			confirmButtonText: 'Si',
+			denyButtonText: 'No',
+		}).then(async result => {
+			if(!result.isConfirmed){
+				return;
+			}
+
+			try {
+
+				this.setState({
+					loadFinalizacion: true
+				})
+
+				const id = this.props.match.params.id;
+				const resp = await Europa3Api.finalizarSolicitud(id)
+				if(resp.status !== 'success')
+					throw resp.data
+
+				this.fetchSolicitudshow();
+				swal.fire('Correcto', 'Solicitud finalizada', 'success')
+			} catch (error) {
+				console.log(error)
+				swal.fire('Error', 'Ocurrió un error al finalizar la solicitud', 'error')
+			}finally{
+				this.setState({
+					loadFinalizacion: false
+				})
+			}
+		})
 	}
 
 	noAutorizarSolicitud(){
@@ -246,8 +285,16 @@ class ShowSolicitud extends React.Component{
 								</React.Fragment>
 								}
 								{ this.props.solicitud.estado_id == 7 &&
-								<button className = 'btn btn-primary btn-sm'>
-									<FontAwesomeIcon icon = { faLockOpen } className = 'mx-2' />
+								<button className = 'btn btn-primary btn-sm'
+									onClick = { this.finalizarSolicitud }
+									disabled = { this.state.loadFinalizacion }
+								>
+									{ !this.state.loadFinalizacion &&
+										<FontAwesomeIcon icon = { faLockOpen } className = 'mx-2' />
+									}
+									{ this.state.loadFinalizacion &&
+									<div class="spinner-border spinner-border-sm text-light mx-2" role="status" />
+									}
 									Finalizar solicitud
 								</button>
 								}

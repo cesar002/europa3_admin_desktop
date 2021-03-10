@@ -61,6 +61,10 @@ import {
 	GET_MOBILIARIO_BY_ID,
 	UPDATE_MOBILIARIO,
 	GET_USUARIOS_ADMIN,
+	FINALIZAR_SOLICITUD,
+	GET_SOLICITUDES_VISITAS,
+	DELETE_SOLICITUD_VISITA,
+	MARCAR_SOLICITUD_VISITA,
 } from './URLS'
 
 
@@ -1274,6 +1278,94 @@ class Europa3Api {
 			const resp = await axios.get(GET_USUARIOS_ADMIN, {
 				headers:{
 					Authorization: `Bearer ${credentials.access_token}`
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
+			}
+		}
+	}
+
+	static async finalizarSolicitud(id){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.put(`${FINALIZAR_SOLICITUD}/${id}/finalize`, {}, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`,
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
+			}
+		}
+	}
+
+	static async getSolicitudesVisitas(){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.get(GET_SOLICITUDES_VISITAS, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`,
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
+			}
+		}
+	}
+
+	static async deleteSolicitudvisita(id){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.delete(`${DELETE_SOLICITUD_VISITA}/${id}`, {
+				headers: {
+					Authorization: `Bearer ${credentials.access_token}`,
+				}
+			})
+
+			return {
+				status: 'success',
+				data: resp.data
+			}
+		} catch (error) {
+			return{
+				status: 'error',
+				data: error.response ? error.response.data : 'Ocurrió un error al contactar con el servidor',
+			}
+		}
+	}
+
+	static async marcarSolicitudVisita(id){
+		try {
+			const credentials = LocalStorage.getCredentials();
+
+			const resp = await axios.patch(`${MARCAR_SOLICITUD_VISITA}/${id}`, {}, {
+				headers:{
+					Authorization: `Bearer ${credentials.access_token}`,
 				}
 			})
 

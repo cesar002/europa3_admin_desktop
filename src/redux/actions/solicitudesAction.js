@@ -29,7 +29,35 @@ export const FINISH_FETCH_SOLICITUD_NO_AUTORIZAR_SUCCESS = 'FINISH_FETCH_SOLICIT
 export const FINISH_FETCH_SOLICITUD_NO_AUTORIZAR_FAIL = 'FINISH_FETCH_SOLICITUD_NO_AUTORIZAR_FAIL';
 export const MARK_SOLICITUD_TO_NO_AUTORIZADO = 'MARK_SOLICITUD_TO_NO_AUTORIZADO';
 
+export const START_FETCH_SOLICITUDES_VISITA = 'START_FETCH_SOLICITUDES_VISITA'
+export const FINISH_FETCH_SOLICITUDES_VISITA_SUCCESS = 'FINISH_FETCH_SOLICITUDES_VISITA_SUCCESS'
+export const FINISH_FETCH_SOLICITUDES_VISITA_FAIL = 'FINISH_FETCH_SOLICITUDES_VISITA_FAIL'
 
+export const SET_SOLICITUDES_VISITA = 'SET_SOLICITUDES_VISITA'
+export const ADD_SOLICITUD_VISITA_FROM_NOTIFICATION = 'ADD_SOLICITUD_VISITA_FROM_NOTIFICATION'
+
+
+export const addSolicitudVisitaFromNotification = solicitud => ({
+	type: ADD_SOLICITUD_VISITA_FROM_NOTIFICATION,
+	payload: { solicitud }
+})
+
+export const startFetchSolicitudesVisita = () => ({
+	type: START_FETCH_SOLICITUDES_VISITA,
+})
+
+export const finishFetchSolicitudesVisitaSuccess = () => ({
+	type: FINISH_FETCH_SOLICITUDES_VISITA_SUCCESS,
+})
+
+export const finishFetchSolicitudesVisitaFail = () => ({
+	type: FINISH_FETCH_SOLICITUDES_VISITA_FAIL,
+})
+
+export const setSolicitudesVisita = visitas => ({
+	type: SET_SOLICITUDES_VISITA,
+	payload: { visitas }
+})
 
 export const markSolicitudToNoAutorizado = () => ({
 	type: MARK_SOLICITUD_TO_NO_AUTORIZADO
